@@ -1,0 +1,18 @@
+Package: field
+Title: Code for data import, cleaning and analysis of the field experiment with the 1001 Genomes of Arabidopsis. 
+       Exposito-Alonso et al. 2017 field  
+Version: 0.0.0.9000
+Authors@R: person("Moises", "Exposito-Alonso", email = "moisesexpositoalonso@gmail.com", role = c("aut", "cre"))
+Description: The package allows cleaning, manipulation, and analysis of data from multiple sources, including 
+            the 1001 Genomes of Arabidopsis field experiment, but also integrates information from other greenhouse 
+            and field experiments (Vasseur 2017 submitted, 1001Genomes Consortium 2016 CELL, Fournier 2011 Science).
+Depends:
+    R (>= 3.2)
+Imports:
+    dplyr,
+    tidyr,
+    moiR
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
