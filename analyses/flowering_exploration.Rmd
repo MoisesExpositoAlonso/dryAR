@@ -1,0 +1,190 @@
+---
+title: "Flowering exploration of the 1001G fiel experiment"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  html_notebook: default
+  # pdf_document: default
+---
+
+
+### Packages set up
+
+```{r setup,message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+library(stargazer)
+library(moiR)
+source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+load_all(".") # field
+
+```
+
+### load dataset
+
+```{r field }
+data(field)
+dim(field)
+names(field)
+stargazer(field,type='text')
+
+```
+
+
+
+## Plot flowering histograms
+
+```{r}
+p1=ggplot(data = field)+
+  geom_density(aes(x=FT.dif,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw()
+p1
+```
+
+Histograms of the flowering time from the day of harvesting until the recorded day per replicate. 
+
+The first observation is that in Tuebingen there is
+more variance in flowering time. In Madrid flowerin time is in a narrow peak. Maybe it indicates that later than early april everything would die.
+
+The second observation is that under low water conditions it seems that the mean flowering time is later. This can be seen as opposite to what the field
+expects, but it might not be necessarily true. Normally, when a new stress comes to a plant, they try to accelerate the phenology. However, if the stress 
+is persistent since the start of the experiment, they might not be able to reach the necessary developmental stage to be able to flower.
+
+```{r}
+p1a=ggplot(data = field)+
+  geom_density(aes(x=FT.date,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw()
+p1a
+```
+
+Histograms of the exact date of flowering (month and day). A similar picture can be drawn from these plots as above. However, in this case we can actually see the dates of flowering. Apparently, in Spain the dates are towards April compared to Tuebingen that spam from februrry to april. Perhaps due to the fact that we started the experiment in Tuebingen 3 weeks earlier than in Madrid.
+
+
+## Two sites or two treatments lines to visualize interaction
+
+
+```{r}
+
+p3a=field %>% group_by(id,site) %>% summarise(.,FT.date=mean(FT.date,na.rm=T))  %>%
+  ggplot(., aes(y=FT.date,x=site, group=id,color=factor(id))) + geom_point() +
+  geom_line(aes(alpha=0.5)) + theme(legend.position="none")
+
+
+p4a=field %>% group_by(id,water) %>% summarise(.,FT.date=mean(FT.date,na.rm=T))  %>%
+  ggplot(., aes(y=FT.date,x=water, group=id,color=factor(id)))  + geom_point() +
+  geom_line(aes(alpha=0.5)) + theme(legend.position="none")
+
+plot_grid(p3a,p4a, rel_widths = c(2,2))
+
+```
+
+This plot, which is based in means per genotype and per site, shows again that in Tuebingen plants flowered in an earlier date generally. 
+The plot in the right indicates that under lower water content, plants flowered later. However, in this case it seems that the interaction is a bit larger,
+that is, there is more lines that are crossing. 
+
+```{r}
+subsetfield=field %>% filter(., FT.date < as.Date('2016-01-20' ,format= "%Y-%m-%d")  ) %>% select(., id, site, water, indpop, FT.date, kgroup, name, country)
+dim(subsetfield)
+print(subsetfield)
+```
+Interesting that the ones with the earliset flowering time, in January in Tuebingen, were actually in low water and from the two extremes of the distribution, Spain 
+and Sweden
+
+
+```{r}
+p3=field %>% group_by(id,site) %>% summarise(.,FT.dif=mean(FT.dif,na.rm=T))  %>%
+  ggplot(., aes(y=FT.dif,x=site, group=id,color=factor(id)))  + geom_point() +
+  geom_line(aes(alpha=0.5)) + theme(legend.position="none")
+
+p4=field %>% group_by(id,water) %>% summarise(.,FT.dif=mean(FT.dif,na.rm=T))  %>%
+  ggplot(., aes(y=FT.dif,x=water, group=id,color=factor(id))) + geom_point() +
+  geom_line(aes(alpha=0.5)) + theme(legend.position="none")
+
+plot_grid(p3,p4, rel_widths = c(2,2))
+
+```
+With the flowering time relative to the date of germination (instead of day and month of flwoering ), we see that Tuebingen was later (opposite trend, but we know that
+it is because we germinated Madrid later so they had to be faster to live) and low water was later (same trend). Nice that again we see interaction, some lines go in 
+one direction and other in the opposite.
+
+## Scatter plots genotype means between treatments
+
+```{r}
+
+p2a= field %>% group_by(site,id) %>% summarise(.,flowering=mean(FT.date,na.rm=T)) %>% tidyr::spread(., key=site,value=flowering) %>%
+  ggplot(data = .)+ geom_point(aes(x=madrid,y=tuebingen)) + geom_abline(aes(intercept=0,slope=1))
+
+p2= field %>% group_by(site,id) %>% summarise(.,flowering=mean(FT.dif,na.rm=T)) %>% tidyr::spread(., key=site,value=flowering) %>%
+  ggplot(data = .)+ geom_point(aes(x=madrid,y=tuebingen)) + geom_abline(aes(intercept=0,slope=1))
+
+plot_grid(p2a,p2,rel_widths = c(2,2))
+
+```
+
+As final comparison, two scatter plots are shown with the mean date (left) and time (right) per genotype are correlated in both locations. This was expected and indicates
+that the rank of early to late flowering genotypes is more or less maitained, but that the extremes are more dispersed in Tuebingen (we mentioned the variance before),
+and this is visualized with the ends in U-shape.
+
+```{r}
+
+field$kgroup<-factor(field$kgroup,labels = knames())
+
+p3= field %>% group_by(site,id) %>% summarise(.,flowering=mean(FT.dif,na.rm=T), group= unique(kgroup)) %>% tidyr::spread(., key=site,value=flowering) %>%
+  ggplot(data = .)+ geom_point(aes(x=madrid,y=tuebingen, color=factor(group),group=group)) + geom_abline(aes(intercept=0,slope=1)) 
+p3  +scale_colour_manual(values = colors11())
+
+# p<-createmapbase()+coord_equal(xlim =  c(-26,+95 ), ylim=c(10,70))
+# p+ geom_point(data=field,aes(y=latitude,x=longitude),color="black",size=2)  + geom_point(data=field,aes(y=latitude,x=longitude,color=kgroup)) +scale_colour_manual(values = colors11()) #+ geom_point(data=acc,aes(y=latitude,x=longitude),shape=1,alpha=0.05) 
+# p
+
+```
+
+From this last plot, we see where the accessions that flower at different times come from. Nice to see that the mediterraneans (lila) and relicts (red) thend to be earliset, whereas ome from Swedish (dark green) and from the Pirinees (yellow).
+
+# Direct visualization of flowering time in the spatial positions of the experiment
+
+```{r ,fig.width=10,fig.height=3 ,warning=F}
+flo=read_flowering('madrid','../data-raw')
+flo=as.matrix(flo)
+flo=apply(flo,2,function(x)asmydate(x,'madrid'))
+flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
+
+f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
+
+f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
+  scale_fill_gradientn("Flowering date",
+                       colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
+                        limits=c(60, 180)
+)
+
+f1
+
+```
+
+
+```{r ,fig.width=10,fig.height=3,warning=F}
+flo=read_flowering('tuebingen','../data-raw')
+flo=as.matrix(flo)
+flo=apply(flo,2,function(x)asmydate(x,'tuebingen'))
+flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
+
+f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
+
+f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
+  scale_fill_gradientn("Flowering date",
+                       colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
+                       limits=c(60, 180)
+                       )
+
+f1
+
+# summary(c(flo))
+
+```
+
+
+We see that Tuebingen again has later flowering times  than Madrid. This also helps to visualize that the blocks of lower watering had 
+
+

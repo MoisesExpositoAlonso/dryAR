@@ -1,34 +1,48 @@
 library(dplyr);library(tidyr)
 library(devtools)
 
+load_all("~/mexposito/moiR/")
+# library(moiR)
+load_all(".")
+# library(field)
+
 ## read harvesting info
 
-madh<-read.csv('data-raw/madharvest_image_index.csv',header=T) %>% mutate(site='madrid')
-head(madh)
-
-tueh<-read.csv('data-raw/tueharvest_image_index.csv',header=T) %>% mutate(site='tuebingen')
-head(tueh)
-
+tueh <- make_data_harvest(location="tuebingen")
+madh <- make_data_harvest(location="madrid")
 harvest<-rbind(madh,tueh)
 
+head(harvest)
+tail(harvest)
+dim(harvest)
+# harvest = select(harvest,-pathimage,-datelabeled)
 
-## add info of the replicates
-data(genoreps)
+# merge
 
+data("genoreps")
+head(genoreps)
 
-harvest %>% select(-pathimage,-datelabeled)  -> harvest
-genoreps %>%filter(quality %in% c('yes','maybe') ) %>% select(-otherpos,-othergeno,-quality)  -> harvest
-harvest
+harvest= merge(harvest,genoreps, by=c('qp','pos','site'),all.y=T)   ### NOTE ALSO THAT CAN BE SEVERAL PICTURES FOR A SINGLE POT!
+head(harvest)
 
-%>%
-  merge(.,genoreps, by.x=c('tray','pos','site'),by.y=c('qp','pos','site')) -> harvest
+# put in the number column NA when it is an individual replicate
+harvest$num[harvest$indpop == 'i']<-NA
 
-··············· CHECK MERGE CORRECT. KEEP THOSE THAT DID NOT SURVIVE!
+harvest$num[harvest$num == 'missin']<-(-9)
+
+# add quality flag
+harvest$Harv.q <- 0
+harvest$Harv.q[ !is.na(harvest$pathimage) ] <-1
+
+unique(harvest$Harv.q)
+unique(harvest$water)
+
+head(harvest)
+tail(harvest)
+dim(harvest)
 
 ## save
 print('The first lines of data index of harvest:')
 head(harvest,n=5)
 
 devtools::use_data(harvest,overwrite = T)
-
-

@@ -16,7 +16,6 @@ devtools::use_data(rapa,overwrite = F)
 patrice<-read.table('data-raw/1165_acc_patrice.tsv',fill = T,header=T)
 head(patrice)
 
-
 ft1001<-read.table('data-raw/1001genomes-FT10-FT16 and 1001genomes-accessions.tsv',fill=T,header=T)
 head(ft1001)
 

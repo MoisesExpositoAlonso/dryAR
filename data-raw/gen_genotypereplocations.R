@@ -18,4 +18,5 @@ print('This is the head/tail of genoreps:')
 head(genoreps,n=5)
 tail(genoreps,n=5)
 
+# devtools::use_data(genoreps,overwrite = T)
 devtools::use_data(genoreps,overwrite = F)

@@ -2375,7 +2375,7 @@ id	replicate	trayid	traynumber	rowcoor	colcoor	rep_type	water_type	quality	other
 6209	5	66_p_l	66	E	5	p	l	1	0	0
 9761	5	66_p_l	66	E	6	p	l	1	0	0
 9759	5	66_p_l	66	E	7	p	l	1	0	0
-9918	5	67_p_l	67	A	2	p	l	1	bad	missing
+9918	5	67_p_l	67	A	2	p	l	bad	0	missing
 8214	5	67_p_l	67	A	3	p	l	1	0	0
 9596	5	67_p_l	67	A	4	p	l	1	0	0
 6085	5	67_p_l	67	A	5	p	l	1	0	0
@@ -4927,8 +4927,8 @@ id	replicate	trayid	traynumber	rowcoor	colcoor	rep_type	water_type	quality	other
 9595	5	66_i_l	138	A	2	i	l	1	0	0
 9612	5	66_i_l	138	A	3	i	l	1	0	0
 9427	5	66_i_l	138	A	4	i	l	1	0	0
-9882	5	66_i_l	138	A	5	i	l	1	0	A6
-7181	5	66_i_l	138	A	6	i	l	1	0	A5
+9882	5	66_i_l	138	A	5	i	l	1	A6	0
+7181	5	66_i_l	138	A	6	i	l	1	A5	0
 6680	5	66_i_l	138	A	7	i	l	1	0	0
 7133	5	66_i_l	138	B	1	i	l	1	0	0
 7203	5	66_i_l	138	B	2	i	l	1	0	0
