@@ -43,7 +43,7 @@ dim(veggyraw[duplicated(veggyraw$indexrep),]) # There are 790 in total from both
 
 ## Run the test for replicability
 library(MCMCglmm)
-lmm=MCMCglmm(data=veggyraw[duplicated(veggyraw$indexrep),], count ~1, random = ~ indexrep, family = 'poisson',verbose=F)
+lmm=MCMCglmm(data=veggyraw[duplicated(veggyraw$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
 print ( h2MCMC(lmm,randomname = 'indexrep') )
 
 ```
@@ -51,9 +51,11 @@ print ( h2MCMC(lmm,randomname = 'indexrep') )
 ## Plot trends
 ```{r}
 data(veggypot)
+names(veggypot)
 
 # Generate all trends
 ggplot(veggypot) + geom_line(aes(y=count,x=day,group=potindex, color=factor(id)),alpha=0.1 ) + theme(legend.position="none")
+# ggplot(veggypot) + geom_line(aes(y=countred,x=day,group=potindex, color=factor(id)),alpha=0.1 ) + theme(legend.position="none")
 
 ```
 
