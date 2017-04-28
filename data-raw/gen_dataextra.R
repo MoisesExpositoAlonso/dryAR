@@ -11,6 +11,17 @@ head(rapa,n=5)
 
 devtools::use_data(rapa,overwrite = F)
 
+#### drought data
+
+droughtraw<-read.csv('data-raw/new_variables_traject_mean_pergenotype.csv')[,1:24] %>% select(-X,-latitude.x,-longitude.x,-kgroup)
+colnames(droughtraw)<-gsub(gsub(colnames(droughtraw),pattern = 'X',replacement = 'day'),pattern = '.5',replacement = '')
+
+droughtmodel<-read.csv('data-raw/m1diii_effects_29_parameters_prepared.csv') %>% select(-X)
+
+drought<-merge(droughtraw,droughtmodel,by='id',all=T)
+
+devtools::use_data(drought,overwrite = F)
+
 #### Greenhouse data
 
 patrice<-read.table('data-raw/1165_acc_patrice.tsv',fill = T,header=T)

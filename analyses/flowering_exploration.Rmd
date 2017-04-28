@@ -105,6 +105,7 @@ p4=field %>% group_by(id,water) %>% summarise(.,FT.dif=mean(FT.dif,na.rm=T))  %>
 plot_grid(p3,p4, rel_widths = c(2,2))
 
 ```
+
 With the flowering time relative to the date of germination (instead of day and month of flwoering ), we see that Tuebingen was later (opposite trend, but we know that
 it is because we germinated Madrid later so they had to be faster to live) and low water was later (same trend). Nice that again we see interaction, some lines go in 
 one direction and other in the opposite.
@@ -133,11 +134,27 @@ field$kgroup<-factor(field$kgroup,labels = knames())
 
 p3= field %>% group_by(site,id) %>% summarise(.,flowering=mean(FT.dif,na.rm=T), group= unique(kgroup)) %>% tidyr::spread(., key=site,value=flowering) %>%
   ggplot(data = .)+ geom_point(aes(x=madrid,y=tuebingen, color=factor(group),group=group)) + geom_abline(aes(intercept=0,slope=1)) 
-p3  +scale_colour_manual(values = colors11())
+p3<-p3  +scale_colour_manual(values = colors11())
 
+p3
 # p<-createmapbase()+coord_equal(xlim =  c(-26,+95 ), ylim=c(10,70))
 # p+ geom_point(data=field,aes(y=latitude,x=longitude),color="black",size=2)  + geom_point(data=field,aes(y=latitude,x=longitude,color=kgroup)) +scale_colour_manual(values = colors11()) #+ geom_point(data=acc,aes(y=latitude,x=longitude),shape=1,alpha=0.05) 
 # p
+p4= field %>% group_by(water,id) %>% summarise(.,flowering=mean(FT.dif,na.rm=T), group= unique(kgroup)) %>% tidyr::spread(., key=water,value=flowering) %>%
+  ggplot(data = .)+ geom_point(aes(x=l,y=h, color=factor(group),group=group)) + geom_abline(aes(intercept=0,slope=1)) 
+p4<-p4  +scale_colour_manual(values = colors11())
+p4
+
+## now plot of the differences
+# difs=field %>% group_by(site,water,id) %>% summarise(.,flowering=mean(FT.dif,na.rm=T), group= unique(kgroup)) %>% unite(WaterSite,water,site) %>%
+#   spread(WaterSite,value=flowering) %>%
+  # mutate(high_low=h_madrid-l_madrid,tue_mad=)
+  
+
+# difs %>%
+#   ggplot(data = .)+ geom_point(aes(x=l,y=h, color=factor(group),group=group)) + geom_abline(aes(intercept=0,slope=1)) 
+# p5<-p5  +scale_colour_manual(values = colors11())
+
 
 ```
 

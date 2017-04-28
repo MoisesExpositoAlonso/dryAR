@@ -20,6 +20,6 @@ flowering data with its associated quality information (see details).
 
 }
 \seealso{
-\url{github.com/MoisesExpositoAlonso/hippo} and \url{github.com/MoisesExpositoAlonso/hippo} for image processing analyses
+\url{github.com/MoisesExpositoAlonso/hitfruit} and \url{github.com/MoisesExpositoAlonso/hippo} for image processing analyses
 }
 

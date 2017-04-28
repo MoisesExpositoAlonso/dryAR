@@ -1,0 +1,47 @@
+## Models Tutorial 2
+# pat='/media/moisesexpositoalonso/Data/GoogleDrive/INVESTIGACION/EDINBURGH-MscQGGA/-- CLASS --/2S-Quantitative_genetics_models/tutorial 2 R matrixes/q2_parentmat.txt'
+
+# q1.i
+
+num_ans<-7
+parent_mat<-matrix(c(0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0),nrow = num_ans)
+
+D<-1/c(1,1,1,0.75,0.5,0.5,0.75)
+Dinv<-diag(1/D)
+
+Tmat<-0.5*parent_mat+diag(1,num_ans,num_ans)
+A<-Tmat %*% Dinv %*% t(Tmat)
+
+solve(A)
+
+# do the Henderson at home
+
+# Question 2
+X<-matrix(c(1,0,0,1,1,0,0,1),nrow=4,ncol=2,byrow=T)
+Z<-matrix(c(1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),byrow=T,ncol=7,nrow=4)
+Z<-matrix(c(0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1),byrow=T,ncol=7,nrow=4)
+
+
+xpx<-t(X)%*%X
+xpz<-t(X)%*%Z
+zpx<-t(Z)%*%X
+zpz<-t(Z)%*%Z
+ialpha<-diag(7)*1.8571
+
+y<-c(320,410,250,380)
+
+xpy<-t(X)%*%y
+zpy<-t(Z)%*%y
+
+MM<-rbind(cbind(xpx,xpz),cbind(zpx,(zpz+ialpha)))
+mm<-rbind(xpy,zpy)
+
+solve(MM)%*%mm  #<- esto es por tanto, el vector de b^ y ?
+
+# INCORPORATE THE RELATIONSHIP MATRIX!
+
+aalpha<-solve(A)*1.8571
+
+M<-rbind(cbind(xpx,xpz),cbind(zpx,(zpz+aalpha)))
+m<-rbind(xpy,zpy)
+solve(M)%*%m

@@ -4,7 +4,7 @@
 \alias{read_flowering}
 \title{Read the flowering time raw data}
 \usage{
-read_flowering(location = "tuebingen")
+read_flowering(location = "tuebingen", path = "data-raw")
 }
 \arguments{
 \item{location}{madrid or tuebingen}

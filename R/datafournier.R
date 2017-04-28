@@ -1,0 +1,20 @@
+#' Data of fitness from four experimental sites from Fournier-Level et al. 2011 Science
+#'
+#' A dataset containing different life history phenotypes and fitness estimates
+#' of 517 accessions with 24 replicates each in different treatments, namely
+#' site (Madrid or Tuebingen), watering (high and low), and density of plants
+#' per pot (an experimental population or single individual).
+#'
+#'
+#' @format A data frame with  ~30,000 rows and ~25 variables:
+#' \describe{
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#'   \item{id}{the 1001 Genomes IDs of the used accessions}
+#' }
+#' @name fournier
+#' @source see \url{https://www.ncbi.nlm.nih.gov/pubmed/21980109} for the original publication.
+"fournier"

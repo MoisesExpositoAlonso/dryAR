@@ -11,5 +11,5 @@ Rscript  data-raw/gen_harvesting.R
 Rscript  data-raw/gen_dataextra.R
 
 # When there have been changes in some of the above, to refresh the master data, run:
-Rscript  data-raw/refresh_data.R
+Rscript  data-raw/gen_field.R
 
