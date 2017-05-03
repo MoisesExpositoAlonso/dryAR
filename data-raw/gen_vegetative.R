@@ -1,5 +1,6 @@
 library(dplyr);library(tidyr)
 library(devtools)
+library(ggplot2);library(cowplot)
 
 load_all("~/mexposito/moiR/")
 # library(moiR)
@@ -40,72 +41,76 @@ veggyraw=veggy
 devtools::use_data(veggyraw,overwrite = T)
 
 
-################################################################################
-## Produce cleaner data than veggyraw
-## Since there are duplicates but the replicability is >99%, generate average of
-## counts for two pots of the same identity (can be due to two pictures per
-## tray/day). Necessary for merge with master dataset later
-
-names(veggy)
-head(veggy)
-
-veggy %>% mutate( indexrep=paste(site,qp,pos,day,sep='_')) %>%
-          group_by(indexrep) %>% summarise(site=unique(site),
-                                               qp=unique(qp),
-                                               pos=unique(pos),
-                                               trayid=unique(trayid),
-                                               rep=unique(rep),
-                                               indpop=unique(indpop),
-                                               water=unique(water),
-                                               id=unique(id),
-                                               day=unique(day),
-                                               countgreen=mean(countgreen),
-                                               countred=mean(countred)
-                                           ) ->veggy
-veggy %>% head()
-veggy %>% tail()
-dim(veggy)
-
-veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) %>% select(-indexrep)
-
-devtools::use_data(veggy,overwrite = T)
 
 ################################################################################
 
-# Generate all trends
-ggplot(veggy) + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(id)),alpha=0.1 ) + theme(legend.position="none")
+# just get the total number of red points
+red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can explore the effecty of choosin threshold
+head(red)
+qplot(log10(red$redsum))
+table(red$redsum > 1e5)
+fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
+  # cat(x)
+  # cat("->")
+  # cat(
+    summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
+    # )
+  # cat("\n")
 
-ggplot(veggy,aes(y=countred,x=day,
-                 # group=potindex,
-                 group=factor(id),
-                 color=factor(id) )) +
-  geom_line(alpha=0.1 ) +
-  #stat_smooth() +
-  theme(legend.position="none")
+})
 
-head(veggy )
-names(veggy)
+plot(fvals ~ seq(1e4,1e6,by=1000))
+seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
 
-# veggy %>% filter(trayid == "27_i_l") %>%
-veggy %>% filter(trayid == "27_i_l" ,pos=="a3", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-veggy %>% filter(trayid == "27_i_l" ,pos=="a4", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-veggy %>% filter(trayid == "27_i_l" ,pos=="a5", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-veggy %>% filter(trayid == "27_i_l" ,pos=="b2", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
+table(red$redsum > 152000)
+badflags = red %>% filter(redsum > 152000) %>% select(identifier)
+badflags=unique(badflags$identifier)
+length(badflags)
 
 
-filter ( veggyraw , trayid == "27_i_l" ,pos=="b2", site=="madrid") %>%
-  select(pathimage) %>%
-  write.table(.,file = "../../tmpimg/tmplist.txt",row.names=F, col,names=F)
+## Get total sum of green pixels to see if something can be inferred
 
+green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(greensum=sum(countgreen)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can explore the effecty of choosin threshold
+qplot(log10(green$greensum))
+
+badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier)
+
+## Get the trajectories
+
+veg<-
+  veggy %>%
+
+  mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
+  filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
+  # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green
+
+
+  mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
+  mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
+  filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
+
+  group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
+  summarize(
+            ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
+            ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
+            ger.c=fitsigmoid(countgreen,daycount,parameter='c')
+            )
+            #,
+            # germi=fitgermination(countgreen,daycount),  # Probably the regression one is not so nice.
+            # germir2=r2fitgermination(countgreen,daycount),
+            # germip=pfitgermination(countgreen,daycount),
+            # firstgreen=firstgreen(y=countgreen,x=daycount)  # first green pixels is kind of arbitrary
+            # )
+
+
+
+# join with red
+veg %>%
+  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) -> newveg
+head(newveg)
+
+################################################################################
+### SAVE DATASET
+veg=newveg
+devtools::use_data(veg,overwrite = T)
 

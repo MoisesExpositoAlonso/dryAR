@@ -39,14 +39,17 @@ genotypevar <- function(variable="FT.q",
 
 }
 
-randomvariance<-function(lmod,var='id'){
+randomvariance<-function(lmod,var='id'){ ############## <<<<<<<<<<<<<<<<<<<<<<<<<<< EDIT THIS TO ALLOT MCMCGLMM TO GET THE VARIANCE
 
   if(class(lmod)=='lmerMod'){
   varcovar=as.data.frame(VarCorr(lmod))
   res<-dplyr::filter(varcovar, grp %in% var) [,"vcov"] / sum(varcovar[,"vcov"])
   res=as.matrix(res)
-  colnames(res)<-var
   }
+  if(class(lmod)=='MCMCglmm'){
+  res=h2MCMC(lmod,randomname=var)
+  }
+
   return(res)
 }
 

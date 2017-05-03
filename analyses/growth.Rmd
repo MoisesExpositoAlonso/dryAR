@@ -1,0 +1,242 @@
+---
+title: "Growth trajectories exploration, inference of germination and detection of missing pots"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  # html_notebook: default
+  pdf_document: default
+---
+
+
+## Packages set up
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+# library(moiR)
+source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+load_all("~/mexposito/moiR/")
+load_all(".")
+
+```
+
+## load data sets
+
+```{r load datasets}
+#data(field)
+#dim(field)
+# head(field)
+data(veggyraw)
+data(veggy)
+
+```
+
+## This dataset is a set of pixel count measurements to characterize green and red area per pot.
+
+![Example image of germinating plants and red flags of those unsuccessful pots](../field/P1030542.JPG)
+
+## Verify replicability
+```{r find duplicated pots}
+## check duplicated image pots
+veggyraw=mutate(veggyraw, indexrep=paste(site,qp,pos,day,sep='_'))
+
+## Number of pots used for replicability analysis
+dim(veggyraw[duplicated(veggyraw$indexrep),]) # There are 790 in total from both experiments
+```
+
+```{r run replicability}
+## Run the test for replicability
+library(MCMCglmm)
+lmm=MCMCglmm(data=veggyraw[duplicated(veggyraw$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
+print ( h2MCMC(lmm,randomname = 'indexrep') )
+
+```
+
+
+## Clean data by removing duplicate records from duplicated images
+```{r clean data by averaging duplicated pots,eval=FALSE}
+## Produce cleaner data than veggyraw
+## Since there are duplicates but the replicability is >99%, generate average of
+## counts for two pots of the same identity (can be due to two pictures per
+## tray/day). Necessary for merge with master dataset later
+
+# veggy %>% mutate( indexrep=paste(site,qp,pos,day,sep='_')) %>%
+#           group_by(indexrep) %>% summarise(site=unique(site),
+#                                                qp=unique(qp),
+#                                                pos=unique(pos),
+#                                                trayid=unique(trayid),
+#                                                rep=unique(rep),
+#                                                indpop=unique(indpop),
+#                                                water=unique(water),
+#                                                id=unique(id),
+#                                                day=unique(day),
+#                                                countgreen=mean(countgreen),
+#                                                countred=mean(countred)
+#                                            ) ->veggy
+# veggy %>% head()
+# veggy %>% tail()
+# dim(veggy)
+# 
+# veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) %>% select(-indexrep)
+# 
+# devtools::use_data(veggy,overwrite = T) # Save the data for the package
+
+```
+This is not run because takes some time, instead I load the data already produced
+
+```{r load veggy }
+data(veggy)
+```
+
+
+## Plot general trends of green area
+```{r plot general trends}
+veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_"))  %>% mutate(site_water=paste(site,water,sep="_"))
+
+veggy %>% filter(indpop=='i') %>%
+ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
+
+veggy %>% filter(indpop=='p') %>%
+ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
+
+```
+
+## Plot general trends of red area
+```{r plot general trend red area}
+veggy %>% 
+ggplot() + geom_line(aes(y=countred,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
+
+qplot(x=veggy$countred)
+```
+
+## Single pot trends as example
+
+```{r plot fail pot}
+veggy %>% filter(trayid == "27_i_l" ,pos=="a3", site=="madrid") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+
+```
+This is an example of a fail pot, where green pixels are low all the time but a red flag was put to identify them
+
+```{r plot individual pot}
+
+veggy %>% filter(trayid == "27_i_l" ,pos=="a4", site=="madrid") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+
+```
+
+The decrease in January of some is due to the thinning of plants for
+
+```{r plot population pot}
+veggy %>% filter(trayid == "9_p_l" ,pos=="e7", site=="tuebingen") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+
+```
+This plot is a populatino replicate therefore there is no sudden decay, only that due to mortality at the end of the experiment
+
+## Detecting unsuccessful pots
+
+```{r count red pictures}
+# just get the total number of red points
+red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can 
+
+```
+
+```{r optimal red count threshold}
+fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
+  # cat(x)
+  # cat("->")
+  # cat(
+    summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
+    # )
+  # cat("\n")
+
+})
+
+plot(fvals ~ seq(1e4,1e6,by=1000), pch=19, ylab='F statistic from ANOVA', xlab='red pixel sum threshold',cex=0.2)
+seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
+
+table(red$redsum > 152000)
+badflags = red %>% filter(redsum > 152000) %>% select(identifier)
+badflags=unique(badflags$identifier)
+length(badflags)
+
+```
+By calculating F statistic, we calculate the variance between two groups of pots whose pixels are counted.
+For that several thresholds are tried, the one that separates better the two distribution is the one that will
+be used
+
+
+
+## Modeling trajectories of germination and growth
+
+```{r model all trajectories as sigmoidal functions,eval=F}
+
+# veg<-
+#   veggy %>%
+# 
+#   mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
+#   filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
+#   # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green
+# 
+# 
+#   mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
+#   mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
+#   filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
+# 
+#   group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
+#   summarize(
+#             ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
+#             ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
+#             ger.c=fitsigmoid(countgreen,daycount,parameter='c')
+#             )
+#             #,
+#             # germi=fitgermination(countgreen,daycount),  # Probably the regression one is not so nice.
+#             # germir2=r2fitgermination(countgreen,daycount),
+#             # germip=pfitgermination(countgreen,daycount),
+#             # firstgreen=firstgreen(y=countgreen,x=daycount)  # first green pixels is kind of arbitrary
+#             # )
+# 
+
+```
+
+```{r}
+data(veg)
+```
+
+```{r}
+
+vegh<-head(veg,1000) %>% filter(ger.a != "NA")
+
+plot( ylab='Predicted # pixels',xlab='Days of experiment',
+  ylim=c(0,50000),
+  y=
+getsigmoid(
+  a= substrRight(vegh$ger.a,lastpos = 4,giveright = F)[2],
+  b= substrRight(vegh$ger.b,lastpos = 4,giveright = F)[2],
+  c= substrRight(vegh$ger.c,lastpos = 4,giveright = F)[2]
+),
+x=1:40,
+type='l'
+)
+for( i in 1:nrow(vegh)){
+lines(  y=
+getsigmoid(
+  a= substrRight(vegh$ger.a,lastpos = 4,giveright = F)[i],
+  b= substrRight(vegh$ger.b,lastpos = 4,giveright = F)[i],
+  c= substrRight(vegh$ger.c,lastpos = 4,giveright = F)[i]
+),
+x=1:40,
+col=transparent('black')
+)
+}
+
+```
+

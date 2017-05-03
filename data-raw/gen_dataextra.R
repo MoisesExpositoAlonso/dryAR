@@ -44,3 +44,15 @@ print("The head lines of fournier:")
 head(fournier,n=5)
 
 devtools::use_data(fournier,overwrite = F)
+
+
+#### Slovak 2014 Plant Cell
+data(acc)
+data("ft1001")
+acc
+
+root<-read.csv('data-raw/Slovak_2014_root.csv',header=T)
+
+merge(acc,by.x='id',root,by.y='ACC_ID') %>% dim()
+merge(ft1001,by.x='id',root,by.y='ACC_ID') %>% dim()
+
