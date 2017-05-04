@@ -107,7 +107,50 @@ lmer(data = .,formula = firstgreen ~ (1|id) + (1|water)+ (1|site)  ) -> lmod
 randomvariance(lmod,var =c('id','water','site') )
 
 
+names(veg)
+
+library(lme4)
+names(veg)
+
+veg %>%
+  mutate(
+  a= fn(substrRight(ger.a,lastpos = 4,giveright = F)),
+  b= fn(substrRight(ger.b,lastpos = 4,giveright = F)),
+  c= fn(substrRight(ger.c,lastpos = 4,giveright = F))
+  ) %>%
+# lmer(formula = a ~ (1|id) + (1|water)+ (1|site)  ) -> lmod
+# lmer(formula = b ~ (1|id) + (1|water)+ (1|site)  ) -> lmod
+lmer(formula = c ~ (1|id) + (1|water)+ (1|site)  ) -> lmod
+# randomvariance(lmod)
+randomvariance(lmod,var =c('id','water','site') )
 
 
+#
+# ```{r}
+names(veg)
+data(veg)
+veg=veg %>%
+  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
 
-##
+veg=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(greensum=sum(countgreen)) %>%
+  full_join(.,veg,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
+
+library(lme4)
+
+veg %>%
+  filter(redsum < 1e4) %>%
+  filter(greensum >1e4) %>%
+  mutate(
+  a= fn(substrRight(ger.a,lastpos = 4,giveright = F)),
+  b= fn(substrRight(ger.b,lastpos = 4,giveright = F)),
+  c= fn(substrRight(ger.c,lastpos = 4,giveright = F))
+  ) %>%
+# lmer(formula = a ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod
+# lmer(formula = b ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod
+# lmer(formula = c ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod
+# randomvariance(lmod)
+randomvariance(lmod,var =c('id','water','site',"indpop") )
+
+#
+# ```
+#

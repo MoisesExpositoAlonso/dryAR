@@ -11,14 +11,13 @@ output:
 
 ## Packages set up
 
-```{r setup, include=FALSE}
+```{r setup, include=F}
 library(knitr)
 library(dplyr,tidyr)
 library(ggplot2);library(cowplot)
 library(devtools)
 library(RColorBrewer)
 # library(moiR)
-source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
 load_all("~/mexposito/moiR/")
 load_all(".")
 
@@ -37,7 +36,7 @@ data(veggy)
 
 ## This dataset is a set of pixel count measurements to characterize green and red area per pot.
 
-![Example image of germinating plants and red flags of those unsuccessful pots](../field/P1030542.JPG)
+![Example image of germinating plants and red flags of those unsuccessful pots](../P1030542.JPG)
 
 ## Verify replicability
 ```{r find duplicated pots}
@@ -85,13 +84,10 @@ print ( h2MCMC(lmm,randomname = 'indexrep') )
 # 
 # devtools::use_data(veggy,overwrite = T) # Save the data for the package
 
+data(veggy)
+
 ```
 This is not run because takes some time, instead I load the data already produced
-
-```{r load veggy }
-data(veggy)
-```
-
 
 ## Plot general trends of green area
 ```{r plot general trends}
@@ -106,11 +102,11 @@ ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_wa
 ```
 
 ## Plot general trends of red area
-```{r plot general trend red area}
+```{r plot general trend red area, warning=F}
 veggy %>% 
 ggplot() + geom_line(aes(y=countred,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
 
-qplot(x=veggy$countred)
+qplot(x=log10(veggy$countred))
 ```
 
 ## Single pot trends as example
@@ -174,7 +170,6 @@ For that several thresholds are tried, the one that separates better the two dis
 be used
 
 
-
 ## Modeling trajectories of germination and growth
 
 ```{r model all trajectories as sigmoidal functions,eval=F}
@@ -204,12 +199,11 @@ be used
 #             # firstgreen=firstgreen(y=countgreen,x=daycount)  # first green pixels is kind of arbitrary
 #             # )
 # 
-
-```
-
-```{r}
 data(veg)
+
 ```
+
+Plotting the sigmoidal curves of 1000 pots 
 
 ```{r}
 
@@ -239,4 +233,3 @@ col=transparent('black')
 }
 
 ```
-
