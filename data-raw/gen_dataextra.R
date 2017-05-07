@@ -47,12 +47,9 @@ devtools::use_data(fournier,overwrite = F)
 
 
 #### Slovak 2014 Plant Cell
-data(acc)
-data("ft1001")
-acc
 
-root<-read.csv('data-raw/Slovak_2014_root.csv',header=T)
+root<-read.table('data-raw/Radka_rsms_ReTL_163_full_days_16traits.tsv',header=T, sep="\t")
 
-merge(acc,by.x='id',root,by.y='ACC_ID') %>% dim()
-merge(ft1001,by.x='id',root,by.y='ACC_ID') %>% dim()
+root %>% filter(-SET) %>% mutate(id= ACC_ID )
 
+devtools::use_data(root,overwrite = F)
