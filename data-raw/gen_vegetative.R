@@ -41,36 +41,15 @@ veggyraw=veggy
 devtools::use_data(veggyraw,overwrite = T)
 
 
-
 ################################################################################
-
-# just get the total number of red points
-red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can explore the effecty of choosin threshold
-head(red)
-qplot(log10(red$redsum))
-table(red$redsum > 1e5)
-fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
-  # cat(x)
-  # cat("->")
-  # cat(
-    summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
-    # )
-  # cat("\n")
-
-})
-
-plot(fvals ~ seq(1e4,1e6,by=1000))
-seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
-
-table(red$redsum > 152000)
-badflags = red %>% filter(redsum > 152000) %>% select(identifier)
-badflags=unique(badflags$identifier)
-length(badflags)
 
 
 ## Get total sum of green pixels to see if something can be inferred
 
-green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(greensum=sum(countgreen)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can explore the effecty of choosin threshold
+green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>%
+  summarize(greensum=sum(countgreen)) %>%
+  mutate(identifier=paste(sep="_",site,qp,pos))
+
 qplot(log10(green$greensum))
 
 badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier)
@@ -79,6 +58,7 @@ badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier)
 
 veg<-
   veggy %>%
+  head(1e4) %>% # for profiling
 
   mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
   filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
@@ -93,24 +73,18 @@ veg<-
   summarize(
             ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
             ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
-            ger.c=fitsigmoid(countgreen,daycount,parameter='c')
+            ger.c=fitsigmoid(countgreen,daycount,parameter='c'),
+            firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
+            lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
+
             )
-            #,
-            # germi=fitgermination(countgreen,daycount),  # Probably the regression one is not so nice.
-            # germir2=r2fitgermination(countgreen,daycount),
-            # germip=pfitgermination(countgreen,daycount),
-            # firstgreen=firstgreen(y=countgreen,x=daycount)  # first green pixels is kind of arbitrary
-            # )
+
+### join with red and green total count
+veg %>% veg %>%
+  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
+  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
 
 
-
-# join with red
-veg %>%
-  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) -> newveg
-head(newveg)
-
-################################################################################
 ### SAVE DATASET
-veg=newveg
 devtools::use_data(veg,overwrite = T)
 

@@ -34,6 +34,22 @@ stargazer(field,type='text')
 
 ```
 
+### How frequent flowering was measured
+
+```{r}
+data("flowering_madrid")
+uniqueflowering<-sort(unique(flowering_madrid$FT.date)  ) - sowingday('madrid') 
+difflowering<-diff(uniqueflowering)
+summary(fn(difflowering))
+
+data("flowering_madrid")
+uniqueflowering<-sort(unique(flowering_tuebingen$FT.date)  ) - sowingday('tuebingen') 
+difflowering<-diff(uniqueflowering)
+summary(fn(difflowering))
+
+
+```
+Flowering was recorded on average ever 1 day, while in Tubingen every 2 days.
 
 
 ## Plot flowering histograms
