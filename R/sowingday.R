@@ -12,3 +12,5 @@ sowingday<-function(site=NULL){
   }
   else{stop("Need to provide a valid argument for *site*")}
 }
+
+startday<-function(location){ ifelse(location=='madrid','2015-11-16' ,'2015-10-22' ) }

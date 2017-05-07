@@ -142,28 +142,25 @@ This plot is a populatino replicate therefore there is no sudden decay, only tha
 
 ```{r count red pictures}
 # just get the total number of red points
-red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) ### Probably better continuous, because a posteriory one can 
+red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) 
 
 ```
 
 ```{r optimal red count threshold}
+# calculate variance across groups by establishing different threshold values
 fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
-  # cat(x)
-  # cat("->")
-  # cat(
     summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
-    # )
-  # cat("\n")
-
 })
 
-plot(fvals ~ seq(1e4,1e6,by=1000), pch=19, ylab='F statistic from ANOVA', xlab='red pixel sum threshold',cex=0.2)
+plot(fvals ~ seq(1e4,1e6,by=1000))
 seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
 
+# generate a bad flag column
 table(red$redsum > 152000)
 badflags = red %>% filter(redsum > 152000) %>% select(identifier)
 badflags=unique(badflags$identifier)
 length(badflags)
+
 
 ```
 By calculating F statistic, we calculate the variance between two groups of pots whose pixels are counted.
@@ -172,34 +169,63 @@ be used
 
 
 ## Modeling trajectories of germination and growth
+Just to have the number of green counts:
+```{r total count of greens}
 
+# get total number of green counts
+green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>%
+  summarize(greensum=sum(countgreen)) %>%
+  mutate(identifier=paste(sep="_",site,qp,pos))
+
+badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier) # just in case it is needed later
+
+green=green%>%select(-identifier)
+
+```
+
+Model all trajectories as sigmoidal functions:
 ```{r model all trajectories as sigmoidal functions,eval=F}
 
-# veg<-
-#   veggy %>%
-# 
-#   mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
-#   filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
-#   # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green
-# 
-# 
-#   mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
-#   mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
-#   filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
-# 
-#   group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
-#   summarize(
-#             ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
-#             ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
-#             ger.c=fitsigmoid(countgreen,daycount,parameter='c')
-#             )
-#             #,
-#             # germi=fitgermination(countgreen,daycount),  # Probably the regression one is not so nice.
-#             # germir2=r2fitgermination(countgreen,daycount),
-#             # germip=pfitgermination(countgreen,daycount),
-#             # firstgreen=firstgreen(y=countgreen,x=daycount)  # first green pixels is kind of arbitrary
-#             # )
-# 
+veg<-
+  veggy %>%
+  # head(1e4) %>% # for profiling
+
+# a couple of filters
+
+  mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
+  filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
+  # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green
+
+  
+# select early positions
+
+  mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
+  mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
+  filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
+
+  group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
+
+# calculate several trajectory informations
+  
+  summarize(
+            ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
+            ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
+            ger.c=fitsigmoid(countgreen,daycount,parameter='c'),
+            firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
+            lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
+
+            )
+
+
+
+## Get the
+# merge with total counts of red and green
+veg=veg %>%
+  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
+  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
+
+devtools::use_data(veg,overwrite = T)
+
 data(veg)
 
 ```
@@ -235,7 +261,83 @@ col=transparent('black')
 
 ```
 
+<<<<<<< HEAD
 ```{r, session info, echo=FALSE}
 sessionInfo()
+
+```
+=======
+
+## Calculate various variance proportions of the modeled trajectories.
+
+```{r calculate}
+
+library(lme4)
+library(MCMCglmm)
+
+veg %>%
+  filter(redsum < 1e4) %>%
+  # filter(greensum >1e4) %>%
+  mutate(
+  a= removetail(ger.a,4),
+  b= removetail(ger.b,4),
+  c= removetail(ger.c,4)
+  ) %>%
+lmer(formula = a ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod 
+lmod %>% randomvariance(.,var =c('id','water','site',"indpop") )
+
+```
+```{r}
+veg %>%
+  filter(redsum < 1e4) %>%
+  # filter(greensum >1e4) %>%
+  mutate(
+  a= removetail(ger.a,4),
+  b= removetail(ger.b,4),
+  c= removetail(ger.c,4)
+  ) %>%
+lmer(formula = b ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod
+lmod %>% randomvariance(.,var =c('id','water','site',"indpop") )
+
+```
+
+```{r}
+
+veg %>%
+  filter(redsum < 1e4) %>%
+  # filter(greensum >1e4) %>%
+  mutate(
+  a= removetail(ger.a,4),
+  b= removetail(ger.b,4),
+  c= removetail(ger.c,4)
+  ) %>%
+lmer(formula = c ~ (1|id) + (1|water)+ (1|site) + (1|indpop)  ) -> lmod 
+lmod %>% randomvariance(.,var =c('id','water','site',"indpop") )
+
+```
+
+Not very satisfactory. Most of the effect is about individual versus population replicates
+
+### Calculate variance in a per-experiment treatment basis 
+
+```{r}
+veg %>%
+  filter(redsum < 1e4) %>%
+  # filter(greensum >1e4) %>%
+  mutate(
+  a= removetail(ger.a,4),
+  b= removetail(ger.b,4),
+  c= removetail(ger.c,4),
+  l=removetail(lin.0)
+  ) %>%
+  filter(water=='h', indpop=='i', site=='madrid') %>%
+# lmer(formula = b ~ (1|id) ) -> lmod 
+# lmer(formula = a ~ (1|id) ) -> lmod 
+# lmer(formula = c ~ (1|id) ) -> lmod 
+# lmer(formula = greensum ~ (1|id) ) -> lmod
+# lmer(formula = redsum ~ (1|id) ) -> lmod
+lmer(formula = l ~ (1|id) ) -> lmod
+lmod %>% randomvariance(.,var =c('id') )
+
 
 ```
