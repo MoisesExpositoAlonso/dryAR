@@ -80,9 +80,10 @@ veg<-
             )
 
 ### join with red and green total count
-veg %>% veg %>%
+veg %>%
   full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
-  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
+  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
+  select(-indentifier.y, -identifier.x)
 
 
 ### SAVE DATASET

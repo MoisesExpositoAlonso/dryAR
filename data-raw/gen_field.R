@@ -12,13 +12,16 @@ load_all(".")
 data(acc)
 data(flowering)
 data(harvest)
+data(veg)
 
 dim(flowering)
 dim(harvest)
 dim(genoreps)
+dim(veg)
 
 head(flowering)
 head(harvest)
+head(veg)
 
 #### master dataset ####
 
@@ -28,7 +31,8 @@ field <- acc %>%
             merge.data.frame(
               .,flowering,by="id" , all.y=T # because I want to keep all the replicates from field data
             ) %>%
-            merge(x=.,y= harvest, by= dupcol, all.x=T) # because want to keep also flowering that did not produce fruit
+            merge(x=.,y= harvest, by= dupcol, all.x=T) %>% # because want to keep also flowering that did not produce fruit
+            merge(., veg, by=dupcol)
 
 
 dim(field)
