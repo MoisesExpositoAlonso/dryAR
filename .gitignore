@@ -6,3 +6,9 @@
 trash
 *trash*
 *.DS_Store
+analyses/*.png
+analyses/*/*.png
+analyses/*/*/*.png
+*.dll
+*.so
+*.o

@@ -16,7 +16,7 @@ thefile=paste0('data-raw/',substr(location,1,3),'countharvest.csv')
 
 har<-read.csv(thefile,header=T )
 har$site=location
-har=rename(har,qp=tray)
+har=dplyr::rename(har,qp=tray)
 return(har)
 }
 
