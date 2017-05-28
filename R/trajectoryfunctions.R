@@ -1,9 +1,9 @@
-removetail<-function(x,positions=6){
+removetail<-function(x,positions=3){
   fn(substrRight( x, lastpos = 8,giveright = F))
 
 }
 
-getsigmoid<-function(a,b,c){
+getsigmoid<-function(a=100000,b=0.5,c=25){
 a=as.numeric(a)
 b=as.numeric(b)
 c=as.numeric(c)
@@ -14,19 +14,20 @@ a/(1 + exp(-b * (x-c)))
 }
 
 fitsigmoid<-function(y,x,parameter=NULL){
-
+# y=y+10 # it is +1 because 0 give errors of convergence
 mydata=data.frame(y,x) %>% arrange(x)
 maxpoint=which(mydata$y == max(mydata$y))
 mydata=mydata[1:maxpoint,]
 
+
 tryCatch({
 
-      fitmodel <- nls((y+1)~a/(1 + exp(-b * (x-c))), start=list(a=max(y+1),b=.5,c=25)) # it is +1 because 0 give errors of convergence
+      fitmodel <- nls(data = mydata,(y)~a/(1 + exp(-b * (x-c))), start=list(a=max(y),b=0.25,c=25))
       res=summary(fitmodel)$coefficients
 
-      toreport=list(a=paste0(res["a",'Estimate'], starpvalue(res["a",4])),
-                    b=paste0(res["b",'Estimate'], starpvalue(res["b",4])),
-                    c=paste0(res["c",'Estimate'], starpvalue(res["c",4]))
+      toreport=list(a=paste0(res["a",'Estimate'], starpvalue(res["a",4],samelength=T)),
+                    b=paste0(res["b",'Estimate'], starpvalue(res["b",4],samelength=T)),
+                    c=paste0(res["c",'Estimate'], starpvalue(res["c",4],samelength=T))
                     )
       if(is.null(parameter)){return(toreport)}
       else if(parameter%in%c('a','b','c')){ return(as.character(toreport[parameter])) }
@@ -59,7 +60,7 @@ tryCatch({
       else if(parameter=='significance'){
         return(
         paste0(toreport, "_",
-        starpvalue(summary(mod)$coefficients[2,4]),
+        starpvalue(summary(mod)$coefficients[2,4],samelength=T),
         round(summary(mod)$r.squared,digits = 1) )
         )
       }else{
@@ -74,7 +75,6 @@ tryCatch({
     )
 }
 
-
 firstgreen<-function(y,x){
   mydata=data.frame(x,y) %>% arrange(x)
   # theday<-which(mydata$y > 800) # THRESHOLD ARBITRARILY DECIDED, BUT INFORMED BECAUSE USUALLY WHEN CLEAR COTILEDONS ARE THERE THERE ARE >1000 PIXELS
@@ -87,8 +87,14 @@ firstgreen<-function(y,x){
   }
 }
 
-#
-#
+
+
+
+
+
+
+######################################################################
+
 # fitgermination<-function(y,x){
 #   mydata=data.frame(x,y) %>% filter(y!=0)
 #   if(nrow(mydata)<5){

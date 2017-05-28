@@ -1,16 +1,15 @@
 ---
-title: Growth trajectories exploration, inference of germination and detection of
+title: Growth trajectories exploration, variance proportion
   missing pots
 author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
-  '# html_notebook': default
   html_document: default
-  pdf_document: default
+  #pdf_document: default
+  #html_notebook: default
 ---
 
-
-## Packages set up
+## Packages set up and loading data
 
 ```{r setup, include=F}
 library(knitr)
@@ -19,222 +18,20 @@ library(ggplot2);library(cowplot)
 library(devtools)
 library(RColorBrewer)
 # library(moiR)
-load_all("~/mexposito/moiR/")
+load_all("~/moiR")
 load_all(".")
 
-```
-
-## load data sets
-
-```{r load datasets}
-#data(field)
-#dim(field)
-# head(field)
-data(veggyraw)
 data(veggy)
-
-```
-
-## This dataset is a set of pixel count measurements to characterize green and red area per pot.
-
-![Example image of germinating plants and red flags of those unsuccessful pots](../P1030542.JPG)
-
-## Verify replicability
-```{r find duplicated pots}
-## check duplicated image pots
-veggyraw=mutate(veggyraw, indexrep=paste(site,qp,pos,day,sep='_'))
-
-## Number of pots used for replicability analysis
-dim(veggyraw[duplicated(veggyraw$indexrep),]) # There are 790 in total from both experiments
-```
-
-```{r run replicability}
-## Run the test for replicability
-library(MCMCglmm)
-lmm=MCMCglmm(data=veggyraw[duplicated(veggyraw$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
-print ( h2MCMC(lmm,randomname = 'indexrep') )
-
-```
-
-
-## Clean data by removing duplicate records from duplicated images
-```{r clean data by averaging duplicated pots,eval=FALSE}
-## Produce cleaner data than veggyraw
-## Since there are duplicates but the replicability is >99%, generate average of
-## counts for two pots of the same identity (can be due to two pictures per
-## tray/day). Necessary for merge with master dataset later
-
-# veggy %>% mutate( indexrep=paste(site,qp,pos,day,sep='_')) %>%
-#           group_by(indexrep) %>% summarise(site=unique(site),
-#                                                qp=unique(qp),
-#                                                pos=unique(pos),
-#                                                trayid=unique(trayid),
-#                                                rep=unique(rep),
-#                                                indpop=unique(indpop),
-#                                                water=unique(water),
-#                                                id=unique(id),
-#                                                day=unique(day),
-#                                                countgreen=mean(countgreen),
-#                                                countred=mean(countred)
-#                                            ) ->veggy
-# veggy %>% head()
-# veggy %>% tail()
-# dim(veggy)
-# 
-# veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) %>% select(-indexrep)
-# 
-# devtools::use_data(veggy,overwrite = T) # Save the data for the package
-
-data(veggy)
-
-```
-This is not run because takes some time, instead I load the data already produced
-
-## Plot general trends of green area
-```{r plot general trends}
-veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_"))  %>% mutate(site_water=paste(site,water,sep="_"))
-
-veggy %>% filter(indpop=='i') %>%
-ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
-
-veggy %>% filter(indpop=='p') %>%
-ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
-
-```
-
-## Plot general trends of red area
-```{r plot general trend red area, warning=F}
-veggy %>% 
-ggplot() + geom_line(aes(y=countred,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
-
-qplot(x=log10(veggy$countred))
-```
-
-## Single pot trends as example
-
-```{r plot fail pot}
-veggy %>% filter(trayid == "27_i_l" ,pos=="a3", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-```
-This is an example of a fail pot, where green pixels are low all the time but a red flag was put to identify them
-
-```{r plot individual pot}
-
-veggy %>% filter(trayid == "27_i_l" ,pos=="a4", site=="madrid") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-```
-
-The decrease in January of some is due to the thinning of plants for
-
-```{r plot population pot}
-veggy %>% filter(trayid == "9_p_l" ,pos=="e7", site=="tuebingen") %>%
-  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
-  geom_point(aes(y=countred,x=day),color="red")
-
-```
-This plot is a populatino replicate therefore there is no sudden decay, only that due to mortality at the end of the experiment
-
-## Detecting unsuccessful pots
-
-```{r count red pictures}
-# just get the total number of red points
-red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred)) %>% mutate(identifier=paste(sep="_",site,qp,pos)) 
-
-```
-
-```{r optimal red count threshold}
-# calculate variance across groups by establishing different threshold values
-fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
-    summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
-})
-
-plot(fvals ~ seq(1e4,1e6,by=1000))
-seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
-
-# generate a bad flag column
-table(red$redsum > 152000)
-badflags = red %>% filter(redsum > 152000) %>% select(identifier)
-badflags=unique(badflags$identifier)
-length(badflags)
-
-
-```
-By calculating F statistic, we calculate the variance between two groups of pots whose pixels are counted.
-For that several thresholds are tried, the one that separates better the two distribution is the one that will
-be used
-
-
-## Modeling trajectories of germination and growth
-Just to have the number of green counts:
-```{r total count of greens}
-
-# get total number of green counts
-green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>%
-  summarize(greensum=sum(countgreen)) %>%
-  mutate(identifier=paste(sep="_",site,qp,pos))
-
-badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier) # just in case it is needed later
-
-green=green%>%select(-identifier)
-
-```
-
-Model all trajectories as sigmoidal functions:
-```{r model all trajectories as sigmoidal functions,eval=F}
-
-veg<-
-  veggy %>%
-  # head(1e4) %>% # for profiling
-
-# a couple of filters
-
-  mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable
-  filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers
-  # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green
-
-  
-# select early positions
-
-  mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
-  mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
-  filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
-
-  group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
-
-# calculate several trajectory informations
-  
-  summarize(
-            ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
-            ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
-            ger.c=fitsigmoid(countgreen,daycount,parameter='c'),
-            firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
-            lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
-
-            )
-
-
-
-## Get the
-# merge with total counts of red and green
-veg=veg %>%
-  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
-  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
-
-devtools::use_data(veg,overwrite = T)
-
 data(veg)
 
+
 ```
 
-Plotting the sigmoidal curves of 1000 pots 
+##  Plotting the sigmoidal curves of 1000 pots 
 
 ```{r}
 
-vegh<-head(veg,1000) %>% filter(ger.a != "NA")
+vegh<- veg %>% dplyr::filter(ger.a != "NA") %>% dplyr::sample_n(size = 1000) 
 
 plot( ylab='Predicted # pixels',xlab='Days of experiment',
   ylim=c(0,50000),
@@ -260,13 +57,6 @@ col=transparent('black')
 }
 
 ```
-
-<<<<<<< HEAD
-```{r, session info, echo=FALSE}
-sessionInfo()
-
-```
-=======
 
 ## Calculate various variance proportions of the modeled trajectories.
 
@@ -339,5 +129,12 @@ veg %>%
 lmer(formula = l ~ (1|id) ) -> lmod
 lmod %>% randomvariance(.,var =c('id') )
 
+
+```
+
+
+
+```{r, session info, echo=FALSE}
+sessionInfo()
 
 ```

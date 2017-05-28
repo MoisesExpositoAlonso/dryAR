@@ -221,3 +221,62 @@ f1
 We see that Tuebingen again has later flowering times  than Madrid. This also helps to visualize that the blocks of lower watering had 
 
 
+### load data sets
+
+```{r field }
+data(field)
+dim(field)
+names(field)
+stargazer(field,type='text')
+
+```
+
+
+
+## Fixed Model
+
+```{r}
+library(stargazer)
+library(MCMCglmm)
+
+names(field)
+
+lmod<-lm(data=field,
+  FT.dif ~  latitude
+   )
+lmod2<-lm(data=field,
+  FT.dif ~  latitude + longitude^2
+   )
+
+
+stargazer(lmod,lmod2,type='text')
+
+```
+
+
+## Mixed Model
+
+
+```{r}
+library(lme4)
+library(lmerTest)
+library(stargazer)
+library(xtable)
+data(cake)
+
+# Get the table first.
+summary(M1 <- lme4::lmer(angle ~ temp + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+summary(M2 <- lme4::lmer(angle ~ factor(temperature) + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+
+stargazer(M1, M2, style="ajps", title="An Illustrative Model Using Cake Data", dep.var.labels.include = FALSE,
+      covariate.labels=c( "Temperature (Continuous)", "Temperature (Factor $<$ 185)", "Temperature (Factor $<$ 195)", "Temperature (Factor $<$ 205)", "Temperature (Factor $<$ 215)", "Temperature (Factor $<$ 225)")
+)
+
+# now for lmerTest
+summary(M1a <- lmer(angle ~ temp + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+summary(M2a <- lmer(angle ~ factor(temperature) + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+anovadf <- data.frame(anova(M1a,M2a))
+xtable(anovadf)
+
+```
+
