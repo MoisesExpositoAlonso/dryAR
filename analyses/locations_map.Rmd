@@ -1,0 +1,50 @@
+---
+title: Locations map
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  #pdf_document: default
+  #html_notebook: default
+---
+
+
+## Packages set up
+
+```{r setup, include=F}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+# library(moiR)
+load_all("~/mexposito/moiR/")
+load_all(".")
+
+```
+
+
+## Get data from GBIF and field experiment
+```{r, retrieve data}
+# gbif<-get_gbif()
+data("gbif")
+data("acc")
+data('g1001')
+
+```
+
+
+## Plot
+```{r, plot overlap map}
+p <- createmap(mapcol =  "black",countrycol = transparent('black') )
+p
+
+p <- field::createmap(mapcol =  "black")
+z <- p+geom_point(data=gbif,aes(x=lon,y=lat),col=c("grey"),size=c(0.2),alpha=0.8 ) + theme(legend.position="none")+
+    geom_point(data=g1001,aes(x=longitude,y=latitude),col="blue",size=c(0.5),alpha=1 ) + theme(legend.position="none")+
+    geom_point(data=acc,aes(x=longitude,y=latitude),col="red",size=c(0.5),alpha=1 ) + theme(legend.position="none")
+z
+ggsave(z,filename = "../figs/Figure_gbif_field_occurrence_map.pdf" ,useDingbats=FALSE,width =12 ,height=8)
+
+```
+

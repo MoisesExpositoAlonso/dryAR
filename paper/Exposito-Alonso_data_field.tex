@@ -1,0 +1,466 @@
+\documentclass[12pt,]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={A climate selection experiment with 517 Arabidopsis thaliana ecotypes},
+            pdfauthor={Moises Exposito-Alonso1 , Rocío Gómez Rodríguez2, Cristina Barragán1, Giovanna Capovilla1, Eunyoung Chae1, Jane Devos1, Ezgi Dogan1, Claudia Friedemann1, Caspar Gross1, Patricia Lang1, Derek Lundberg1, Belén Méndez-Vigo3, Vera Middendorf1, Jorge Kageyama1, Talia Karasov1, Sonja Kersten1, Sebastian Petersen1, Leily Rabbani1, Julian Regalado1, Beth Rowan1, Danelle Seymour1, Efthymia Symeonidi1, Rebecca Schwab1, Diep Tran1, Kavita Venkataramani1, Anna-Lena Van de Weyer1, Ronja Wedegärtne1, Frank Weiss1, Rui Wu1, Wanyan Xi1, Maricris Zaidem1, Wangsheng Zhu1, Fernando García Arenal2, Carlos Alonso Blanco3, Xavier Picó4, Hernán A. Burbano1, Oliver Bossdorf5, Detlef Weigel1.  Max Planck Institute for Developmental Biology, Tübingen, Germany  Centre for Plant Biotechnology and Genomics, Technical University of Madrid, Pozuelo de Alarcón, Spain  National Centre of Biotechnology, Cantoblanco, Madrid, Spain  Doñana Biological Station, Sevilla, Spain  University of Tübingen, Tübingen, Germany  correspondence to moisesexpositoalonso@gmail.com},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{A climate selection experiment with 517 \emph{Arabidopsis thaliana}
+ecotypes}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{\newline \normalfont Moises
+Exposito-Alonso\textsuperscript{1}\textsuperscript{*} , Rocío Gómez
+Rodríguez\textsuperscript{2}, Cristina Barragán\textsuperscript{1},
+Giovanna Capovilla\textsuperscript{1}, Eunyoung Chae\textsuperscript{1},
+Jane Devos\textsuperscript{1}, Ezgi Dogan\textsuperscript{1}, Claudia
+Friedemann\textsuperscript{1}, Caspar Gross\textsuperscript{1}, Patricia
+Lang\textsuperscript{1}, Derek Lundberg\textsuperscript{1}, Belén
+Méndez-Vigo\textsuperscript{3}, Vera Middendorf\textsuperscript{1},
+Jorge Kageyama\textsuperscript{1}, Talia Karasov\textsuperscript{1},
+Sonja Kersten\textsuperscript{1}, Sebastian Petersen\textsuperscript{1},
+Leily Rabbani\textsuperscript{1}, Julian Regalado\textsuperscript{1},
+Beth Rowan\textsuperscript{1}, Danelle Seymour\textsuperscript{1},
+Efthymia Symeonidi\textsuperscript{1}, Rebecca
+Schwab\textsuperscript{1}, Diep Tran\textsuperscript{1}, Kavita
+Venkataramani\textsuperscript{1}, Anna-Lena Van de
+Weyer\textsuperscript{1}, Ronja Wedegärtne\textsuperscript{1}, Frank
+Weiss\textsuperscript{1}, Rui Wu\textsuperscript{1}, Wanyan
+Xi\textsuperscript{1}, Maricris Zaidem\textsuperscript{1}, Wangsheng
+Zhu\textsuperscript{1}, Fernando García Arenal\textsuperscript{2},
+Carlos Alonso Blanco\textsuperscript{3}, Xavier Picó\textsuperscript{4},
+Hernán A. Burbano\textsuperscript{1}, Oliver
+Bossdorf\textsuperscript{5}, Detlef Weigel\textsuperscript{1}.
+\newline \newline \textsuperscript{1} Max Planck Institute for
+Developmental Biology, Tübingen, Germany \newline \textsuperscript{2}
+Centre for Plant Biotechnology and Genomics, Technical University of
+Madrid, Pozuelo de Alarcón, Spain \newline \textsuperscript{3} National
+Centre of Biotechnology, Cantoblanco, Madrid, Spain
+\newline \textsuperscript{4} Doñana Biological Station, Sevilla, Spain
+\newline \textsuperscript{5} University of Tübingen, Tübingen, Germany
+\newline \textsuperscript{*} correspondence to
+\href{mailto:moisesexpositoalonso@gmail.com}{\nolinkurl{moisesexpositoalonso@gmail.com}}
+\newline \newline \newline \newline \newline \newline}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \date{}
+  \predate{}\postdate{}
+
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+To quantify phenotypic and genetic natural selection, the gold standart
+are evolution experiments. However, studies that include whole-genome
+data are still unabundant. Evolution experiments can be longitudinal, as
+laboratory experiments continued over many generations, or
+cross-sectional, as field experiments replicated over many geographic
+locations or environments. For long-lived organisms (generation time
+over a 1 year) such as Arabidopsis thaliana, only cross-sectional
+studies are feasible. Here we present an experiment carried out in a
+Mediterranean and a Central European field station and in which we
+additionally manipulated rainfall. We used 517 whole-genome sequenced A.
+thaliana lines from globally distributed areas. Generally, the
+experiment suggests that x and x are. We encapsulate the raw data and
+cleaning and processing code in an R package for easy data sharing.
+Finally, we complement the dataset with other previously published data
+of flowering time, root morphology, growth traits, and fitness in four
+other field stations. We believe this could be a useful resource for the
+evolutionary biology and the Arabidopsis communities.
+\end{abstract}
+
+\section{Field experiment design}\label{field-experiment-design}
+
+\subsection{The ecotypes from the 1001 Genomes
+Projects}\label{the-ecotypes-from-the-1001-genomes-projects}
+
+The 1001 project (1001 Genomes Consortium (2016)) comprises 1135
+accession lines (or ecotypes) sequenced (Fig. \ref{fig:ecotypes}). Here
+are the details of the protocol used to select the most informative,
+less biased sample of the lines within the 1001 genomes project in order
+to prioritize phenotypic efforts. Filtering consisted in several
+approaches: (1) First we aimed to remove those accessions with the
+lowest genome quality. Among 1135, we discarded those with \textless{}
+10X genome coverage and \textless{} 90\% congruence of SNPs called from
+Max Planck Institute and Gregor Mendel Institute pipelines (1001 Genomes
+Consortium 2016). The remaining number were 959 accessions. (2)
+Parallely, we filtered almost-identical individuals. Using Plink we
+computed identity by state genome-wide across the 1135 accessions. For
+those pairs of accessions with \textless{} 0.01 differences per SNP, we
+randomly picked one. This resulted in 889 accessions. The merge between
+(1) and (2) criteria was 762. (3) Finally, we reduced geographic
+ascertainment. Sampling for the 1001g project was not performed in
+neither a random nor regular structured scheme. Some laboratories
+provided several lines per locations whereas others provided lines that
+were at least several hundred kilometres apart. Employing latitude and
+longitude degrees, we computed euclidean distances across the 11135
+accessions and identified pairs that were \textless{} 0.0001 distance,
+that is accessions from the same population ( \textless{}\textless{} 100
+meters), and randomly picked one. This resulted in 682 accessions. We
+merged the resulting lists of accessions after the three quality
+filtering procedures and obtained a final set of 523 accessions. We
+reproduced accessions in controlled conditions to generate enouch seeds
+for the field experiment. A total of 517 accessions produced enough
+seeds and were used in the experiment (Fig. \ref{fig:ecotypes}).
+
+\subsection{Field settings and
+watering}\label{field-settings-and-watering}
+
+We build two 30m x 6m tunnels with equivalent PVC plastic foils to fully
+exclude rainfall in Madrid and in Tübingen (Fig 2). The foil tunnels
+were different from a greenhouse in that they were completely opened in
+two sides. Then temperature varied as much as any outdoor experiment
+{[}include environmental information{]}. In each location, we supplied
+artificial watering at two contrasting regimes: abundant watering and
+reduced watering. Inside each tunnel, we created an approximate 10\%
+slope and setup four flooding tables in the ground (1m x 25m). The lower
+elevation side of the flooding table was used to drain the water
+provided from the other, higher elevation, side of the table (Fig 2).
+
+We used trays of 8x5 cells (5.5 x 5.5 x 10cm size). One genotype was
+planted per cell. We grew a total of 12 replicates per genotype per
+treatment. Five replicates were planted at a density of 30 counted seeds
+per cell and were let grow without disturbance (``population
+replicate''). Seven were planted at low density (ca. 10 seeds) and once
+germinated one seedling was selected at random (``individual
+replicate'').
+
+\subsection{Blocking and
+randomization}\label{blocking-and-randomization}
+
+We used an incomplete block randomized designed (Fig. \ref{fig:blocks}).
+A total of 16 blocks were established. For each watering treatment there
+were two blocks, which were intercalated. Within each flooding table
+there were four blocks, two of individual replicates and two of
+population replicates; also intercalated. Within each watering x
+replicate type x replicate number combination block, genotypes were
+randomly distributed in the trays (Fig. \ref{fig:trays}). The design was
+identical in Madrid and Tübingen.
+
+\subsection{Removal of errors during sowing and possible
+contaminations}\label{removal-of-errors-during-sowing-and-possible-contaminations}
+
+In a large field experiment enterprise errors can occur, but these
+errors can be reduced by reducing the ``degrees of freedom'' of the
+experimenters. We tried to accomplish this by preparing and curating all
+eppendorf with the seeds to be sown in cardboard boxes with the same
+cells as in the target quick pots and arranged in their corresponding
+(randomised) locations. Then, during sowing each experimenter took a box
+at random and went to the corresponding tray in the field previously
+arranged (Fig. S2). This reduced the possible errors, and those
+positions were detected, were removed from the analyses.
+
+Because we were aware that contamination of neighboring pots was a risk.
+We were extremely careful during sowing. We pick a day with no wind and
+we throw the seeds from 1-2 cm height. During the vegetative grow we
+identified germination that looked like neighbour contamination and
+remove those. Although we lost a number of plants, the power of the
+design was the replication, thus we discarded everything that looked
+suspicious. During flowering recording (see section) we observed
+homogeneity of flowering as a trait that could further indicate
+contamination
+
+\section{Recording of flowering time}\label{recording-of-flowering-time}
+
+We visited the field experiment on average every 1 or 2 days and
+recorded what pots had flowered. To keep track from previous visits, we
+sticked blue pins in the pots were flowering was recorded. This removed
+a source of human error. To calculate flowering time, to the flowering
+data we substracted the date of sowing.
+
+\section{Image production and
+analysis}\label{image-production-and-analysis}
+
+\subsection{Vegetative rosettes}\label{vegetative-rosettes}
+
+Top-view images were taken every x days with a Panasonic DMC-TZ61
+digital camera and a customized closed black box (Fig. \ref{fig:trays})
+at a distance of 40 cm from the tray. Photos were taken on average every
+x days from the sowing date until flowering plants impede the
+acquisition -- a total of 20 timepoints. Images for analyses are
+available at \url{http://datadryad.org} and the software to process and
+analyse them is available at
+\url{http://github.com/MoisesExpositoAlonso/hippo}. Segmentation was
+done similarly as Exposito-Alonso \emph{et al.} (2017). We began by
+transforming images from RGB to HSV chanels. We applied a hard
+segmentation threshold of HSV values as (H = 30-65, S=65-255, V=20-220).
+This was followed by several iterations of morphology transformations
+based on erosion and dilation. Then, for the resulting binary image we
+counted the number of green pixels. During field monitoring we noticed
+that some pots did not germinate sucessfuly, which can be due to lack of
+seeds or improper soil compaction. In those cases, we left a red mark in
+those pots which we can detect in the same way as the existence of green
+pixels (with threshold H=150-179, S=100-255, V=100-255). An example of
+transformed images is in Figure \ref{fig:segmentation}.
+
+The resulting data consists in green and red pixel counts per pots (Fig.
+\ref(fig:growth)). We took the advantage that a tray was photographed
+the same day several times to verify the replicability of our pipeline.
+In total there were 790 of such observations distributed in 11 timepoint
+and different trays. Using a genearlized linear mixed model with Poisson
+distribution (Bolker \emph{et al.} (2009)), we calculated that the
+proportion of pixel count variance explained by the pot identity was
+\(Var_{green} / Var_{tot} = 99.6 \%\). After that verification, wethe
+average pixel between the several images was calculated for those pots,
+ending up with a dataset of the size
+
+In order to remove from the analyses those pots that did not germinater
+pot. As expected, the distribution of pixels is bimodal (Fig.
+\ref{fig:red}). Therefore, the exclusion of pots is straightforward: a
+pot is excluded if at any photographed time it was in the second
+distribution (\textgreater{}1000 pixels). This filtering left a dataset
+of 30947 pixel observations (from an original of 474100).
+
+Then we aimed to quantify germination timing. We did this by modeling
+the growth trajectory of green pixels per pot as a sigmoidal curve
+fitting the next function:
+
+\[y = \frac{a}{1 + e^{-(b  \times  (x-c))} } \] , starting in the sowing
+day and until the observed peak of green pixels per pot. The three
+parameters \(a\), \(b\), and \(c\), were stored together with several
+less complex indicators of growth: an analogous linear model, the day
+that over 1000 green pixels were observed (\textasciitilde{}
+1cm\textsuperscript{2} as pixels resolution is \textasciitilde{}xyz),
+and a total count of green and red pixels through all timepoints. This
+data columns comprise 24747 with non-missing data.
+
+{[}still need to figure out problem here{]}
+
+\subsection{Reproductive plants}\label{reproductive-plants}
+
+We used Otsu's adaptive thresholding algorithm from OpenCV module to
+convert three channel images into a white/black segmented picture. Then
+we utilized the thin function from Mahotas module to erodes the binary
+picture to a single-pixel path --- called skeletonisation. Finally, to
+detect the branching points we used
+
+\subsection{Data visualization}\label{data-visualization}
+
+\section{Additional datasets}\label{additional-datasets}
+
+\subsection{Vasseur et al. 2017}\label{vasseur-et-al.-2017}
+
+\subsection{Fournier-Level et al.
+2011}\label{fournier-level-et-al.-2011}
+
+\subsection{Slovak et al. 2014}\label{slovak-et-al.-2014}
+
+\subsection{1001 Genomes Consortium 2016}\label{genomes-consortium-2016}
+
+\section{Author contributions}\label{author-contributions}
+
+The detailed list of contributed tasks of each authors
+
+\pagebreak
+
+\section{Tables}\label{tables}
+
+\section{Figures}\label{figures}
+
+\begin{figure}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_gbif_field_occurrence_map.pdf}}
+    \caption{ Locations of \textit{Arabidopsis thaliana} accessions used in this experiments (red), accessions included in the 1001 Genomes Project (blue), and all observations of the species in gbif.org}
+    \label{fig:ecotypes}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/IMG_20151113_154250988.jpg}
+        \caption{} \label{fig:aereal}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/IMG_20151121_162359474_HDR.jpg}
+        \caption{} \label{fig:inside}
+    \end{subfigure}
+     \caption{Aereal picture of foil tunnel setting in Madrid (\subref{fig:aereal}) and photo inside the foil tunnel in Tübingen (\subref{fig:inside}).}
+\end{figure}
+
+\begin{figure}
+ \centerline{\includegraphics[width=5in]{../figs/Figure_field_spatial_distribution.pdf}}
+    \caption{ Design and spatial distribution of blocks and replicates}
+    \label{fig:blocks}
+\end{figure}
+
+\begin{figure}
+  \centering
+      \begin{subfigure}[b]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/IMG_20151123_151811961_HDR.jpg}
+        \caption{} \label{fig:photobox}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/Figure_example_trays.pdf}
+        \caption{} \label{fig:exampletrays}
+    \end{subfigure}
+    \caption{ Customized black box for image acquisition (\subref{fig:photobox}) and example trays  (\subref{fig:exampletrays})  of the four watering x replicate type combinations: low watering and population replicate (upper-left), high watering and population replicate (upper-right), low watering and individual replicate (lower-left), high watering and individual replicate (lower-right). }
+    \label{fig:trays}
+\end{figure}
+
+\begin{figure}
+ \centerline{\includegraphics[width=5in]{../figs/Figure_green_trajectory.pdf}}
+    \caption{ Trajectories per pot of number of green pixels measured from image analysis}
+    \label{fig:growth}
+\end{figure}
+
+\begin{figure}
+ \centerline{\includegraphics[width=3in]{../figs/Figure_redcount_histogram.pdf}}
+    \caption{ Distribution of total sum of red pixels}
+    \label{fig:red}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1030542.JPG}
+        \caption{} \label{fig:raw}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1030542.JPG_seggreen.jpeg}
+        \caption{} \label{fig:greenexample}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1030542.JPG_seggreenred.jpeg}
+        \caption{} \label{fig:redexample}
+    \end{subfigure}
+\caption{Example segmentation results from raw image (\subref{fig:raw}) to green (\subref{fig:greenexample})  and red (\subref{fig:redexample}) pixels only.}
+\label{fig:segmentation}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1060902.JPG}
+        \caption{} \label{fig:raw}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1060902.JPG_proc.jpeg}
+        \caption{} \label{fig:segmented}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1060902.JPG_proc_sk.jpeg}
+        \caption{} \label{fig:sk}
+    \end{subfigure}
+        \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1060902.JPG_proc_ends.jpeg}
+        \caption{} \label{fig:ep}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../figs/P1060902.JPG_proc_branches.jpeg}
+        \caption{} \label{fig:bp}
+    \end{subfigure}
+\caption{Example sakeletonisation results from raw image (\subref{fig:raw}) to segmented (\subref{fig:segmented}), skeletonised (\subref{fig:sk}), the detected branches (\subref{fig:bp}) and endpoints (\subref{fig:ep}).}
+\label{fig:skeletonisation}
+\end{figure}
+
+\pagebreak
+
+\section{References}\label{references}
+
+\bibliography{references}
+
+\hypertarget{refs}{}
+\hypertarget{ref-1001_Genomes_Consortium2016-nw}{}
+1001 Genomes Consortium. (2016). 1,135 genomes reveal the global pattern
+of polymorphism in arabidopsis thaliana. \emph{Cell}, \textbf{166},
+481--491. Retrieved from
+\url{http://dx.doi.org/10.1016/j.cell.2016.05.063}
+
+\hypertarget{ref-Bolker2009-by}{}
+Bolker, B.M., Brooks, M.E., Clark, C.J., Geange, S.W., Poulsen, J.R.,
+Stevens, M.H.H. \& White, J.-S.S. (2009). Generalized linear mixed
+models: A practical guide for ecology and evolution. \emph{Trends Ecol.
+Evol.}, \textbf{24}, 127--135. Retrieved from
+\url{http://dx.doi.org/10.1016/j.tree.2008.10.008}
+
+\hypertarget{ref-Exposito-Alonso2017-ob}{}
+Exposito-Alonso, M., Vasseur, F., Ding, W., Wang, G., Burbano, H.A.A. \&
+Weigel, D. (2017). Genomic basis and evolutionary potential for extreme
+drought adaptation in arabidopsis thaliana. \emph{bioRxiv}, 118067.
+Retrieved from \url{http://dx.doi.org/10.1101/118067}
+
+
+\end{document}
