@@ -19,7 +19,8 @@ library(devtools)
 library(RColorBrewer)
 library(stargazer)
 library(moiR)
-source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+#source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+#source("droughtfunctions.R")
 load_all(".") # field
 
 ```
