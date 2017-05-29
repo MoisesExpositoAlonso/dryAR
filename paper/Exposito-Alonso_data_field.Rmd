@@ -27,7 +27,7 @@ author: \newline \normalfont
   Diep Tran^1^,
   Kavita Venkataramani^1^,
   Anna-Lena Van de Weyer^1^,
-  Ronja Wedegärtne^1^,
+  Ronja Wedegärtner^1^,
   Frank Weiss^1^,
   Rui Wu^1^,
   Wanyan Xi^1^,
@@ -40,6 +40,7 @@ author: \newline \normalfont
   Oliver Bossdorf^5^,
   Detlef Weigel^1^.
   \newline 
+  \small
   \newline \textsuperscript{1} Max Planck Institute for Developmental Biology, Tübingen, Germany    
   \newline \textsuperscript{2} Centre for Plant Biotechnology and Genomics, Technical University of Madrid, Pozuelo de Alarcón, Spain 
   \newline \textsuperscript{3} National Centre of Biotechnology, Cantoblanco, Madrid, Spain  
@@ -59,7 +60,7 @@ header-includes:
 fontsize: 12pt
 geometry: margin=1.5in
 
-abstract: To quantify phenotypic and genetic natural selection, the gold standart are evolution experiments. However, studies that include whole-genome data are still unabundant. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For long-lived organisms (generation time over a 1 year) such as Arabidopsis thaliana, only cross-sectional studies are feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station and in which we additionally manipulated rainfall. We used 517 whole-genome sequenced A. thaliana lines from globally distributed areas. Generally, the experiment suggests that x and x are. We encapsulate the raw data and cleaning and processing code in an R package for easy data sharing. Finally, we complement the dataset with other previously published data of flowering time, root morphology, growth traits, and fitness in four other field stations. We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
+abstract: To quantify phenotypic and genetic natural selection, the gold standart are evolution experiments. However, studies that include whole-genome data are still unabundant. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For long-lived organisms (generation time over a 1 year) such as Arabidopsis thaliana, only cross-sectional studies are feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station and in which we additionally manipulated rainfall. We used 517 whole-genome sequenced A. thaliana lines from globally distributed areas. Generally, the experiment suggests that x and x are. We encapsulate the raw data and processing code in an R package available at \url{http://github.com/MoisesExpositoAlonso}. Finally, we complement the dataset with other previously published data of flowering time, root morphology, growth traits, and fitness in four other field stations. We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
 
 Keywords: Arabidopsis thaliana, natural selection, field experiments, climate change
 
@@ -67,7 +68,8 @@ output:
   pdf_document:
     fig_caption: yes
     keep_tex: yes
-    latex_engine: xelatex
+#    latex_engine: xelatex
+    latex_engine: pdflatex
     #toc: yes
     #toc_depth: 2
    #html_document:
@@ -136,14 +138,13 @@ We visited the field experiment on average every 1 or 2 days and recorded what p
 
 Top-view images were taken every x days with a Panasonic DMC-TZ61 digital camera and a customized closed black box (Fig. \ref{fig:trays}) at a distance of 40 cm from the tray. Photos were taken on average every x days from the sowing date until flowering plants impede the acquisition -- a total of 20 timepoints. Images for analyses are available at \url{http://datadryad.org} and the software to process and analyse them is available at \url{http://github.com/MoisesExpositoAlonso/hippo}. Segmentation was done similarly as @Exposito-Alonso2017-ob. We began by transforming images from RGB to HSV chanels. We applied a hard segmentation threshold of HSV values as (H = 30-65, S=65-255, V=20-220). This was followed by several iterations of morphology transformations based on erosion and dilation. Then, for the resulting binary image we counted the number of green pixels. During field monitoring we noticed that some pots did not germinate sucessfuly, which can be due to lack of seeds or improper soil compaction. In those cases, we left a red mark in those pots which we can detect in the same way as the existence of green pixels (with threshold H=150-179, S=100-255, V=100-255). An example of transformed images is in Figure \ref{fig:segmentation}.
 
-The resulting data consists in green and red pixel counts per pots (Fig. \ref(fig:growth)). We took the advantage that a tray was photographed the same day several times to verify the replicability of our pipeline. In total there were 790 of such observations distributed in 11 timepoint and different trays. Using a genearlized linear mixed model with Poisson distribution (@Bolker2009-by), we calculated that the proportion of pixel count variance  explained by the pot identity was $Var_{green} / Var_{tot} = 99.6 \%$. After that verification, wethe average pixel between the several images was calculated for those pots, ending up with a dataset of the size 
-
+The resulting data consists in green and red pixel counts per pots (Fig. \ref(fig:growth)). We took the advantage that a tray was photographed the same day several times to verify the replicability of our pipeline. In total there were 790 of such observations distributed in 11 timepoint and different trays. Using the R package lme4 1.1-12 (@Bates2015-ly), we computed a genearlized linear mixed model with Poisson distribution (@Bolker2009-by), and derived the variance proportion of pixel counts explained by the pot identity:  $Var_{green} / Var_{tot} = 99.7 \%$. As this replicability proportion was high, we summarized the mean number of green pixels for those duplicated pots.
 
 In order to remove from the analyses those pots that did not germinater pot. As expected, the distribution of pixels is bimodal (Fig. \ref{fig:red}). Therefore, the exclusion of pots is straightforward: a pot is excluded if at any photographed time it was in the second distribution (>1000 pixels). This filtering left a dataset of `r library(field); data(veggyclean); nrow(veggyclean)` pixel observations (from an original of `r library(field); data(veggy); nrow(veggy)`). 
 
 Then we aimed to quantify germination timing. We did this by modeling the growth trajectory of green pixels per pot as a sigmoidal curve fitting the next function:
 
-$$y = \frac{a}{1 + e^{-(b  \times  (x-c))} } $$
+$$y = \frac{a}{1 + e^{-(b  \times   (x-c))} } $$
 , starting in the sowing day and until the observed peak of green pixels per pot. The three parameters $a$, $b$, and $c$, were stored together with several less complex indicators of growth: an analogous linear model, the day that over 1000 green pixels were observed (~ 1cm^2^ as pixels resolution is ~xyz), and a total count of green and red pixels through all timepoints. This data columns comprise `r library(field); data(veg); nrow(veg)` with non-missing data. 
 
 

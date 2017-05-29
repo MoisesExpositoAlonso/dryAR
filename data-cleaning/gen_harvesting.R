@@ -1,21 +1,27 @@
 library(dplyr);library(tidyr)
 library(devtools)
 
-load_all("~/mexposito/moiR/")
+load_all("~/moiR")
 # library(moiR)
 load_all(".")
 # library(field)
 
+
+####################################################################################
 ## read harvesting info
 
-tueh <- make_data_harvest(location="tuebingen")
-madh <- make_data_harvest(location="madrid")
-harvest<-rbind(madh,tueh)
+# tueh <- make_data_harvest(location="tuebingen")
+# madh <- make_data_harvest(location="madrid")
+# harvest<-rbind(madh,tueh) #### <<- need to change when tuebingen is annotated
+# harvest<-(madh) #### <<- need to change when tuebingen is annotated
+# harvestraw<-harvest
+# devtools::use_data(harvestraw,overwrite = F)
 
+data(harvestraw)
+harvest=harvestraw
 head(harvest)
 tail(harvest)
 dim(harvest)
-# harvest = select(harvest,-pathimage,-datelabeled)
 
 # merge
 
@@ -44,5 +50,7 @@ dim(harvest)
 ## save
 print('The first lines of data index of harvest:')
 head(harvest,n=5)
+print("Rows without data:")
+table(is.na(harvest$totarea))
 
 devtools::use_data(harvest,overwrite = T)

@@ -138,3 +138,4 @@ lmod %>% randomvariance(.,var =c('id') )
 sessionInfo()
 
 ```
+

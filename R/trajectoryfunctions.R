@@ -1,5 +1,5 @@
-removetail<-function(x,positions=3){
-  fn(substrRight( x, lastpos = 8,giveright = F))
+removetail<-function(x,positions=4){
+  as.numeric(substrRight( x, lastpos = positions,giveright = F))
 
 }
 
@@ -13,10 +13,18 @@ a/(1 + exp(-b * (x-c)))
 
 }
 
+fitspline<-function(y,x){
+fits<-spline(y~x)
+which(fits$y >1000)[1]
+}
+
+
 fitsigmoid<-function(y,x,parameter=NULL){
 # y=y+10 # it is +1 because 0 give errors of convergence
 mydata=data.frame(y,x) %>% arrange(x)
-maxpoint=which(mydata$y == max(mydata$y))
+# maxpoint=which(mydata$y == max(mydata$y)) # before I used directly the maximum point
+maxpoint = which(diff(y) == min(diff(y)))-1
+# instead of looking for the maximum point, it looks for the maximum reduction, which must be when it already has reached the max.
 mydata=mydata[1:maxpoint,]
 
 
@@ -40,6 +48,7 @@ tryCatch({
     error = function(e) {return('NA')}
 
     )
+
 }
 
 fitlinear<-function(y,x,parameter=NULL){

@@ -8,67 +8,6 @@ output:
   #html_notebook: default
 ---
 
-
-<!-- ## Get total sum of green pixels to see if something can be inferred -->
-
-<!-- ```{r} -->
-<!-- setwd('../') -->
-
-<!-- ## Get total sum of green pixels to see if something can be inferred -->
-
-<!-- green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% -->
-<!--   summarize(greensum=sum(countgreen)) %>% -->
-<!--   mutate(identifier=paste(sep="_",site,qp,pos)) -->
-
-<!-- qplot(log10(green$greensum)) -->
-
-<!-- badflagsgreen=green %>% filter(greensum < 1e4) %>% select(identifier) -->
-
-
-<!-- ``` -->
-
-
-<!-- ## Get the trajectories -->
-
-<!-- ```{r} -->
-<!-- setwd('../') -->
-
-
-<!-- veg<- -->
-<!--   veggy %>% -->
-<!--   head(1e4) %>% # for profiling -->
-
-<!--   mutate(identifier=paste(sep="_",site,qp,pos)) %>% # get an indentifier variable -->
-<!--   filter( ! identifier  %in% badflags) %>% # remove those pots with bad identifiers -->
-<!--   # filter( ! identifier  %in% badflagsgreen) %>% # filter if there is not enough green -->
-
-
-<!--   mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations -->
-<!--   mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment -->
-<!--   filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis. -->
-
-<!--   group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series -->
-<!--   summarize( -->
-<!--             ger.a=fitsigmoid(countgreen,daycount,parameter='a'), -->
-<!--             ger.b=fitsigmoid(countgreen,daycount,parameter='b'), -->
-<!--             ger.c=fitsigmoid(countgreen,daycount,parameter='c'), -->
-<!--             firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary -->
-<!--             lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice. -->
-
-<!--             ) -->
-
-<!-- ### join with red and green total count -->
-<!-- veg %>% veg %>% -->
-<!--   full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>% -->
-<!--   full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id')) -->
-
-
-<!-- ### SAVE DATASET -->
-<!-- devtools::use_data(veg,overwrite = T) -->
-
-<!-- ``` -->
-
-
 ####################################################################################
 
 ## Packages set up
@@ -83,11 +22,11 @@ library(RColorBrewer)
 load_all("~/moiR")
 load_all(".")
 
+myoverwrite=T
 ```
 
 
-## This scripts is meant to read and clean the 
-
+<!-- ## This scripts is meant to read and clean the  -->
 <!-- ![Example image of germinating plants and red flags of those unsuccessful pots](../figs/P1030542.JPG) -->
 
 # DATA READING
@@ -96,10 +35,15 @@ load_all(".")
 ```{r load packages}
 set_project_dir('field')
 
-## read harvesting info
-tuev <- make_data_vegetative(location="tuebingen")
-madv <- make_data_vegetative(location="madrid")
-veggy<-rbind(madv,tuev)
+# ## read harvesting info
+# tuev <- make_data_vegetative(location="tuebingen")
+# madv <- make_data_vegetative(location="madrid")
+# veggyraw<-rbind(madv,tuev)
+# # save as package database
+# devtools::use_data(veggyraw,overwrite = F)
+
+data(veggyraw)
+veggy=veggyraw
 
 head(veggy)
 tail(veggy)
@@ -124,10 +68,6 @@ veggy= veggy %>% mutate( pathimage= paste(pathimage,folder,image,sep='/') ) %>%
                 select(-folder, -image)
 head(veggy)
 
-# save as package database
-veggyraw=veggy
-devtools::use_data(veggyraw,overwrite = T)
-
 ```
 
 # CONSENSUS OF DUPLICATES
@@ -136,17 +76,17 @@ devtools::use_data(veggyraw,overwrite = T)
 set_project_dir('field')
 
 ## check duplicated image pots
-veggyraw=mutate(veggyraw, indexrep=paste(site,qp,pos,day,sep='_'))
+veggy=mutate(veggy, indexrep=paste(site,qp,pos,day,sep='_'))
 
 ## Number of pots used for replicability analysis
-dim(veggyraw[duplicated(veggyraw$indexrep),]) # There are 790 in total from both experiments
-unique(veggyraw[duplicated(veggyraw$indexrep),]$day)
-unique(veggyraw[duplicated(veggyraw$indexrep),]$qp)
+dim(veggy[duplicated(veggy$indexrep),]) # There are 790 in total from both experiments
+unique(veggy[duplicated(veggy$indexrep),]$day)
+unique(veggy[duplicated(veggy$indexrep),]$qp)
 
 
 ## Run the test for replicability
 library(MCMCglmm)
-lmm=MCMCglmm(data=veggyraw[duplicated(veggyraw$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
+lmm=MCMCglmm(data=veggy[duplicated(veggy$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
 print ( h2MCMC(lmm,randomname = 'indexrep') )
 
 ```
@@ -161,29 +101,34 @@ set_project_dir('field')
 ## counts for two pots of the same identity (can be due to two pictures per
 ## tray/day). Necessary for merge with master dataset later
 
-veggy %>% mutate( indexrep=paste(site,qp,pos,day,sep='_')) %>%
-          group_by(indexrep) %>% summarise(site=unique(site),
-                                               qp=unique(qp),
-                                               pos=unique(pos),
-                                               trayid=unique(trayid),
-                                               rep=unique(rep),
-                                               indpop=unique(indpop),
-                                               water=unique(water),
-                                               id=unique(id),
-                                               day=unique(day),
-                                               countgreen=mean(countgreen),
-                                               countred=mean(countred)
-                                           ) ->veggy
-veggy %>% head()
-veggy %>% tail()
-dim(veggy)
-
-veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) %>% select(-indexrep)
-
-devtools::use_data(veggy,overwrite = T) # Save the data for the package
+# veggy <- veggy %>%
+#   mutate( indexrep=paste(site,qp,pos,day,sep='_')) %>%
+#           group_by(indexrep) %>% summarise(site=unique(site),
+#                                                qp=unique(qp),
+#                                                pos=unique(pos),
+#                                                trayid=unique(trayid),
+#                                                rep=unique(rep),
+#                                                indpop=unique(indpop),
+#                                                water=unique(water),
+#                                                id=unique(id),
+#                                                day=unique(day),
+#                                                countgreen=mean(countgreen),
+#                                                countred=mean(countred)
+#                                            ) 
+# veggy %>% head()
+# veggy %>% tail()
+# 
+# dim(veggy)
+# 
+# veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) %>% select(-indexrep)
+# 
+# devtools::use_data(veggy,overwrite = F) # Save the data for the package
 
 data(veggy)
-dim(veggy)
+veggy %>% dim()
+veggy %>% head()
+veggy %>% tail()
+
 ```
 This is not run because takes some time, instead I load the data already produced
 
@@ -276,7 +221,7 @@ save_plot(filename="figs/Figure_redcount_histogram.pdf",plot = p, base_width = 5
 
 # DATA FILTERING
 ## Get the total number of red
-```{r total count of greens}
+```{r total count of reds}
 set_project_dir('field')
 
 red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(redsum=sum(countred))# %>% mutate(identifier=paste(sep="_",site,qp,pos)) 
@@ -286,12 +231,13 @@ red=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% summarize(red
 
 ## Get the total number of green
 ```{r total count of greens}
-set_project_dir('field')
+set_project_dir()
 
 # get total number of green counts
 green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id,potindex) %>%
   summarize(greensum=sum(countgreen)) %>%
   mutate(identifier=paste(sep="_",site,qp,pos))
+
 
 ```
 
@@ -300,39 +246,30 @@ green=veggy %>% group_by(site,qp,pos,trayid,rep,indpop,water,id,potindex) %>%
 ```{r count red pictures}
 set_project_dir()
 
-# calculate variance across groups by establishing different threshold values
-# fvals<-sapply(seq(1e4,1e6,by=1000),function(x){
-#     summary(aov(red$redsum ~ red$redsum >x))[[1]][["F value"]][1]
-# })
-# 
-# plot(fvals ~ seq(1e4,1e6,by=1000))
-# foundthreshold= seq(1e4,1e6,by=1000)[which(fvals==max(fvals,na.rm=T))] # =152000
-# print(foundthreshold)
-#
-# By calculating F statistic, we calculate the variance between two groups of pots whose pixels are counted.
-# For that several thresholds are tried, the one that separates better the two distribution is the one that will
-# be used
-# # generate a bad flag column
-# table(red$redsum > foundthreshold)
-# badflags = red %>% filter(redsum > foundthreshold) %>% select(identifier)
-# badflags=unique(badflags$identifier)
-# length(badflags)
-
-##### Easier than the above
+##### Easier than before
 # here I define which is labeled as red because it is completely bimodal
 quantile(log10(veggy$countred+1),probs = seq(0,1,0.01))
 whichred= log10(veggy$countred+1) > 1.4
+table(whichred)
+length(whichred)
+nrow(veggy)
 veggy<-veggy %>% mutate(isred=whichred)
+
+table(veggy$isred)
+lapply(veggy,veggy$potindex,FUN = function      (x) table(x$isred==TRUE))
 
 ##### == >  Filtering need to be done later in the summarization
 dim(veggy)
 redflags <- veggy%>%
   group_by(potindex) %>% summarize(redflag=any(isred==TRUE)) %>% filter(redflag==TRUE)
 
-
 greenflag <- green%>% mutate(isnotgreen = greensum<10) %>%
   group_by(potindex) %>% summarize(greenflag=any(isnotgreen==TRUE)) %>% filter(greenflag==TRUE)
 
+dim(greenflag)
+dim(redflags)
+unique(redflags$potindex) %>% length()
+unique(veggy$potindex) %>% length()
 
 # select those post that do not have every a red flag or green flag (no pixel)
 veggyclean <- veggy %>%
@@ -343,36 +280,81 @@ veggyclean <- veggy %>%
 dim(veggyclean)
 
 hist(log10(veggy$countred+1))
-hist(log10(veggyclean$countred+1),add=T,col='black') # proof of concept that there are no pots with non-0
+hist(log10(veggyclean$countred+1),add=T,col='black') # proof of concept that there are no pots with non zero
 
-devtools::use_data(veggyclean,overwrite = T)
+devtools::use_data(veggyclean,overwrite = myoverwrite)
 
 ```
 
 ## Model all trajectories as sigmoidal functions
+
 ```{r model all trajectories as sigmoidal functio)ns,eval=F}
 set_project_dir()
 
-veg<-  veggyclean %>%
-  # head(1e4) %>% # ONLY FOR PROFILING
+dim(veggyclean)
 
+uniquepots=unique(veggyclean$potindex)[1:100]
+
+head(veggyclean)
+
+index="madrid_100_b1_9649"
+
+estimated<-sapply(uniquepots,function(index){
+  mydata=filter(veggyclean, potindex==index)
+  
+  starting=startday(unique(mydata$site))
+  mydata$daycount=fn(mydata$day - as.Date(starting) )
+  
+  
+  spline1=fitspline(y=mydata$countgreen,x=mydata$daycount)
+  green1=firstgreen(y=mydata$countgreen,x=mydata$daycount)  # first green pixels is kind of arbitrary
+  lin0=fitlinear(y=mydata$countgreen,x=mydata$daycount,'significance') 
+  # mysigmoid=fitsigmoid(y=mydata$countgreen,x=mydata$daycount )
+
+  # return(list(spline1,green1,lin0,sig.a=mysigmoid$a,sig.b=mysigmoid$b,sig.c=mysigmoid$c))
+  return(list(green1,spline1,lin0))
+}) %>% t() %>% apply(.,2,as.character) %>% data.frame()
+
+estimated$potindex=uniquepots
+colnames(estimated) = c("green1","spline1","lin0","potindex")
+
+veg<- veggyclean %>%  
+  group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
+  full_join(.,estimated,by="potindex")
+
+veg$green1
+  
+veg=veg %>%
+  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
+  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
+dim(veg)
+
+
+veggyclean%>% group_by(potindex)
+
+length(unique(veggyclean$potindex))
+
+veg<-  veggyclean %>%
+  
 # select early positions
   mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
   mutate(daycount= fn(day - as.Date(starting) ) )%>% #  trick to filter the 40 first dates depending on experiment
-  filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
+  # filter(daycount <60) %>% # 40 days because we started the thinning like 1 month after they started germination, probably would be better to do it in a per pot basis.
 
   group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% # group observations by pot to analyse each time series
 
 # calculate several trajectory informations
   
   summarize(
-            ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
-            ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
-            ger.c=fitsigmoid(countgreen,daycount,parameter='c'),
-            firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
-            lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
-
+            # ger.a=fitsigmoid(countgreen,daycount,parameter='a'),
+            # ger.b=fitsigmoid(countgreen,daycount,parameter='b'),
+            # ger.c=fitsigmoid(countgreen,daycount,parameter='c'),
+            # firstspline=fitspline(y=countgreen,x=daycount),
+            # firstgreen=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
+            # lin.0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
+            meangreen=mean(countgreen)
             )
+
 
 ## Get the
 # merge with total counts of red and green
@@ -381,14 +363,110 @@ veg=veg %>%
   full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id'))
 dim(veg)
 
+table(is.na(veg$firstspline))
 
-devtools::use_data(veg,overwrite = T)
+veg
+devtools::use_data(veg,overwrite = myoverwrite)
 
-table(is.na(veg$ger.a)) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+veg %>% head()
+veg %>% tail()
+
+dim(veg)
+
+# table(is.na(veg$ger.a)) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # table(is.na(veg$lin.0)) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  SOMETHING IS GOING WRONGLY IN THE
 
 
 ```
 
+
+
+```{r}
+
+veg<-  veggyclean %>%
+  # select early positions
+  mutate(starting=startday(site)) %>% # add the start day of the experiment ina per row basis for later calculations
+  mutate(daycount= fn(day - as.Date(starting) ) )%>%#  trick to filter the 40 first dates depending on experiment
+  # filter(potindex =="madrid_311_c7_9597")
+  filter(potindex == "madrid_232_e2_9595" )
+
+as.character(veggyclean %>% sample_n(1) %>% select(potindex))
+
+fitsigmoid(y = veg$countgreen, x=veg$daycount)
+
+y=veg$countgreen
+x=veg$daycount
+y=y+1 # it is +1 because 0 give errors of convergence
+
+mydata=data.frame(y,x) %>% arrange(x)
+maxpoint=which(mydata$y == max(mydata$y))
+mydata=mydata[1:maxpoint,]
+
+fitmodel <- nls(data = mydata,(y)~a/(1 + exp(-b * (x-c))), start=list(a=max(y),b=0.25,c=25))
+fitmodel <- nls(data = mydata,(y)~a/(1 + exp(-b * (x-c))), start=list(a=max(y),b=0.5,c=25))
+res=summary(fitmodel)$coefficients
+
+toreport=list(a=paste0(res["a",'Estimate'], starpvalue(res["a",4],samelength=T)),
+              b=paste0(res["b",'Estimate'], starpvalue(res["b",4],samelength=T)),
+              c=paste0(res["c",'Estimate'], starpvalue(res["c",4],samelength=T))
+              )
+
+robustbase::nlrob(data = mydata,(y)~a/(1 + exp(-b * (x-c))), start=list(a=max(y),b=0.25,c=25))
+
+
+fit <- nls(y ~ SSlogis(x), data=mydata)
+
+fit <- lm(y ~ x, data=mydata)
+plot(y~x, data=mydata)
+spline(y~x)
+plot(spline(y~x)$y > 1000 )
+
+abline(fit)  
+
+Asym<-max(mydata$y)
+xmid=Asym/2
+scal
+
+SSlogis(mydata$x,)
+
+Asym/(1+exp((xmid-input)/scal))
+
+robustbase::nlrob(data = mydata,(y)~a/(1 + exp((x-c))), start=list(a=max(y),b=0.25,c=25))
+
+fm1 <- nls(weight ~ SSlogis(Time, Asym, xmid, scal), data = Chick.1)
+
+
+Chick.1 <- ChickWeight[ChickWeight$Chick == 1, ]
+SSlogis(Chick.1$Time, 368, 14, 6)  # response only
+
+
+getInitial(weight ~ SSlogis(Time, Asym, xmid, scal), data = Chick.1)
+initials<-getInitial(y ~ SSlogis(mydata$x, max(mydata$y), tail(mydata$x,1)/2 , scal), data = mydata)
+initials<-getInitial(y ~ SSlogis(x,Asym, xmid, scal), data = mydata)
+fit<-nls(y~SSlogis(x,Asym, xmid, scal),start=initials)
+
+SSlogis(x,initials$Asym,initials$xmid,initials$scal)
+
+plot()
+
+spline(y~x)
+plot(spline(y~x))
+
+elasticn
+
+library(glmnet)
+fit.elnet <- glmnet( y=y, x=x, family="poisson", alpha=.5)
+
+
+summary(fit)
+
+getInitial(weight ~ SSlogis(Time, Asym, xmid, scal), data = Chick.1)
+fm1 <- nls(weight ~ SSlogis(Time, Asym, xmid, scal), data = Chick.1)
+summary(fm1)
+
+
+
+
+```
 
 
