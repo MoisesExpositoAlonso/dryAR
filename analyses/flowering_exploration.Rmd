@@ -4,8 +4,7 @@ author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  html_notebook: default
-  # pdf_document: default
+  pdf_document: default
 ---
 
 
@@ -27,7 +26,7 @@ load_all(".") # field
 
 ### load dataset
 
-```{r field }
+```{r  }
 data(field)
 dim(field)
 names(field)
@@ -58,6 +57,8 @@ Flowering was recorded on average ever 1 day, while in Tubingen every 2 days.
 ```{r}
 p1=ggplot(data = field)+
   geom_density(aes(x=FT.dif,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw()
+p1=p1 + xlab('Flowering time since sowing (days)') + scale_alpha(guide = 'none')
+save_plot(filename = 'figs/Figure_flowering_distribution.pdf',base_height = 5,base_width = 5, plot=p1)
 p1
 ```
 
@@ -180,7 +181,9 @@ From this last plot, we see where the accessions that flower at different times 
 # Direct visualization of flowering time in the spatial positions of the experiment
 
 ```{r ,fig.width=10,fig.height=3 ,warning=F}
-flo=read_flowering('madrid','../data-raw')
+set_project_dir()
+
+flo=read_flowering('madrid','data-raw')
 flo=as.matrix(flo)
 flo=apply(flo,2,function(x)asmydate(x,'madrid'))
 flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
@@ -191,30 +194,56 @@ f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() +
   scale_fill_gradientn("Flowering date",
                        colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
                         limits=c(60, 180)
-)
+  ) #+
+  # scale_x_continuous(breaks = c(0,100,200,300),labels = paste(c(0,100,200,300) * 10 /100, 'm')  )+
+  # scale_y_continuous(breaks = c(0,10,20,30),labels = paste(c(0,25,50,75) * 10 /100, 'm')  )+
+  # labs(y="",x='') 
+  
 
-f1
 
-```
-
-
-```{r ,fig.width=10,fig.height=3,warning=F}
-flo=read_flowering('tuebingen','../data-raw')
+flo=read_flowering('tuebingen','data-raw')
 flo=as.matrix(flo)
 flo=apply(flo,2,function(x)asmydate(x,'tuebingen'))
 flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
 
 f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
 
-f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
+f2=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
   scale_fill_gradientn("Flowering date",
                        colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
                        limits=c(60, 180)
                        )
 
-f1
+f2
 
-# summary(c(flo))
+
+########## PLOT THE TWO FLOWERING TIMES
+
+f1=f1+ theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          # legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank()) + ggtitle("Madrid")
+
+f2=f2+ theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          # legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank()) +ggtitle("Tübingen")
+
+
+panel=plot_grid(f1,f2,rel_widths = c(10,10),rel_heights = c(3,3),nrow = 2)
+save_plot(filename="figs/Figure_raw_flowering.pdf",plot = panel, base_width = 13,base_height =5)
 
 ```
 
@@ -224,7 +253,7 @@ We see that Tuebingen again has later flowering times  than Madrid. This also he
 
 ### load data sets
 
-```{r field }
+```{r  }
 data(field)
 dim(field)
 names(field)

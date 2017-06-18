@@ -1,7 +1,7 @@
 library(dplyr);library(tidyr)
 library(devtools)
 
-load_all("~/mexposito/moiR/")
+load_all("~/moiR/")
 # library(moiR)
 
 load_all(".")
@@ -11,24 +11,31 @@ load_all(".")
 
 data(acc)
 data(flowering)
+data(veg)
 data(harvest)
 
 dim(flowering)
 dim(harvest)
 dim(genoreps)
 
+head(acc)
 head(flowering)
+head(veg)
 head(harvest)
 
 #### master dataset ####
 
 dupcol= c(colnames(flowering),colnames(harvest)) [ duplicated(c(colnames(flowering),colnames(harvest))) ]
 c("qp","pos","site",'rep','trayid','water', 'indpop','id')
-field <- acc %>%
+
+# field <-
+  acc %>%
             merge.data.frame(
-              .,flowering,by="id" , all.y=T # because I want to keep all the replicates from field data
-            ) %>%
-            merge(x=.,y= harvest, by= dupcol, all.x=T) # because want to keep also flowering that did not produce fruit
+              .,flowering,by="id" , all=T ) %>% # because I want to keep all the replicates from field data
+            merge(x=.,y= veg, by= dupcol, all=T) %>%
+            merge(x=.,y= harvest, by= dupcol, all=T)
+    # tail
+    head
 
 
 dim(field)

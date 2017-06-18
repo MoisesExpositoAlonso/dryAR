@@ -116,3 +116,54 @@ return(flor)
 
 
 
+#' Read and clean flowering time from experiment spatial grid raw data
+#'
+#' @param data long format flowering data
+#' @details
+#' A number of flags were used during flowering time accquisition. This function just considers everything that had these values as "dead" (or that never germinated). This is passed to make_data_flowering where it will be filtered
+
+cleanflowering<-function(data=longform.rm){
+dead=c("X","x","na","-",""," ","z","*","0","d","x","dead","-")
+
+data$FT<-as.character.factor(data$FT)
+data$FT[data$FT %in% dead] <-"dead"
+
+unclear<-'?'
+data$FT[data$FT %in% unclear] <-"unclear"
+
+return(data)
+}
+
+
+
+#' Read the flowering time raw data
+#'
+#' @param location madrid or tuebingen
+#' @details
+#' reads/returns raw data of flowering time dates in the spatial position of the field experiment.
+
+read_flowering <- function(location="tuebingen",path='data-raw'){
+
+if(is.null(location)){stop("Error: you can specify either tuebingen or madrid")}
+
+if(location=="madrid"){
+  thefile <-paste0(path,"/Flowering_pheno_Madrid.xlsx-combined.tsv")
+  # thefile <-"Flowering_pheno_Madrid.xlsx-combined.tsv"
+  print(thefile)
+}
+
+if(location=="tuebingen"){
+  thefile <-paste0(path,"/Flowering_pheno_Tuebingen-combined.tsv")
+}
+
+fmad<-read.table(thefile,fill=T,sep="\t",stringsAsFactors = F)
+head(fmad,n = 20)
+tail(fmad,n = 20)
+fmad2<-fmad[,-11]
+fmad2<-cbind(fmad2[which(fmad[,11]=="row1" ) ,] ,
+             fmad2[which(fmad[,11]=="row2" ) ,] ,
+             fmad2[which(fmad[,11]=="row3" ) ,] ,
+             fmad2[which(fmad[,11]=="row4" ) ,]
+             )
+return(fmad2)
+}

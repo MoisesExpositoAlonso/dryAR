@@ -5,8 +5,8 @@ author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  #pdf_document: default
-  #html_notebook: default
+  pdf_document: default
+  
 ---
 
 ## Packages set up and loading data
@@ -24,44 +24,72 @@ load_all(".")
 data(veggy)
 data(veg)
 
-
 ```
 
 ##  Plotting the sigmoidal curves of 1000 pots 
 
-```{r}
+```{r trajectory plot}
 
-vegh<- veg %>% dplyr::filter(ger.a != "NA") %>% dplyr::sample_n(size = 1000) 
+veg$ss.na<-veg$ss.a == "NA" ## need to filter for NAs
+table(veg$ss.na)
+vegh<- veg %>% dplyr::filter(ss.na != TRUE) %>%
+  mutate(ss.a=removetail(ss.a),
+          ss.b=removetail(ss.b),
+          ss.c=removetail(ss.c)) 
+
+
+vegh=vegh[sample(1:nrow(vegh), size = 500),]
+dim(vegh)
+
 
 plot( ylab='Predicted # pixels',xlab='Days of experiment',
   ylim=c(0,50000),
   y=
 getsigmoid(
-  a= substrRight(vegh$ger.a,lastpos = 4,giveright = F)[2],
-  b= substrRight(vegh$ger.b,lastpos = 4,giveright = F)[2],
-  c= substrRight(vegh$ger.c,lastpos = 4,giveright = F)[2]
+  a=vegh$ss.a[1],
+  b=vegh$ss.b[1],
+  c=vegh$ss.c[1]
 ),
 x=1:40,
 type='l'
 )
+
 for( i in 1:nrow(vegh)){
 lines(  y=
 getsigmoid(
-  a= substrRight(vegh$ger.a,lastpos = 4,giveright = F)[i],
-  b= substrRight(vegh$ger.b,lastpos = 4,giveright = F)[i],
-  c= substrRight(vegh$ger.c,lastpos = 4,giveright = F)[i]
+  a=vegh$ss.a[i],
+  b=vegh$ss.b[i],
+  c=vegh$ss.c[i]
 ),
 x=1:40,
 col=transparent('black')
 )
 }
 
+set_project_dir()
+p <- recordPlot()
+set_project_dir()
+pdf(file = 'figs/Figure_growth_trajectories.pdf',useDingbats = F,width = 5,height = 5)
+p # redraw
+dev.off()
+
+```
+
+##  Germination plot
+
+```{r germination plot}
+
+p1=ggplot(veg) +
+  geom_histogram(aes(x=spline1,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw()
+p1=p1 + xlab('Germination time since sowing (days)') + scale_alpha(guide = 'none')
+p1
+save_plot(filename = 'figs/Figure_germination_distribution.pdf',base_height = 5,base_width = 5, plot=p1)
+
 ```
 
 ## Calculate various variance proportions of the modeled trajectories.
 
 ```{r calculate}
-
 library(lme4)
 library(MCMCglmm)
 

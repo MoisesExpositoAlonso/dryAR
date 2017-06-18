@@ -44,7 +44,21 @@ z <- p+geom_point(data=gbif,aes(x=lon,y=lat),col=c("grey"),size=c(0.2),alpha=0.8
     geom_point(data=g1001,aes(x=longitude,y=latitude),col="blue",size=c(0.5),alpha=1 ) + theme(legend.position="none")+
     geom_point(data=acc,aes(x=longitude,y=latitude),col="red",size=c(0.5),alpha=1 ) + theme(legend.position="none")
 z
-ggsave(z,filename = "../figs/Figure_gbif_field_occurrence_map.pdf" ,useDingbats=FALSE,width =12 ,height=8)
+ggsave(z,filename = "figs/Figure_gbif_field_occurrence_map.pdf" ,useDingbats=FALSE,width =12 ,height=8)
 
 ```
 
+## Plot
+```{r, plot overlap map}
+p <- createmap(mapcol =  "grey",countrycol = ('grey') )
+p <- createmap()
+p
+
+z<-p+geom_point(data=acc,aes(x=longitude,y=latitude),col="white",size=c(1),alpha=1 ) +
+   geom_point(data=acc,aes(x=longitude,y=latitude),col="black",size=c(0.8),alpha=1 ) +
+   geom_point(data=acc,aes(x=longitude,y=latitude,col=factor(kgroup)),size=c(0.5) ) +scale_color_manual(values=colors11(),labels=c(knames(),NA))
+z
+
+ggsave(z,filename = "figs/Figure_field_accessions_map.pdf" ,useDingbats=FALSE,width =12 ,height=8)
+
+```

@@ -1,14 +1,12 @@
 ---
-title: Growth trajectories exploration, inference of germination and detection of
-  missing pots
+title: Read the harvesting data
 author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  #pdf_document: default
-  #html_notebook: default
+  # pdf_document: default
+  
 ---
-
 
 <!-- Define global options for knitr -->
 ```{r global_options, include=FALSE}
@@ -19,10 +17,7 @@ knitr::opts_chunk$set(
   )
 ```
 
-
-
-```{r}
-
+```{r, setup package}
 library(dplyr);library(tidyr)
 library(devtools)
 
@@ -31,16 +26,27 @@ load_all("~/mexposito/moiR/")
 load_all(".")
 # library(field)
 
+wannaoverwrite=F
+```
+
+
+```{r}
+####################################################################################
 ## read harvesting info
 
-tueh <- make_data_harvest(location="tuebingen")
-madh <- make_data_harvest(location="madrid")
-harvest<-rbind(madh,tueh)
+# tueh <- make_data_harvest(location="tuebingen")
+# madh <- make_data_harvest(location="madrid")
+# harvest<-rbind(madh,tueh) #### <<- need to change when tuebingen is annotated
+# harvest<-(madh) #### <<- need to change when tuebingen is annotated
+# harvestraw<-harvest
+# devtools::use_data(harvestraw,overwrite = F)  #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< UPDATE THIS WHEN ALL IMAGES ARE LABELED!
+# write.tsv(harvestraw,file='../data-raw/harvestraw') 
 
+data(harvestraw)
+harvest=harvestraw
 head(harvest)
 tail(harvest)
 dim(harvest)
-# harvest = select(harvest,-pathimage,-datelabeled)
 
 # merge
 
@@ -52,25 +58,44 @@ head(harvest)
 
 # put in the number column NA when it is an individual replicate
 harvest$num[harvest$indpop == 'i']<-NA
-
 harvest$num[harvest$num == 'missin']<-(-9)
+harvest$num[harvest$num == '']<-(-9)
+harvest$num<-as.character.factor(harvest$num)
 
 # add quality flag
 harvest$Harv.q <- 0
 harvest$Harv.q[ !is.na(harvest$pathimage) ] <-1
 
+# check missing data and so on
 unique(harvest$Harv.q)
-unique(harvest$water)
+unique(harvest$num)
 
 head(harvest)
 tail(harvest)
 dim(harvest)
 
+## save harvestclean
+harvestclean=harvest
+if(wannaoverwrite==T) devtools::use_data(harvestclean,overwrite = T) # this includes also path to image
+
+
 ## save
 print('The first lines of data index of harvest:')
-head(harvest,n=5)
+print(head(harvest,n=5))
+print("Rows without data:")
+table(is.na(harvest$totarea))
 
-devtools::use_data(harvest,overwrite = T)
+if(wannaoverwrite==T) devtools::use_data(harvest,overwrite = T)
+
+
+harvest %>% filter(organ=='i') %>%
+ggplot() +
+  geom_histogram(aes(x=totarea,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw() +
+  xlab('Total segmented inflorescence area (# pixels)') + scale_alpha(guide = 'none') -> p1
+p1
+
+set_project_dir()
+save_plot(filename = 'figs/Figure_inflorescence_distribution.pdf',base_height = 3,base_width = 6, plot=p1)
 
 
 ```

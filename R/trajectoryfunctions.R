@@ -61,7 +61,8 @@ tryCatch({
 
       mod=lm(y ~ x,data=mydata)
 
-      xintercept<-(0-mod$coefficients[1]) /mod$coefficients[2]
+      # xintercept<-(0-mod$coefficients[1]) /mod$coefficients[2]
+      xintercept<-(100-mod$coefficients[1]) /mod$coefficients[2] # I thought I could keep the 1000 pixels as reference
 
       toreport=ifelse(xintercept >40 | xintercept< -10, 'NA', xintercept)
 
