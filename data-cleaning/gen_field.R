@@ -7,6 +7,9 @@ load_all("~/moiR/")
 load_all(".")
 # library(field)
 
+#### wannaoverwrite
+wannaoverwrite=T
+
 #### Get the datas
 
 data(acc)
@@ -28,29 +31,36 @@ head(harvest)
 dupcol= c(colnames(flowering),colnames(harvest)) [ duplicated(c(colnames(flowering),colnames(harvest))) ]
 c("qp","pos","site",'rep','trayid','water', 'indpop','id')
 
-# field <-
-  acc %>%
-            merge.data.frame(
-              .,flowering,by="id" , all=T ) %>% # because I want to keep all the replicates from field data
-            merge(x=.,y= veg, by= dupcol, all=T) %>%
-            merge(x=.,y= harvest, by= dupcol, all=T)
-    # tail
-    head
-
+harvestinflorescence= harvest %>% filter(Harv.organ =='i')
 
 dim(field)
+names(field)
+names(veg)
+
+c(colnames(flowering),colnames(veg))[ duplicated(c(colnames(flowering),colnames(veg)))  ]
+c(colnames(flowering),colnames(harvest)) [ duplicated(c(colnames(flowering),colnames(harvest))) ]
+
+dim(veg)
+veg
+
+field <-
+  acc %>%
+    # because I want to keep all the replicates from field data
+    merge.data.frame(
+      .,flowering,by="id", all=T ) %>%
+    # add the vegetative
+    merge(x=.,y= veg, by= dupcol, all=T) %>%
+    merge(x=.,y= harvestinflorescence, by= dupcol, all=T)
+dim(field)
+
+
+
+print('The dimensions and first/last lines of field:')
+dim(field)
 head(field)
+tail(field)
+names(field)
 
-print('The first lines of field:')
-print(head(field,5))
-
-devtools::use_data(field,overwrite = TRUE)
-
-
-#### mastergeno dataset ####
-
-# data(acc)
-#
-# dm<-merge(fou,by.x = 'ecotype_id',acc,'id')
-# nrow(dm)
+if(wannaoverwrite==T)
+  devtools::use_data(field,overwrite = wannaoverwrite)
 

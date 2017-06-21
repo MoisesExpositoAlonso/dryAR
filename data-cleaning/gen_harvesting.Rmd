@@ -53,8 +53,10 @@ dim(harvest)
 data("genoreps")
 head(genoreps)
 
-harvest= merge(harvest,genoreps, by=c('qp','pos','site'),all.y=T)   ### NOTE ALSO THAT CAN BE SEVERAL PICTURES FOR A SINGLE POT!
+harvest= merge(harvest,genoreps, by.x=c('qp','pos','site','ptype'),by.y=c('qp','pos','site','indpop'),all.y=T) %>%  ### NOTE ALSO THAT CAN BE SEVERAL PICTURES FOR A SINGLE POT!
+  rename(indpop=ptype)
 head(harvest)
+tail(harvest)
 
 # put in the number column NA when it is an individual replicate
 harvest$num[harvest$indpop == 'i']<-NA
@@ -76,10 +78,22 @@ dim(harvest)
 
 ## save harvestclean
 harvestclean=harvest
+names(harvestclean)
 if(wannaoverwrite==T) devtools::use_data(harvestclean,overwrite = T) # this includes also path to image
 
+## save but remove some columns
+head(harvest)
+names(harvest)
+dim(harvest)
+harvest=harvest %>% 
+  select(-pathimage, -datelabeled) %>%  # remove these unimportant columns
+  rename(Harv.organ=organ,   # rename some
+         Harv.num=num,
+         Harv.area=totarea,
+         Harv.sk=sk,
+         Harv.bp=bp,
+         Harv.ep=ep)
 
-## save
 print('The first lines of data index of harvest:')
 print(head(harvest,n=5))
 print("Rows without data:")
@@ -88,10 +102,13 @@ table(is.na(harvest$totarea))
 if(wannaoverwrite==T) devtools::use_data(harvest,overwrite = T)
 
 
-harvest %>% filter(organ=='i') %>%
+harvest %>% filter(Harv.organ=='i') %>%
 ggplot() +
-  geom_histogram(aes(x=totarea,group=water,fill=water,alpha=0.3)) + scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+theme_bw() +
-  xlab('Total segmented inflorescence area (# pixels)') + scale_alpha(guide = 'none') -> p1
+  geom_histogram(aes(x=Harv.area,group=water,fill=water,alpha=0.3)) + 
+  scale_fill_manual(values = c("h"="navy","l"="red3"))+facet_grid(site~indpop)+
+  theme_bw() +
+  xlab('Total segmented inflorescence area (# pixels)') + 
+  scale_alpha(guide = 'none') -> p1
 p1
 
 set_project_dir()
@@ -99,3 +116,32 @@ save_plot(filename = 'figs/Figure_inflorescence_distribution.pdf',base_height = 
 
 
 ```
+
+## Model to predict harvested organ from image analysis
+```{r}
+
+ggplot(harvestclean) + 
+  geom_point(aes(x=ep, y=bp,group=organ, color=organ),alpha=0.5)
+library(randomForest)
+modorgan<-randomForest(data=harvestclean, organ ~ ep + bp + totarea + sk ,
+                       importance=T,
+                       na.action=na.omit)
+
+predict(modorgan) %>% str()
+(predict(modorgan) %>% as.character())
+predict(modorgan) 
+validation=data.frame(pred=(predict(modorgan) %>% as.character()), real=(harvestclean$organ %>% na.omit()))
+
+table(validation$pred == validation$real ) / sum(table(validation$pred == validation$real )
+)
+
+harvestclean
+which(validation$pred != validation$real)
+
+harvestclean %>% mutate(index=row.names(harvestclean)) %>%
+  filter(!is.na(pathimage)) %>%
+  filter(index %in% which(validation$pred != validation$real) )  
+ 
+
+```
+
