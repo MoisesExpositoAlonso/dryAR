@@ -27,7 +27,7 @@ author: \newline \normalfont
   Diep Tran^1^,
   Kavita Venkataramani^1^,
   Anna-Lena Van de Weyer^1^,
-  George Wang^1^.
+  George Wang^1^,
   Ronja Wedegärtner^1^,
   Frank Weiss^1^,
   Rui Wu^1^,
@@ -64,7 +64,7 @@ header-includes:
 fontsize: 12pt
 geometry: margin=1.5in
  
-abstract: To quantify phenotypic and genetic natural selection, the gold standard are evolution experiments. However, studies that include whole-genome data are still scarce. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For long-lived organisms (generation time over a 1 year) such as \textit{Arabidopsis thaliana}, only cross-sectional studies are most feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station and in which we additionally manipulated rainfall. We used 517 whole-genome sequenced \textit{A. thaliana} lines covering the global distribution. We encapsulate the raw data and processing code in an R package available at \url{http://github.com/MoisesExpositoAlonso/updatehere}. We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
+abstract: To quantify phenotypic and genetic natural selection, the gold standard are evolution experiments. However, studies that include whole-genome data are still scarce. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For long-lived organisms (generation time over a 1 year) such as \textit{Arabidopsis thaliana}, only cross-sectional studies are most feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station and in which we additionally manipulated rainfall. We used 517 whole-genome sequenced \textit{A. thaliana} lines covering the global distribution. We encapsulate the raw data and processing code in an R package "dryAR" available at \url{http://github.com/MoisesExpositoAlonso/updatehere}. We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
  
 keywords: Arabidopsis thaliana, natural selection, field experiments, climate change
  
@@ -98,10 +98,9 @@ knitr::opts_chunk$set(
 ```
  
 ```{r, echo=F}
-  # library(knitcitations); cleanbib()
-  # cite_options(citation_format = "pandoc", check.entries=FALSE)
   library(bibtex)
-  devtools::load_all(".")
+  # devtools::load_all(".")
+  # library(dplyr)
 ```
  
  
@@ -147,12 +146,12 @@ Top-view images were taken every four to five days (median) with a Panasonic DMC
  
 The resulting raw data consists in green and red area (pixel counts) per pots (Fig. \ref{fig:pixels}A). We took the advantage that a tray was photographed the same day several times to verify the replicability of our pipeline. In total there were 790 of such observations distributed in 11 timepoint and different trays. Using the R package lme4 1.1-12 (@Bates2015-ly), we computed a generalized linear mixed model with Poisson distribution [@Bolker2009-by], and derived the variance proportion of pixel counts explained by the pot identity taken at the same day:  $Var_{green} / Var_{tot} = 99.7 \%$. As this replicability proportion was high, we summarized the mean number of green pixels for those duplicated pots.
  
-In order to remove from the analyses those pots that did not germinate, we performed a moving threshold and analysis of variance to determine what is the number of red pixels above which a pot is highly likely to have a red mark.  As expected, the distribution of pixels is bimodal (Fig. \ref{fig:red}), what makes this process straightforward and reliable. This filtering lead to a dataset of `r library(field); data(veggyclean); nrow(veggyclean)` pixel observations (from an original of `r library(field); data(veggy); nrow(veggy)`). 
+In order to remove from the analyses those pots that did not germinate, we performed a moving threshold and analysis of variance to determine what is the number of red pixels above which a pot is highly likely to have a red mark.  As expected, the distribution of pixels is bimodal (Fig. \ref{fig:red}), what makes this process straightforward and reliable. This filtering lead to a dataset of `r library(dryAR); data(veggyclean); nrow(veggyclean)` pixel observations (from an original of `r library(dryAR); data(veggy); nrow(veggy)`). 
  
 Then we aimed to quantify germination timing. We did this by modeling the growth trajectory of green pixels per pot as a sigmoidal curve fitting the next function:
  
 $$y = \frac{a}{1 + e^{-(b  \times   (x-c))} } $$
-, starting in the sowing day and until the observed peak of green pixels per pot. The three parameters $a$, $b$, and $c$, would inform about the different shapes of growth curves. We also computed less complex indicators of growth: an analogous linear model that was used to determine the intersection with 1000 pixels,  the day that over 1000 green pixels were observed (~ 1cm^2^ as pixels resolution is ~xyz), the day that a fitted spline passed over 1000 green pixels, and a total count of green and red pixels through all timepoints. In Fig. \ref{fig:trajectories}, we show a total of 1000 example growth trajectories modeled with the sigmoidal approach and in Fig. \ref{fig:germination} we show the estimated number of days from sowing till germination based on the spline approach. The final dataset comprised `r library(field); data(veg); nrow(veg)` observations with germination day from low complex indicators, and `r library(field); data(veg); table(veg$ss.a != "NA")['TRUE']` for which a sigmoidal curve could be fitted. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
+, starting in the sowing day and until the observed peak of green pixels per pot. The three parameters $a$, $b$, and $c$, would inform about the different shapes of growth curves. We also computed less complex indicators of growth: an analogous linear model that was used to determine the intersection with 1000 pixels,  the day that over 1000 green pixels were observed (~ 1cm^2^ as pixels resolution is ~xyz), the day that a fitted spline passed over 1000 green pixels, and a total count of green and red pixels through all timepoints. In Fig. \ref{fig:trajectories}, we show a total of 1000 example growth trajectories modeled with the sigmoidal approach and in Fig. \ref{fig:germination} we show the estimated number of days from sowing till germination based on the spline approach. The final dataset comprised `r library(dryAR); data(veg); nrow(veg)` observations with germination day from low complex indicators, and `r library(dryAR); data(veg); table(veg$ss.a != "NA")['TRUE']` for which a sigmoidal curve could be fitted. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
  
 <!-- Maximum resolution	4896x3672 -->
 <!-- Minimum resolution	640x480 -->
@@ -163,12 +162,20 @@ $$y = \frac{a}{1 + e^{-(b  \times   (x-c))} } $$
  
 ## Reproductive plants
  
-Once flowering plants finished the reproductive stage (dry fruits were observed), we harvested them and took a final photograph of the rosette and the inflorescence (Fig. \ref{fig:skeletonisation}). The python module to analyse the inflorescence pictures (Fig. \ref{fig:original}) is available at \url{http://github.com/MoisesExpositoAlonso/hitfruit}. We first used a cycle of morphological transformations of erode and dilate to produce the segmented image (Fig. \ref{fig:segmented}). This generated a segmented white/balck image without white noise. Then, we used the thin (erode cycles) algorithm from Mahotas module to generate a binary pictures reduced to single-pixel paths — a process called skeletonisation (Fig. \ref{fig:sk}). Finally, to detect the branching points in the skeletonised image we used a hit or miss algorithm from Mahotas. We used customized structural elements to maximize the branch (Fig. \ref{fig:bp}) and end point detection (Fig. \ref{fig:ep}). This resulted in four variables per image: total segmented inflorescence area, total length of the skeleton path, number of branching points and number of ending points (Fig. \ref{fig:skeletonisation}). The total number of observations in the inflorescence dataset is  `r library(field); data(harvest); nrow(harvest)`. The distribution of total inflorescence area is in Fig. \ref{fig:inflorescence}. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
+Once flowering plants finished the reproductive stage (dry fruits were observed), we harvested them and took a final photograph of the rosette and the inflorescence (Fig. \ref{fig:skeletonisation}). The python module to analyse the inflorescence pictures (Fig. \ref{fig:original}) is available at \url{http://github.com/MoisesExpositoAlonso/hitfruit}. We first used a cycle of morphological transformations of erode and dilate to produce the segmented image (Fig. \ref{fig:segmented}). This generated a segmented white/balck image without white noise. Then, we used the thin (erode cycles) algorithm from Mahotas module to generate a binary pictures reduced to single-pixel paths — a process called skeletonisation (Fig. \ref{fig:sk}). Finally, to detect the branching points in the skeletonised image we used a hit or miss algorithm from Mahotas. We used customized structural elements to maximize the branch (Fig. \ref{fig:bp}) and end point detection (Fig. \ref{fig:ep}). This resulted in four variables per image: total segmented inflorescence area, total length of the skeleton path, number of branching points and number of ending points (Fig. \ref{fig:skeletonisation}). 
+
+
+Because errors of labeling could have occurred, we build a machine learning model with the labeled organs and the branching points, end points, total area, and skeleton. This produced a concordance of 91.63 % between predicted and labeled. Then, the ones that were badly predicted from the machine learning model were manually re-labeled [update here]. 
+
+The total number of observations in the inflorescence dataset is  `r library(dryAR); data(harvest); nrow(harvest)`. The distribution of total inflorescence area is in Fig. \ref{fig:inflorescence}. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/gen_harvesting.Rmd}.
+
+
  
 ################################################################################
 ## Environmental data
  
-We monitored at real time temperature and watering throughout the experiment using multi-purpose sensors (Parrot SA, Paris, France). This enable us to adjust watering depending on the degree of evapotranspiration over the experiment. [more data here]
+We monitored at real time temperature and watering throughout the experiment using multi-purpose sensors (Parrot SA, Paris, France). This enable us to adjust watering depending on the degree of evapotranspiration over the experiment. Overall the soil water content was lower in the blocks of drought treatment compared to the high watering treatments. The sensors outside of the tunnel showed in Madrid similar soil water content as the drought treatment and in Tübingen similar water content as in the high watering treatment. Temperatures were overall higher in Madrid than in Tübingen but did not vary between sensors inside and outside the tunnel \ref{fig:histoenv}.
+ 
  
 ################################################################################
  
@@ -255,27 +262,29 @@ The detailed list of contributed tasks of each authors
         \includegraphics[width=\linewidth]{../figs/P1030542.JPG_seggreenred.jpeg}
         \caption{} \label{fig:redexample}
     \end{subfigure}
-\caption{Example segmentation results from raw image (\subref{fig:rawseg}) to green (\subref{fig:greenexample})  and red (\subref{fig:redexample}) pixels only.}
-\label{fig:segmentation}
-\end{figur}e
- 
+    \caption{Example segmentation results from raw image (\subref{fig:rawseg}) to green (\subref{fig:greenexample})  and red (\subref{fig:redexample}) pixels only.}
+    \label{fig:segmentation}
+\end{figure}
+
+
 <!-- segmentation counts-->
- 
- 
 \begin{figure}
+    \centering
     \begin{subfigure}[t]{0.8\textwidth}
-        \centerline{\includegraphics[width=6in]{../figs/Figure_green_trajectory.pdf}}
+        \centering
+        \includegraphics[width=6in]{../figs/Figure_green_trajectory.pdf}
         \caption{} \label{fig:growth}
     \end{subfigure}
         \begin{subfigure}[t]{0.8\textwidth}
+        \centering
         \centerline{\includegraphics[width=3in]{../figs/Figure_redcount_histogram.pdf}}
         \caption{} \label{fig:red}
     \end{subfigure}
-    \caption{ Trajectories per pot  (\subref{fig:growth}) of number of green pixels for Madrid and Tübingen. Distribution of the number of red pixels per pot summed over different time frames (\subref{fig:red}) and the heuristically chosen threshold )red vertical line= to define whether the pot actually had a red label.}
+    \caption{Trajectories per pot of number of green pixels for Madrid and Tübingen (\subref{fig:growth}). Distribution of the number of red pixels per pot summed over different time frames (\subref{fig:red}) and the heuristically chosen threshold to define whether the pot actually had a red label(red vertical line).}
     \label{fig:pixels}
-\end{figur}e
- 
- 
+\end{figure}
+
+
  
  <!-- growth tarjectories -->
 \begin{figure}
@@ -300,7 +309,7 @@ The detailed list of contributed tasks of each authors
 \end{figure}
  
 \begin{figure}
-    \centerline{\includegraphics[width=5in]{../figs/Figure_flowering_distribution}}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_flowering_distribution.pdf}}
     \caption{ Distribution of time since sowing date until flowering}
     \label{fig:flowerdistribution}
 \end{figure}
@@ -348,8 +357,16 @@ The detailed list of contributed tasks of each authors
 <!-- survival? -->
  
  
-<!-- environment from flower power -->
  
+<!-- environment from flower power -->
+\begin{figure}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_watering_temperature.pdf}}
+    \caption{ Soil water content and temperature from the 35 sensors monitororing each experimental block and the conditions outside the tunnel.}
+    \label{fig:histoenv}
+\end{figure}
+
+
+
 <!-- any correlation with geography? -->
  
  

@@ -1,0 +1,134 @@
+---
+title: "Heretabilities of the different traints from dryAR"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+### Packages set up
+
+```{r setup,message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+library(stargazer)
+library(moiR)
+#source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+#source("droughtfunctions.R")
+load_all(".") # field
+
+```
+
+```{r}
+library(MCMCglmm)
+library(lme4)
+
+
+# flo<-MCMCglmm(data=filter(field,site=='madrid',water=='l',indpop=='i'),
+             # FT.dif ~ 1,
+             # random= ~ id
+           # )
+
+print("------------")
+print("Flowering heritabilities")
+lmer(data=filter(field,site=='madrid',water=='l',indpop=='i'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='i'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='i'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='i'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='l',indpop=='p'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='p'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='p'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='p'),
+            FT.dif ~ 1 + (1 | id) ) %>%
+  randomvariance()
+print("------------")
+
+
+print("------------")
+print("Germination heritabilities")
+# field=field %>% mutate(lin0 = fn(substr(lin0,start = 1,stop = 4)) ) 
+
+lmer(data=filter(field,site=='madrid',water=='l',indpop=='i'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='i'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='i'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='i'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='l',indpop=='p'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='p'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='p'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='p'),
+            green1 ~ 1 + (1 | id) ) %>%
+  randomvariance()
+print("------------")
+
+
+
+print("------------")
+print("Total inflorescence heritabilities")
+
+field= field %>% mutate(log10Harv.area= log10(Harv.area+1))
+field2= field %>% filter(Harv.area !=0)
+
+lmer(data=field,
+            Harv.area ~ 1 + (1 | id)+  (1 | water)+ (1 | indpop) ) %>%
+  randomvariance()
+
+# lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='i'),
+#             log10Harv.area ~ 1 + (1 | id) ) %>%
+#   randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='i'),
+            Harv.area ~ 1 + (1 | id) ) %>%
+  randomvariance()
+# lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='i'),
+#             log10Harv.area ~ 1 + (1 | id) ) %>%
+#   randomvariance()
+lmer(data=filter(field,site=='madrid',water=='l',indpop=='p'),
+            Harv.area ~ 1 + (1 | id) ) %>%
+  randomvariance()
+# lmer(data=filter(field,site=='tuebingen',water=='l',indpop=='p'),
+#             log10Harv.area ~ 1 + (1 | id) ) %>%
+#   randomvariance()
+lmer(data=filter(field,site=='madrid',water=='h',indpop=='p'),
+            Harv.area ~ 1 + (1 | id) ) %>%
+  randomvariance()
+# lmer(data=filter(field,site=='tuebingen',water=='h',indpop=='p'),
+            # log10Harv.area ~ 1 + (1 | id) ) %>%
+  # randomvariance()
+print("------------")
+
+
+```
+
+

@@ -12,3 +12,7 @@ relative <- function(f){
   # tmp[is.na(tmp)]<-mean(tmp,na.rm=T)
 return(tmp)
 }
+
+normalize <- function(f){
+(max(f,na.rm=T)- f) / (max(f,na.rm=T) - min(f,na.rm=T))
+}

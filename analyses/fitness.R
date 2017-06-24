@@ -1,0 +1,52 @@
+#
+# ### Packages set up
+#
+# library(knitr)
+# library(dplyr,tidyr)
+# library(ggplot2);library(cowplot)
+# library(devtools)
+# library(RColorBrewer)
+# library(stargazer)
+# library(moiR)
+# library(MCMCglmm)
+#
+# load_all(".") # field
+#
+#
+# ## load data sets
+#
+# data(field)
+# stargazer(field,type='text')
+# names(field)
+#
+# ## want to overwrite?
+# wannaoverwrite=F
+#
+#
+# ## Survival until flowering
+# mli<-MCMCglmm(data=filter(field,site=='madrid',water=='l',indpop=='i'),
+#              relative(FT.q) ~ 1,
+#              random= ~ id
+#            )
+# # mli=m1
+# randomname=colnames(mli$VCV)
+# allvariance=apply(mli$VCV, 1, sum)
+# posterior<-mli$VCV[,randomname]/ allvariance
+# HPDinterval(posterior,0.95)
+# posterior.mode(posterior)
+#
+#
+# names(field)
+# genotypevar(random=c("id","site","water","indpop"),filter = F )
+# genotypevar(variable="Harv.q",random=c("id","site","water","indpop"),filter = F )
+# genotypevar(variable="FT.dif",random=c("id","site","water","indpop"),filter = F ,relative=F)
+#
+#
+# library(field)
+# library(moiR)
+#
+# data(field)
+#
+# field %>%
+#   filter(site=="madrid", water=="l" , indpop=="i", rep=="1")
+#

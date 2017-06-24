@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={A climate selection experiment with 517 Arabidopsis thaliana ecotypes},
-            pdfauthor={Moises Exposito-Alonso1 , Rocío Gómez Rodríguez2, Cristina Barragán1, Giovanna Capovilla1, Eunyoung Chae1, Jane Devos1, Ezgi Dogan1, Claudia Friedemann1, Caspar Gross1, Patricia Lang1, Derek Lundberg1, Belén Méndez-Vigo3, Vera Middendorf1, Jorge Kageyama1, Talia Karasov1, Sonja Kersten1, Sebastian Petersen1, Leily Rabbani1, Julian Regalado1, Beth Rowan1, Danelle Seymour1, Efthymia Symeonidi1, Rebecca Schwab1, Diep Tran1, Kavita Venkataramani1, Anna-Lena Van de Weyer1, George Wang1. Ronja Wedegärtner1, Frank Weiss1, Rui Wu1, Wanyan Xi1, Maricris Zaidem1, Wangsheng Zhu1, Fernando García Arenal2, Carlos Alonso Blanco3, Xavier Picó4, Hernán A. Burbano1, Oliver Bossdorf5, Detlef Weigel1.  Max Planck Institute for Developmental Biology, Tübingen, Germany  Centre for Plant Biotechnology and Genomics, Technical University of Madrid, Pozuelo de Alarcón, Spain  National Centre of Biotechnology, Cantoblanco, Madrid, Spain  Doñana Biological Station, Sevilla, Spain  University of Tübingen, Tübingen, Germany},
+            pdfauthor={Moises Exposito-Alonso1 , Rocío Gómez Rodríguez2, Cristina Barragán1, Giovanna Capovilla1, Eunyoung Chae1, Jane Devos1, Ezgi Dogan1, Claudia Friedemann1, Caspar Gross1, Patricia Lang1, Derek Lundberg1, Belén Méndez-Vigo3, Vera Middendorf1, Jorge Kageyama1, Talia Karasov1, Sonja Kersten1, Sebastian Petersen1, Leily Rabbani1, Julian Regalado1, Beth Rowan1, Danelle Seymour1, Efthymia Symeonidi1, Rebecca Schwab1, Diep Tran1, Kavita Venkataramani1, Anna-Lena Van de Weyer1, George Wang1, Ronja Wedegärtner1, Frank Weiss1, Rui Wu1, Wanyan Xi1, Maricris Zaidem1, Wangsheng Zhu1, Fernando García Arenal2, Carlos Alonso Blanco3, Xavier Picó4, Hernán A. Burbano1, Oliver Bossdorf5, Detlef Weigel1.  Max Planck Institute for Developmental Biology, Tübingen, Germany  Centre for Plant Biotechnology and Genomics, Technical University of Madrid, Pozuelo de Alarcón, Spain  National Centre of Biotechnology, Cantoblanco, Madrid, Spain  Doñana Biological Station, Sevilla, Spain  University of Tübingen, Tübingen, Germany},
             pdfkeywords={Arabidopsis thaliana, natural selection, field experiments, climate
 change},
             pdfborder={0 0 0},
@@ -94,7 +94,7 @@ Beth Rowan\textsuperscript{1}, Danelle Seymour\textsuperscript{1},
 Efthymia Symeonidi\textsuperscript{1}, Rebecca
 Schwab\textsuperscript{1}, Diep Tran\textsuperscript{1}, Kavita
 Venkataramani\textsuperscript{1}, Anna-Lena Van de
-Weyer\textsuperscript{1}, George Wang\textsuperscript{1}. Ronja
+Weyer\textsuperscript{1}, George Wang\textsuperscript{1}, Ronja
 Wedegärtner\textsuperscript{1}, Frank Weiss\textsuperscript{1}, Rui
 Wu\textsuperscript{1}, Wanyan Xi\textsuperscript{1}, Maricris
 Zaidem\textsuperscript{1}, Wangsheng Zhu\textsuperscript{1}, Fernando
@@ -136,9 +136,10 @@ carried out in a Mediterranean and a Central European field station and
 in which we additionally manipulated rainfall. We used 517 whole-genome
 sequenced \textit{A. thaliana} lines covering the global distribution.
 We encapsulate the raw data and processing code in an R package
-available at \url{http://github.com/MoisesExpositoAlonso/updatehere}. We
-believe this could be a useful resource for the evolutionary biology and
-the Arabidopsis communities.
+``dryAR'' available at
+\url{http://github.com/MoisesExpositoAlonso/updatehere}. We believe this
+could be a useful resource for the evolutionary biology and the
+Arabidopsis communities.
 \end{abstract}
 
 \section{Field experiment design}\label{field-experiment-design}
@@ -249,7 +250,8 @@ flowering time data per pot in the original spatial distribution of pots
 as in ref\{fig:blocks\}. Fig. \ref{fig:flowerdistribution} shows the
 distribution of flowering time per treatment combination. Note that grey
 boxes in Fig. \ref{fig:flowerraw} are pots with plants that did not
-survive until flowering.
+survive until flowering. For more visualizations of flowering time see
+\url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
 
 \section{Image production and
 analysis}\label{image-production-and-analysis}
@@ -294,7 +296,7 @@ we performed a moving threshold and analysis of variance to determine
 what is the number of red pixels above which a pot is highly likely to
 have a red mark. As expected, the distribution of pixels is bimodal
 (Fig. \ref{fig:red}), what makes this process straightforward and
-reliable. This filtering lead to a dataset of 435020 pixel observations
+reliable. This filtering lead to a dataset of 434240 pixel observations
 (from an original of 474100).
 
 Then we aimed to quantify germination timing. We did this by modeling
@@ -315,7 +317,7 @@ of 1000 example growth trajectories modeled with the sigmoidal approach
 and in Fig. \ref{fig:germination} we show the estimated number of days
 from sowing till germination based on the spline approach. The final
 dataset comprised 22779 observations with germination day from low
-complex indicators, and 9719 for which a sigmoidal curve could be
+complex indicators, and 12636 for which a sigmoidal curve could be
 fitted. A detailed R markdown document of data loading and cleaning can
 be found at
 \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
@@ -338,19 +340,33 @@ Mahotas. We used customized structural elements to maximize the branch
 (Fig. \ref{fig:bp}) and end point detection (Fig. \ref{fig:ep}). This
 resulted in four variables per image: total segmented inflorescence
 area, total length of the skeleton path, number of branching points and
-number of ending points (Fig. \ref{fig:skeletonisation}). The total
-number of observations in the inflorescence dataset is 30608. The
-distribution of total inflorescence area is in Fig.
+number of ending points (Fig. \ref{fig:skeletonisation}).
+
+Because errors of labeling could have occurred, we build a machine
+learning model with the labeled organs and the branching points, end
+points, total area, and skeleton. This produced a concordance of 91.63
+\% between predicted and labeled. Then, the ones that were badly
+predicted from the machine learning model were manually re-labeled
+{[}update here{]}.
+
+The total number of observations in the inflorescence dataset is 30564.
+The distribution of total inflorescence area is in Fig.
 \ref{fig:inflorescence}. A detailed R markdown document of data loading
 and cleaning can be found at
-\url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
+\url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/gen_harvesting.Rmd}.
 
 \subsection{Environmental data}\label{environmental-data}
 
 We monitored at real time temperature and watering throughout the
 experiment using multi-purpose sensors (Parrot SA, Paris, France). This
 enable us to adjust watering depending on the degree of
-evapotranspiration over the experiment. {[}more data here{]}
+evapotranspiration over the experiment. Overall the soil water content
+was lower in the blocks of drought treatment compared to the high
+watering treatments. The sensors outside of the tunnel showed in Madrid
+similar soil water content as the drought treatment and in Tübingen
+similar water content as in the high watering treatment. Temperatures
+were overall higher in Madrid than in Tübingen but did not vary between
+sensors inside and outside the tunnel \ref{fig:histoenv}.
 
 \section{Author contributions}\label{author-contributions}
 
@@ -424,20 +440,23 @@ The detailed list of contributed tasks of each authors
         \includegraphics[width=\linewidth]{../figs/P1030542.JPG_seggreenred.jpeg}
         \caption{} \label{fig:redexample}
     \end{subfigure}
-\caption{Example segmentation results from raw image (\subref{fig:rawseg}) to green (\subref{fig:greenexample})  and red (\subref{fig:redexample}) pixels only.}
-\label{fig:segmentation}
+    \caption{Example segmentation results from raw image (\subref{fig:rawseg}) to green (\subref{fig:greenexample})  and red (\subref{fig:redexample}) pixels only.}
+    \label{fig:segmentation}
 \end{figure}
 
 \begin{figure}
+    \centering
     \begin{subfigure}[t]{0.8\textwidth}
-        \centerline{\includegraphics[width=6in]{../figs/Figure_green_trajectory.pdf}}
+        \centering
+        \includegraphics[width=6in]{../figs/Figure_green_trajectory.pdf}
         \caption{} \label{fig:growth}
     \end{subfigure}
         \begin{subfigure}[t]{0.8\textwidth}
+        \centering
         \centerline{\includegraphics[width=3in]{../figs/Figure_redcount_histogram.pdf}}
         \caption{} \label{fig:red}
     \end{subfigure}
-    \caption{ Trajectories per pot  (\subref{fig:growth}) of number of green pixels for Madrid and Tübingen. Distribution of the number of red pixels per pot summed over different time frames (\subref{fig:red}) and the heuristically chosen threshold )red vertical line= to define whether the pot actually had a red label.}
+    \caption{Trajectories per pot of number of green pixels for Madrid and Tübingen (\subref{fig:growth}). Distribution of the number of red pixels per pot summed over different time frames (\subref{fig:red}) and the heuristically chosen threshold to define whether the pot actually had a red label(red vertical line).}
     \label{fig:pixels}
 \end{figure}
 
@@ -460,7 +479,7 @@ The detailed list of contributed tasks of each authors
 \end{figure}
 
 \begin{figure}
-    \centerline{\includegraphics[width=5in]{../figs/Figure_flowering_distribution}}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_flowering_distribution.pdf}}
     \caption{ Distribution of time since sowing date until flowering}
     \label{fig:flowerdistribution}
 \end{figure}
@@ -500,6 +519,12 @@ The detailed list of contributed tasks of each authors
     \centerline{\includegraphics[width=5in]{../figs/Figure_inflorescence_distribution.pdf}}
     \caption{ Distribution of total inflorescence size (number of pixels)}
     \label{fig:inflorescence}
+\end{figure}
+
+\begin{figure}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_watering_temperature.pdf}}
+    \caption{ Soil water content and temperature from the 35 sensors monitororing each experimental block and the conditions outside the tunnel.}
+    \label{fig:histoenv}
 \end{figure}
 
 \hypertarget{refs}{}

@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include=F}
 devtools::load_all(".")
-setup()
+setup_dryAR()
 
 wannaoverwrite=F
 # wannaoverwrite=T
@@ -28,7 +28,7 @@ wannaoverwrite=F
 # DATA READING
 ## Read the green pixels from image analysis
 
-```{r load packages}
+```{r read the image processed data}
 set_project_dir('field')
 
 # ## read harvesting info
@@ -46,6 +46,10 @@ head(veggy)
 tail(veggy)
 dim(veggy)
 
+```
+
+```{r merge images with genotype replicates}
+
 # merge
 
 data("genoreps")
@@ -58,6 +62,10 @@ head(veggy)
 # correct two folders with a non-standard name
 veggy$folder=gsub(veggy$folder,pattern = '2015_12_09y10', replacement = '2015_12_09',fixed=T) # to homogenize
 veggy$folder=gsub(veggy$folder,pattern = '2015_11_17_incompleto', replacement = '2015_11_17',fixed = T) # to homogenize
+
+
+# add an index of the pots and days
+veggy=mutate(veggy, indexrep=paste(site,qp,pos,day,sep='_'))
 
 # remove image information
 veggy= veggy %>% mutate( pathimage= paste(pathimage,folder,image,sep='/') ) %>%
@@ -73,14 +81,10 @@ head(veggy)
 ```{r find duplicated pots, eval=F}
 set_project_dir('field')
 
-## check duplicated image pots
-veggy=mutate(veggy, indexrep=paste(site,qp,pos,day,sep='_'))
-
 ## Number of pots used for replicability analysis
 dim(veggy[duplicated(veggy$indexrep),]) # There are 790 in total from both experiments
 unique(veggy[duplicated(veggy$indexrep),]$day)
 unique(veggy[duplicated(veggy$indexrep),]$qp)
-
 
 ## Run the test for replicability
 library(MCMCglmm)
@@ -125,14 +129,11 @@ veggy %>% tail()
 
 if(wannaoverwrite==T) devtools::use_data(veggy,overwrite = T)
 
-
 ```
-This is not run because takes some time, instead I load the data already produced
 
 
 # DATA FILTERING
-
-## Get the total number of green
+## Get the total number of green pixels
 ```{r total count of greens}
 set_project_dir()
 
@@ -146,40 +147,13 @@ p
 
 ```
 
-
-## Removing unsuccessful pots
+## Removing unsuccessful pots - indicated by the red labels
 ```{r count red and green pixels}
 set_project_dir()
 
 ########################################################################################################################
 ##### == >  RED FLAG
-# quantile(log10(veggy$countred+1),probs = seq(0,1,0.01))
-# whichred= log10(veggy$countred+1) > 1.4
-# table(whichred)
-# length(whichred)
-# nrow(veggy)
-# veggy<-veggy %>% mutate(isred=whichred)
-# 
-# table(veggy$isred)
-# lapply(veggy,veggy$potindex,FUN = function      (x) table(x$isred==TRUE))
-# 
-# 
-# dim(veggy)
-# redflags <- veggy%>%
-#   group_by(potindex) %>% summarize(redflag=table(isred == TRUE)['TRUE']>3) %>% filter(redflag==TRUE)
-#   # group_by(potindex) %>% summarize(redflag=any(isred==TRUE)) %>% filter(redflag==TRUE) # i think this is picking many false positives
-# dim(redflags)
-# unique(redflags$potindex) %>% length()
-# 
-# redflags <- veggy%>%
-#   group_by(potindex) %>% summarize(redflag=table(isred == TRUE)['TRUE']) 
-#   # group_by(potindex) %>% summarize(redflag=any(isred==TRUE)) %>% filter(redflag==TRUE) # i think this is picking many false positives
-# dim(redflags)
-# 
-# hist(redflags$redflag)
-####  this method was too sensitive. I came back to the previous one of cumulative sum
-
-# Cumulative sum
+# Cumulative red sum
 red=veggy %>% 
   # group_by(site,qp,pos,trayid,rep,indpop,water,id) %>% 
   group_by(potindex) %>% 
@@ -187,7 +161,6 @@ red=veggy %>%
 
 p<-ggplot(data=red,aes(x=log10(redsum+1)),fill='black' )+geom_histogram(binwidth = 0.1) + labs(x='log 10 (# red pixels +1)') 
 p
-
 
 # Calculate variance across groups by establishing different threshold values
 ## By calculating F statistic, we calculate the variance between two groups of pots 
@@ -222,6 +195,9 @@ greenflag <- green%>% mutate(isnotgreen = greensum<10) %>%
 dim(greenflag)
 unique(greenflag$potindex) %>% length()
 
+########################################################################################################################
+##### == >  FILTER BOTH FLAGS
+
 # select those post that do not have every a red flag or green flag (no pixel)
 veggyclean <- veggy %>%
   # do the filtering of red flags
@@ -236,6 +212,7 @@ dim(veggyclean)
 if(wannaoverwrite==T) devtools::use_data(veggyclean,overwrite = T)
 
 ```
+
 
 ## Model all trajectories as sigmoidal functions
 
@@ -256,9 +233,9 @@ veg<-  veggyclean %>%
 # calculate several trajectory informations
   
   summarize(
-            ss.a=fitsigmoid(countgreen,daycount,parameter='a'),
-            ss.b=fitsigmoid(countgreen,daycount,parameter='b'),
-            ss.c=fitsigmoid(countgreen,daycount,parameter='c'),
+            # ss.a=fitsigmoid(countgreen,daycount,parameter='a'),
+            # ss.b=fitsigmoid(countgreen,daycount,parameter='b'),
+            # ss.c=fitsigmoid(countgreen,daycount,parameter='c'),
             spline1=fitspline(y=countgreen,x=daycount),
             green1=firstgreen(y=countgreen,x=daycount),  # first green pixels is kind of arbitrary
             lin0=fitlinear(countgreen,daycount,'significance')  # Probably the regression one is not so nice.
@@ -267,14 +244,14 @@ veg<-  veggyclean %>%
 
 
 ## Get the merge with total counts of red and green
+names(veg )
+names(red)
+names(green)
 
 veg=veg %>%
-  full_join(.,red,by=c('site','qp','pos','trayid','rep','indpop','water','id')) %>%
-  full_join(.,green,by=c('site','qp','pos','trayid','rep','indpop','water','id', 'potindex'))
-dim(veg)
+  left_join(.,red,by=c('potindex')) %>%
+  left_join(veg,green,by=c('site','qp','pos','trayid','rep','indpop','water','id', 'potindex'))
 
-ggplot(veg) + 
-  geom_hex(aes(y=greensum, x=redsum))
 
 veg %>% dim()
 veg %>% head()

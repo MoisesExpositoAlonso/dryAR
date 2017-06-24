@@ -1,0 +1,130 @@
+---
+title: "Flowering exploration of the 1001G fiel experiment"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+
+## Packages set up and loading data
+
+```{r setup, include=F}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+# library(moiR)
+load_all("~/moiR")
+load_all(".")
+
+data(veggy)
+data(veggy)
+data(veg)
+
+```
+
+
+### Every how many days pictures were taken
+
+```{r}
+
+daysmad= veggy %>% filter(site=='madrid') %>% select(day) %>% unique() %>% as.matrix()
+daysmad
+as.Date(daysmad) %>% sort() %>% diff()%>% as.numeric() %>% summary()
+
+daysmad= veggy %>% filter(site=='tuebingen') %>% select(day) %>% unique() %>% as.matrix()
+daysmad
+as.Date(daysmad) %>% sort() %>% diff()%>% as.numeric() %>% summary()
+
+
+```
+
+
+## Single pot trends as example
+
+```{r plot fail pot}
+veggy %>% filter(trayid == "27_i_l" ,pos=="a3", site=="madrid") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+#This is an example of a fail pot, where green pixels are low all the time but a red flag was put to identify them
+
+
+veggy %>% filter(trayid == "27_i_l" ,pos=="a4", site=="madrid") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+#The decrease in January of some is due to the thinning of plants for
+
+veggy %>% filter(trayid == "9_p_l" ,pos=="e7", site=="tuebingen") %>%
+  ggplot(.) + geom_point(aes(y=countgreen,x=day),color="green") +
+  geom_point(aes(y=countred,x=day),color="red")
+#This plot is a populatino replicate therefore there is no sudden decay, only that due to mortality at the end of the experiment
+
+```
+
+
+## Plot general trends of red area and determine which pots are labeled red
+```{r plot general trend red area, warning=F}
+set_project_dir()
+
+veggy %>% 
+ggplot() + geom_line(aes(y=countred,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
+
+p<-ggplot(data=veggy,aes(x=log10(countred+1)),fill='black' )+geom_histogram() + labs(x='log 10 (# red pixels +1)')
+p
+
+# this is just
+
+```
+
+
+## Plot general trends of green area
+```{r plot general trends}
+set_project_dir('field')
+
+veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_"))  %>% mutate(site_water=paste(site,water,sep="_"))
+
+veggy %>% filter(indpop=='i') %>%
+ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) +
+   labs(
+    y = "# green pixels",
+    colour = ""
+   )#+ theme(legend.position="none")
+
+veggy %>% filter(indpop=='p') %>%
+ggplot() +
+  # geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) +
+  geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.05 ) +
+  labs(
+    y = "# green pixels",
+    colour = ""
+   )#+ theme(legend.position="none")
+
+p1<-
+veggy %>% filter(indpop=='p',site=='madrid') %>%
+ggplot() +
+  geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(water)),alpha=0.05 ) +
+  scale_color_manual(values = c("blue",  "red"))+
+  labs(title='Madrid',
+    y = "# green pixels",
+    colour = "Watering"
+   )+ guides(colour = guide_legend(override.aes = list(alpha = 1)))
+
+p2<-
+veggy %>% filter(indpop=='p',site=='tuebingen') %>%
+ggplot() +
+  geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(water)),alpha=0.05 ) +
+  scale_color_manual(values = c("blue",  "red"))+
+  labs(title='Tübingen',
+    y = "# green pixels",
+    colour = "Watering"
+   )+ guides(colour = guide_legend(override.aes = list(alpha = 1)))
+
+
+panel<-plot_grid(p1,p2)
+save_plot(filename="figs/Figure_green_trajectory.pdf",plot = panel, base_width = 10,base_height = 3.8)
+
+```

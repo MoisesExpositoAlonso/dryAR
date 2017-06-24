@@ -49,14 +49,16 @@ tail(harvest)
 dim(harvest)
 
 # merge
-
 data("genoreps")
 head(genoreps)
 
 harvest= merge(harvest,genoreps, by.x=c('qp','pos','site','ptype'),by.y=c('qp','pos','site','indpop'),all.y=T) %>%  ### NOTE ALSO THAT CAN BE SEVERAL PICTURES FOR A SINGLE POT!
   rename(indpop=ptype)
+  # important to consider that the indpop or population type could be either that the image was mistaken or that when I labeled them there was r1 and then it was actually only r
+
 head(harvest)
 tail(harvest)
+
 
 # put in the number column NA when it is an individual replicate
 harvest$num[harvest$indpop == 'i']<-NA
