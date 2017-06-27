@@ -3,7 +3,8 @@ setup_dryAR<-function(){
 library(devtools)
 
 library(knitr)
-library(dplyr,tidyr)
+library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(cowplot)
 library(RColorBrewer)

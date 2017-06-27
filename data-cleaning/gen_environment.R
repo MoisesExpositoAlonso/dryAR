@@ -1,4 +1,5 @@
 ### Script to read all environmental data from my FLower Power sensors ###
+set.seed(1)
 devtools::load_all('.')
 setup_dryAR()
 
@@ -99,11 +100,29 @@ histwater=ggplot(envsample,aes(y=vwc_percent, x=Treatment,fill=Treatment)) +
     stat_summary(fun.data=data_summary_median)
 histwater
 
+histwater=ggplot(envsample,aes(y=vwc_percent, x=Site,fill=Treatment)) +
+  geom_violin(alpha=0.4,na.rm=T) +
+    # facet_wrap( ~Site,nrow=1)+
+    facet_wrap( ~Treatment,nrow=1)+
+    # scale_color_manual('',values=c('blue', 'red', 'black'))+
+    scale_fill_manual('',values=transparent(c('blue', 'red', 'black')))+
+    ylab('Soil water content (%)') + xlab('')+
+    stat_summary(fun.data=data_summary_median)
+histwater
+
 
 histtemp=ggplot(envsample,aes(y=air_temperature_celsius, x=Treatment,fill=Treatment)) +
   geom_violin(alpha=0.4,na.rm=T) +
-  # geom_boxplot,width=.1,alpha=0.5) +
     facet_wrap( ~Site,nrow=1)+
+    scale_color_manual('',values=c('blue', 'red', 'black'))+
+    scale_fill_manual('',values=c('blue', 'red', 'black'))+
+    ylab('Soil surface temperature (ºC)') + xlab('')+
+  stat_summary(fun.data=data_summary_median)
+histtemp
+
+histtemp=ggplot(envsample,aes(y=air_temperature_celsius, x=Site,fill=Treatment)) +
+  geom_violin(alpha=0.4,na.rm=T) +
+    facet_wrap( ~Treatment,nrow=1)+
     scale_color_manual('',values=c('blue', 'red', 'black'))+
     scale_fill_manual('',values=c('blue', 'red', 'black'))+
     ylab('Soil surface temperature (ºC)') + xlab('')+
