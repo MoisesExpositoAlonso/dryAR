@@ -1,0 +1,23 @@
+qp	position	this_is_the_stored_label_and_is_corrected	substitute_by_this	organ	observation
+288	c4	d4	d4	i	0
+288	c4	d4	d4	r	0
+285	e7	b8	b8	r	0
+285	b8	c8	c8	r	0
+305	d7	e7	e7	i	0
+305	d7	e7	e7	r	0
+310	c2	e2	e2	i	0
+310	c2	e2	e2	r	0
+187	b5	b6	b6	r	0
+187	d5	e5	e5	i	0
+187	d5	e5	e5	r	0
+187	d5	d6	e6	i	0
+187	d5	d6	e6	r	0
+188	E2				no_flash
+182	C3				no_flash
+182	D8				no_flash
+180	D5				no_flash
+186	A2				no_flash
+177	D1				no_flash
+177	B1				no_flash
+180	B1				no_flash
+242	a6			r	rosette_lost_by_wind

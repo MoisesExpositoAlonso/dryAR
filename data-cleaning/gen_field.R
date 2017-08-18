@@ -1,11 +1,24 @@
-library(dplyr);library(tidyr)
+# ---
+# title: Read the harvesting data
+# author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+# date: '`r Sys.Date()`'
+# ---
+
+message('-------------------------------------------------')
+message('Generating field data')
+message('-------------------------------------------------')
+
+pryr::mem_used()
+library(dplyr)
+library(tidyr)
 library(devtools)
+library(ggplot2)
+library(cowplot)
 
 load_all("~/moiR/")
-# library(moiR)
-
+pryr::mem_used()
 load_all(".")
-# library(field)
+pryr::mem_used()
 
 #### wannaoverwrite
 wannaoverwrite=T
@@ -13,54 +26,55 @@ wannaoverwrite=T
 #### Get the datas
 
 data(acc)
+data(genoreps)
 data(flowering)
 data(veg)
 data(harvest)
 
+dim(genoreps)
+dim(veg)
 dim(flowering)
 dim(harvest)
-dim(genoreps)
 
 head(acc)
 head(flowering)
 head(veg)
 head(harvest)
 
+################################################################################
 #### master dataset ####
+# acc => contains locations of origin and other information
+# veg => contains the sucessfully sown pots
+# flowering => contains FT and the survival to reach flowering
+# harvest => contains Fitness and the survival to reach reproduction
 
-dupcol= c(colnames(flowering),colnames(harvest)) [ duplicated(c(colnames(flowering),colnames(harvest))) ]
-c("qp","pos","site",'rep','trayid','water', 'indpop','id')
-
-harvestinflorescence= harvest %>% filter(Harv.organ =='i')
-
-dim(field)
-names(field)
-names(veg)
-
-c(colnames(flowering),colnames(veg))[ duplicated(c(colnames(flowering),colnames(veg)))  ]
-c(colnames(flowering),colnames(harvest)) [ duplicated(c(colnames(flowering),colnames(harvest))) ]
-
-dim(veg)
-veg
-
-field <-
-  acc %>%
-    # because I want to keep all the replicates from field data
-    merge.data.frame(
-      .,flowering,by="id", all=T ) %>%
-    # add the vegetative
-    merge(x=.,y= veg, by= dupcol, all=T) %>%
-    merge(x=.,y= harvestinflorescence, by= dupcol, all=T)
-dim(field)
+field<-
+  merge(acc,genoreps,by=dupcol(acc,genoreps), all.y=T) %>%
+  merge(.,veg,by=dupcol(.,veg), all.y=T) %>%
+  merge(.,flowering,by=dupcol(.,flowering), all.x=T) %>%
+  merge(.,harvest,by=dupcol(.,harvest), all.x=T)
 
 
+field %>% names
+field %>% head
+field %>% tail
+field %>% dim
 
-print('The dimensions and first/last lines of field:')
-dim(field)
-head(field)
-tail(field)
-names(field)
 
-if(wannaoverwrite==T)
-  devtools::use_data(field,overwrite = wannaoverwrite)
+################################################################################
+### A couple of quality controls
+# There are some flowering unknowns, -9, because it was unclear (only 4, consider dead)
+field$FT.q[field$FT.q == -9 & !is.na(field$FT.q)] <- NA
 
+# To be able to calculate later the fitness, I make the harv.num that is NA, zero
+field$Harv.num %>% unique
+
+field[is.na(field$Harv.num),'Harv.num']<-0
+# and the -9, which are from ind. replicates, I will change to 1 later
+
+
+################################################################################
+### write
+summary(field)
+
+devtools::use_data(field,overwrite = T)

@@ -12,3 +12,6 @@ analyses/*/*/*.png
 *.dll
 *.so
 *.o
+*.log
+*.aux
+*.Rhistory

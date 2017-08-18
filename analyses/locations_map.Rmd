@@ -4,8 +4,6 @@ author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  #pdf_document: default
-  #html_notebook: default
 ---
 
 
@@ -14,7 +12,8 @@ output:
 ```{r setup, include=F}
 library(knitr)
 library(dplyr,tidyr)
-library(ggplot2);library(cowplot)
+library(ggplot2)
+library(cowplot)
 library(devtools)
 library(RColorBrewer)
 # library(moiR)
@@ -27,6 +26,7 @@ load_all(".")
 ## Get data from GBIF and field experiment
 ```{r, retrieve data}
 # gbif<-get_gbif()
+data(field)
 data("gbif")
 data("acc")
 data('g1001')
@@ -36,10 +36,11 @@ data('g1001')
 
 ## Plot
 ```{r, plot overlap map}
-p <- createmap(mapcol =  "black",countrycol = transparent('black') )
+set_project_dir()
+p <- ggplot_world_map(mapcol =  "black",countrycol = transparent('black') )
 p
 
-p <- field::createmap(mapcol =  "black")
+p <- ggplot_world_map(mapcol =  "black")
 z <- p+geom_point(data=gbif,aes(x=lon,y=lat),col=c("grey"),size=c(0.2),alpha=0.8 ) + theme(legend.position="none")+
     geom_point(data=g1001,aes(x=longitude,y=latitude),col="blue",size=c(0.5),alpha=1 ) + theme(legend.position="none")+
     geom_point(data=acc,aes(x=longitude,y=latitude),col="red",size=c(0.5),alpha=1 ) + theme(legend.position="none")
@@ -49,9 +50,11 @@ ggsave(z,filename = "figs/Figure_gbif_field_occurrence_map.pdf" ,useDingbats=FAL
 ```
 
 ## Plot
-```{r, plot overlap map}
-p <- createmap(mapcol =  "grey",countrycol = ('grey') )
-p <- createmap()
+```{r, plot acc}
+set_project_dir()
+
+p <- ggplot_world_map(mapcol =  "grey",countrycol = ('grey') )
+p <- ggplot_world_map()
 p
 
 z<-p+geom_point(data=acc,aes(x=longitude,y=latitude),col="white",size=c(1),alpha=1 ) +

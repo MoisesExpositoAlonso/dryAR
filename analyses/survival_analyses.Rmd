@@ -1,0 +1,62 @@
+---
+title: "Survival analysis of the 1001G fiel experiment"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  # html_notebook: default
+  pdf_document: default
+---
+
+### Packages set up
+
+```{r setup,message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+library(stargazer)
+library(moiR)
+library(MCMCglmm)
+
+source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+load_all(".") # field
+
+```
+
+### load data sets
+
+```{r field }
+data(field)
+dim(field)
+names(field)
+stargazer(field,type='text')
+
+data(veggy)
+```
+
+
+## Survival until flowering
+```{r}
+mli<-MCMCglmm(data=filter(field,site=='madrid',water=='l',indpop=='i'),
+             relative(FT.q) ~ 1,
+             random= ~ id
+           )
+mli=m1
+randomname=colnames(mli$VCV)
+allvariance=apply(mli$VCV, 1, sum)
+posterior<-mli$VCV[,randomname]/ allvariance
+HPDinterval(posterior,0.95)
+posterior.mode(posterior)
+
+
+
+names(field)
+genotypevar(random=c("id","site","water","indpop"),filter = F )
+genotypevar(variable="Harv.q",random=c("id","site","water","indpop"),filter = F )
+genotypevar(variable="FT.dif",random=c("id","site","water","indpop"),filter = F ,relative=F)
+
+
+```
+

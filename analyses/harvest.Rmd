@@ -1,0 +1,123 @@
+---
+title: Fruits distributions
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+---
+
+
+```{r}
+data(harvest)
+
+library(ggplot2)
+library(cowplot)
+
+harvest %>% 
+  filter(!is.na(pathimage)) %>%
+ggplot() +
+  # geom_histogram(aes(x=Harv.area,group=water,fill=water,alpha=0.3)) + 
+  geom_histogram(aes(x=Harv.sk,group=water,fill=water,alpha=0.3)) + 
+  scale_fill_manual(values = c("h"="navy","l"="red3"))+
+  facet_grid(site~ptype)+
+  theme_bw() +
+  # xlab('Total segmented inflorescence area (# pixels)') + 
+  xlab('Total inflorescence length (# pixels)') + 
+  scale_alpha(guide = 'none') -> p1
+p1
+
+set_project_dir()
+save_plot(filename = 'figs/Figure_inflorescence_distribution.pdf',base_height = 6,base_width = 6, plot=p1)
+
+
+# and a scatterplot
+ggplot(h) + 
+  geom_point(aes(x=ep, y=bp,group=organ, color=organ),alpha=0.5)
+
+ggplot(h) + 
+  geom_point(aes(x=sk, y=totarea,group=organ, color=organ),alpha=0.5)
+
+ggplot(h) + 
+  geom_point(aes(x=sk, y=totarea,group=organ, color=organ),alpha=0.5)
+
+h[,c('sk','totarea','bp','ep')] %>% 
+  na.omit() %>%
+prcomp(.) -> pcaorgan
+
+summary(pcaorgan) 
+
+organ=na.omit(h[,c('sk','totarea','bp','ep','organ')])$organ
+ggplot(data.frame(pcaorgan$x )) + 
+    geom_point(aes(x=PC1, y=PC2,group=organ,color= organ),alpha=0.5)
+
+
+```
+
+
+## Model to predict harvested organ from image analysis
+```{r}
+
+h$organ %>% table()
+
+hnona=filter(h, !is.na(organ))
+
+
+library(randomForest)
+modorgan<-randomForest::randomForest(data=hnona, 
+                                        factor(organ) ~ ep + bp + totarea + sk ,
+                                        importance=T,
+                                        keep.inbag=T
+                      )
+
+# Proportion of wrongly infered
+validation=data.frame(pred=as.character(predict(modorgan)), 
+                      real=hnona$organ)
+validationorgan=table(validation$pred == validation$real)['TRUE'] / nrow(hnona)
+devtools::use_data(validationorgan,overwrite = T)
+
+# Relabel
+hnona[which(validation$pred != validation$real),] %>% 
+  write.csv('data-raw/harvestraw_torelabel.csv',row.names = F,quote = F)
+hnona[which(validation$pred != validation$real),] %>% 
+  write.csv('data-raw/harvestraw_original.csv',row.names = F,quote = F)
+
+# read relabeled
+hnona_relabeled=read.csv('data-raw/harvestraw_relabeled_test.csv',stringsAsFactors = F)
+hnona_relabeled<- filter(hnona_relabeled, is.na(pos))
+hnona_relabeled$organ = ifelse(hnona_relabeled$organ =='e', 'i', 'r')
+
+hnona_relabeled %>%
+  select(pathimage,organ) %>%
+  merge(hnona,.,by='pathimage') -> check_relabeled
+
+table(check_relabeled$organ.x  ==check_relabeled$organ.y) / nrow(check_relabeled)
+
+
+```
+
+
+```{r}
+# Second correction
+# could look whether two ids are duplicated -- it could be that the two organs, i and r, are labeled the same
+# set_project_dir()
+# 
+# merge(veg,harvest,by=dupcol(veg,harvest), all.x=T) -> trial
+# 
+# duplicated(trial$potindex) %>% table
+# trial[duplicated(trial$potindex) , ] %>% arrange(id,trayid)
+# 
+# openimage('../data/field_tuebingen_harvesting/2016_04_27/P1070220.JPG')
+# 
+# harvest[]
+# harvest$trayid
+# 
+# harvest2= harvest %>% mutate( potindex=paste(site,qp,pos,id,sep="_")) 
+# 
+# 
+# harvest2[duplicated(harvest2$potindex),]
+# openimage('../data/field_tuebingen_harvesting/2016_06_02/P1130730.JPG')
+
+
+
+```
+

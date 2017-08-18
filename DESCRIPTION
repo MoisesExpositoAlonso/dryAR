@@ -7,13 +7,12 @@ Description: The package allows cleaning, manipulation, and analysis of
     data from multiple sources, including the 1001 Genomes of Arabidopsis field
     experiment.
 Depends:
-    R (>= 3.2)
-Imports:
-    dplyr,
-    tidyr,
+    R (>= 3.2),
     moiR,
+    dplyr,
+    tidyr
+Imports:
     RColorBrewer,
-    Rcpp
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

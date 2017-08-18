@@ -1,4 +1,15 @@
-library(dplyr);library(tidyr)
+# ---
+# title: Read the harvesting data
+# author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+# date: '`r Sys.Date()`'
+# ---
+
+message('-------------------------------------------------')
+message('Generating flowering data')
+message('-------------------------------------------------')
+
+library(dplyr)
+library(tidyr)
 library(devtools)
 
 load_all("~/mexposito/moiR/")

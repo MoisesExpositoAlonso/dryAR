@@ -1,7 +1,7 @@
 ---
 title: "A climate selection experiment with 517 *Arabidopsis thaliana* ecotypes"
 author: \newline \normalfont 
-  Moises Exposito-Alonso^1^\textsuperscript{*}  , 
+  Moises Exposito-Alonso^1^\textsuperscript{*}, 
   Rocío Gómez Rodríguez^2^, 
   Cristina Barragán^1^, 
   Giovanna Capovilla^1^,
@@ -18,38 +18,36 @@ author: \newline \normalfont
   Talia Karasov^1^,
   Sonja Kersten^1^,
   Sebastian Petersen^1^,
-  Leily Rabbani^1^,
   Julian Regalado^1^,
+  Lukas Reinelt^1^,
   Beth Rowan^1^,
   Danelle Seymour^1^,
   Efthymia Symeonidi^1^, 
   Rebecca Schwab^1^,
-  Diep Tran^1^,
+  Diep Thi Ngoc Tran^1^,
   Kavita Venkataramani^1^,
   Anna-Lena Van de Weyer^1^,
+  François Vasseur^1^,
   George Wang^1^,
   Ronja Wedegärtner^1^,
   Frank Weiss^1^,
+  Leily Rabanni^1^,
   Rui Wu^1^,
   Wanyan Xi^1^,
   Maricris Zaidem^1^,
   Wangsheng Zhu^1^,
   Fernando García Arenal^2^,
-  Carlos Alonso Blanco^3^,
-  Xavier Picó^4^,
   Hernán A. Burbano^1^,
-  Oliver Bossdorf^5^,
+  Oliver Bossdorf^3^,
   Detlef Weigel^1^.
   \newline 
   \small
   \newline \textsuperscript{1} Max Planck Institute for Developmental Biology, Tübingen, Germany    
   \newline \textsuperscript{2} Centre for Plant Biotechnology and Genomics, Technical University of Madrid, Pozuelo de Alarcón, Spain 
-  \newline \textsuperscript{3} National Centre of Biotechnology, Cantoblanco, Madrid, Spain  
-  \newline \textsuperscript{4} Doñana Biological Station, Sevilla, Spain
-  \newline \textsuperscript{5} University of Tübingen, Tübingen, Germany
+  \newline \textsuperscript{3} University of Tübingen, Tübingen, Germany
   \newline
   <!--  \newline \textsuperscript{*} correspondence to moisesexpositoalonso@gmail.com -->
-  \newline \newline \newline \newline \newline \newline 
+  \newline \newline \newline \newline \newline \newline \newline \newline 
   
 #date: '`r format(Sys.time(), "%d %m %Y")`'
 header-includes:
@@ -63,8 +61,11 @@ header-includes:
  
 fontsize: 12pt
 geometry: margin=1.5in
- 
-abstract: To quantify phenotypic and genetic natural selection, the gold standard are evolution experiments. However, studies that include whole-genome data are still scarce. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For organisms with generations that span months or years such as \textit{Arabidopsis thaliana}, cross-sectional studies are most feasible. Here we present an experiment carried out in a Mediterranean and a Central European field stations with rainout shelters so we could apply a high and low rainfall treatment in each location. In those we planted 12 replicates per treatment combination of 517 whole-genome sequenced \textit{A. thaliana} lines covering the global distribution. We included the raw data and processing code in an R package "dryAR" available at \url{http://github.com/MoisesExpositoAlonso/dryAR}. We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
+
+#Thinning plants, flowering monitoring, harvesting the plants to take photos and to store the plant material, taking photos
+
+
+abstract: To quantify phenotypic and genetic natural selection, the gold standard are evolution experiments. However, studies that include whole-genome data are still scarce. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For organisms with generations that span months or years such as \textit{Arabidopsis thaliana}, cross-sectional studies are most feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station with rainout shelters which enabled to apply a high and low rainfall treatment in each location. We planted 12 replicates per treatment combination of 517 whole-genome sequenced \textit{A. thaliana} lines covering the global distribution. To make the data and processing code available, we created a companion R package "dryAR" (\url{http://github.com/MoisesExpositoAlonso/dryAR}). We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
  
 keywords: Arabidopsis thaliana, natural selection, field experiments, climate change
  
@@ -109,49 +110,52 @@ knitr::opts_chunk$set(
 # Field experiment design
 ## The ecotypes from the 1001 Genomes Projects
  
-The 1001 project [@1001_Genomes_Consortium2016-nw] comprises 1135 accession lines (or ecotypes) sequenced (Fig. \ref{fig:ecotypes}). Here are the details of the protocol used to select the most informative, less biased sample of the lines within the 1001 genomes project in order to prioritize phenotypic efforts. Filtering consisted in several approaches: (1) First we aimed to remove those accessions with the lowest genome quality. Among 1135, we discarded those with < 10X genome coverage and < 90% congruence of SNPs called from Max Planck Institute and Gregor Mendel Institute pipelines [@1001_Genomes_Consortium2016-nw]. The remaining number were 959 accessions. (2) Parallely, we filtered almost-identical individuals. Using Plink we computed identity by state genome-wide across the 1135 accessions. For those pairs of accessions with < 0.01 differences per SNP, we randomly picked one. This resulted in 889 accessions. The merge between (1) and (2) criteria was 762. (3) Finally, we reduced geographic ascertainment. Sampling for the 1001g project was not performed in either a random nor regular structured scheme. Some laboratories provided several lines per locations whereas others provided lines that were at least several hundred kilometres apart. Employing latitude and longitude degrees, we computed euclidean distances across the 1135 accessions and identified pairs that were < 0.0001 distance, that is accessions from the same population ( << 100 meters), and randomly picked one. This resulted in 682 accessions. We merged the resulting lists of accessions after the three quality filtering procedures and obtained a final set of 523 accessions. We reproduced accessions in controlled conditions to generate enough seeds for the field experiment. A total of 517 accessions were finally planted in the field experiments (Fig. \ref{fig:ecotypes}).
+The 1001 Genomes project [@1001_Genomes_Consortium2016-nw] comprises 1135 sequenced accession lines (or ecotypes) (Fig. \ref{fig:ecotypes}). To select the most informative, less biased lines within the 1001 genomes project, we set some quality criteria. These consisted of several filters: (1) First we aimed to remove those accessions with the lowest genome quality. We discarded those with < 10X genome coverage and < 90% congruence of SNPs called from Max Planck Institute and Gregor Mendel Institute pipelines [@1001_Genomes_Consortium2016-nw], which resulted in 959 accessions. (2) Parallely, we filtered almost-identical individuals. Using Plink [@Purcell2007-wl] we computed identity by state genome-wide across the 1135 accessions. For pairs of accessions with < 0.01 differences per SNP, we randomly picked one. This resulted in 889 accessions. After the (1) and (2) criteria 762 accessions remained. (3) Finally, we reduced geographic ascertainment. Sampling for the 1001 Genomes project was not performed in either a random nor regular structured scheme. Some laboratories provided several lines per locations whereas others provided lines that were at least several hundred kilometres apart. Employing latitude and longitude degrees, we computed euclidean distances across the 1135 accessions and identified pairs that were < 0.0001 distance, that is accessions from the same population ( << 100 meters), and randomly picked one. This resulted in 682 accessions. We merged the resulting lists of accessions after the three quality filtering procedures and obtained a final set of 523 accessions. We propagated accessions in controlled conditions to generate seeds for the field experiment. A total of 517 accessions were finally planted in the field experiments (Fig. \ref{fig:ecotypes}).
  
 ################################################################################
 
 ## Field settings and watering  
  
-We build two 30m x 6m tunnels with similar PVC plastic foils to fully exclude rainfall in Madrid and in Tübingen (Fig 2). The foil tunnels are different from a greenhouse in that they are completely opened in two sides, thus ambient temperatures vary as much as any outdoor experiment [include environmental information]. In each location, we supplied artificial watering at two contrasting regimes: abundant watering and reduced watering. Inside each tunnel, we created an approximate 10% slope and set up four flooding tables in the ground (1m x 25m). The lower elevation side of the flooding table was used to drain the water provided from the other, higher elevation, side of the table (Fig 2). The soil from trays from the two treatments clearly showed a consistent difference in water content [insert environment].
- 
+We built two 30m x 6m tunnels with similar PVC plastic foils to fully exclude rainfall in Madrid and in Tübingen (Fig. \ref{fig:fieldsetup}). The foil tunnels are different from a greenhouse in that they are completely opened in two sides, thus ambient temperatures vary as much as in any outdoor experiment. In each location, we supplied artificial watering at two contrasting regimes: abundant watering and reduced watering. Inside each tunnel, we created an approximate 10% slope and set up four flooding tables in the ground (1m x 25m). The lower elevation side of the flooding table was used to drain the water provided from the other, higher elevation, side of the table (Fig. \ref{fig:blocks}).  
+
 We used trays of 8x5 cells (5.5 x 5.5 x 10cm size). One genotype was planted per cell. We grew a total of 12 replicates per genotype per treatment. Five replicates were planted at a density of 30 counted seeds per cell and were let grow without disturbance ("population replicate"). Seven were planted at low density (ca. 10 seeds) and once germinated one seedling was selected at random ("individual replicate"). 
+
+We monitored temperature and watering at real time throughout the experiment using multi-purpose sensors (Parrot SA, Paris, France). This enable us to adjust watering depending on the degree of evapotranspiration over the experiment. Overall the soil water content was lower in the blocks of drought treatment compared to the high watering treatments. The sensors outside of the tunnel in Madrid (i.e. only natural rainfall) showed similar soil water content as the drought treatment we artificially imposed inside of the tunnels both in Madrid and in Tübingen. Similarly, the sensors outside of the tunnel in Tübingen showed similar water content as in the high watering treatment in both locations. Temperatures were overall higher in Madrid than in Tübingen, but did not vary between sensors inside and outside the tunnel (see Fig. \ref{fig:histoenv}).
+
 
 ################################################################################
 
 ## Blocking and randomization
  
-We used an incomplete block randomized designed (Fig. \ref{fig:blocks}). A total of 16 blocks were established. For each watering treatment there were two blocks, which were intercalated. Within each flooding table there were four blocks, two of individual replicates and two of population replicates; also intercalated. Within each watering x replicate type x replicate number combination block, genotypes were randomly distributed in the trays (Fig. \ref{fig:trays}). The randomized designed was identical in Madrid and Tübingen.
+We used an incomplete block randomized designed (Fig. \ref{fig:blocks}). A total of 16 blocks were established. For each watering treatment there were two intercalated blocks. Within each flooding table there were four also intercalated blocks, two of individual replicates and two of population replicates. Within each watering x replicate type x replicate number combination block, genotypes were randomly distributed in the trays (Fig. \ref{fig:trays}). The randomized designed was identical in Madrid and Tübingen.
  
 ## Removal of errors during sowing and possible contaminations
  
-In a large enterprise such as this field experiment, errors can occur. However, we tried to control such errors by reducing the “degrees of freedom” of the experimenters. We tried to accomplish this by preparing and curating all eppendorf with the seeds to be sown in cardboard boxes with the same cells as in the target trays and arranged them in their corresponding (randomised) locations. Then, during sowing each experimenter took a box at random and went to the corresponding tray in the field previously arranged (Fig. S2). This reduced the possibility of sowing errors, but when an incorrect sowing was done (wrong positions, badly sprayed), we recorded those and exclude them from the analyses.
+In a large enterprise such as this field experiment, errors can occur. However, we tried to control such errors by reducing the “degrees of freedom” of the experimenters. We tried to accomplish this by preparing and curating Eppendorf tubes containing the seeds to be sown in cardboard boxes with the same cells as in the target trays and arranged them in their corresponding (randomised) locations. During sowing each experimenter took a box at random and went to the corresponding previously arranged tray in the field (Fig. \ref{fig:blocks}). This reduced the possibility of sowing errors.
  
-We were aware that contamination of neighboring pots was a risk. For that reason the first watering days were gentle. Furthermore, we pick a day with no wind and we throw the seeds from 1-2 cm height from the soil. During the vegetative grow we identified germination that looked like neighbour contamination and remove those. Although we lost a number of plants, the power of the design was the replication, thus we discarded everything that looked suspicious. During the recording of flowering time, we used the homogeneity of flowering within a pot as a sign of contamination. When a plant had a completely different flowering stage and leaf phenotypes did not coincide with the majority of the pot, this plant was removed.
+We were aware that contamination of neighboring pots was a risk. For that reason the first watering days were gentle. We also chose a day with no wind and we sow the seeds from 1-2 cm height from the soil. During the vegetative growth we identified germination that looked like neighbour contamination and remove those. Although we lost a number of plants, the power of the design was the replication, thus we discarded everything that looked suspicious. During the recording of flowering time, we used the homogeneity of flowering within a pot as a sign of contamination. When a plant had a completely different flowering stage and leaf phenotypes did not coincide with the majority of the pot, this plant was removed.
  
 ################################################################################
  
 # Recording of flowering time
  
-We visited the field experiment on average every 1 or 2 days and recorded manually what pots had flowered. To keep track from previous visits and avoid errors, we sticked blue pins in the pots were flowering was recorded. This removed a source of human error. To calculate flowering time, we counted the number of days from the date of sowing to to the assigned flowering date. Fig. \ref{fig:flowerraw} shows the raw flowering time data per pot in the original spatial distribution of pots as in ref\{fig:blocks}.  Fig. \ref{fig:flowerdistribution} shows the distribution of flowering time per treatment combination. Note that grey boxes in Fig. \ref{fig:flowerraw} are pots with plants that did not survive until flowering. For more visualizations of flowering time see  \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
+We visited the field experiment on average every 1-2 days and manually recorded the pots that had flowered. To keep track from previous visits and avoid errors, we stuck blue pins in the pots were flowering had already been recorded. This removed a source of human error. To calculate flowering time, we counted the number of days from the date of sowing to the assigned flowering date. Fig. \ref{fig:flowerraw} shows the raw flowering time data per pot in the original spatial distribution of pots as in Fig. \ref{fig:fieldsetup}.  Fig. \ref{fig:flowerdistribution} shows the distribution of flowering time per treatment combination. Note that grey boxes in Fig. \ref{fig:flowerraw} are pots with plants that did not survive until flowering. For more visualizations of flowering time see  \url{http://github.com/MoisesExpositoAlonso/field/analyses/flowering_exploration.html}.
  
 ################################################################################
 
 # Image production and analysis
 ## Vegetative rosettes
  
-Top-view images were taken every four to five days (median) with a Panasonic DMC-TZ61 digital camera and a customized closed black box (Fig. \ref{fig:trays}) at a distance of 40 cm from the tray. Photos were taken on average every x days from the sowing date until flowering plants impede the acquisition -- a total of 20 timepoints. Images for analyses are available at \url{http://datadryad.org/updatehere} and the software to process and analyse them is available at \url{http://github.com/MoisesExpositoAlonso/hippo}. Segmentation was done similarly as @Exposito-Alonso2017-ob. We began by transforming images from RGB to HSV channels. We applied a hard segmentation threshold of HSV values as (H = 30-65, S=65-255, V=20-220). This was followed by several iterations of morphology transformations based on erosion and dilation. Then, for the resulting binary image we counted the number of green pixels. During field monitoring we noticed that some pots did not germinate. Sometimes this was due to lack of seeds or improper soil compaction. In those cases, we left a red mark in those pots, which we could detect in the same way as the existence of green pixels (with threshold H=150-179, S=100-255, V=100-255). Those pots were excluded from survival analyses as they contained any plants. An example of transformed images is in Figure \ref{fig:segmentation}.
+Top-view images were taken every four to five days (median) with a Panasonic DMC-TZ61 digital camera and a customized closed black box (Fig. \ref{fig:trays}) at a distance of 40 cm from the tray. After trying different camera parameters, we used an exposure of -2/3 and an ISO of 100. White balance was automatically set for flashlight, the only source of illumination to keep the white balance consistent from picture to picture. Photos were saved both in .jpeg and .raw to allow for adjustments a posteriori. In total, we did this at 20 timepoints. Images for analyses are available at \url{http://datadryad.org/updatehere} and the software to process and analyse them is available at \url{http://github.com/MoisesExpositoAlonso/hippo}. Segmentation was done similarly as in @Exposito-Alonso2017-ob. We began by transforming images from RGB to HSV channels. We applied a hard segmentation threshold of HSV values as (H = 30-65, S=65-255, V=20-220). This was followed by several iterations of morphology transformations based on erosion and dilation. Then, for the resulting binary image we counted the number of green pixels. During field monitoring we noticed that some pots did not germinate. Sometimes this was due to lack of seeds or improper soil compaction. In those cases, we left a red mark in those pots, which we could detect in the same way as the existence of green pixels (with threshold H=150-179, S=100-255, V=100-255). Those pots were excluded from survival analyses as they did not contain any plants. An example of transformed images is in Fig. \ref{fig:segmentation}.
  
-The resulting raw data consists in green and red area (pixel counts) per pots (Fig. \ref{fig:pixels}A). We took the advantage that a tray was photographed the same day several times to verify the replicability of our pipeline. In total there were 790 of such observations distributed in 11 timepoint and different trays. Using the R package lme4 1.1-12 (@Bates2015-ly), we computed a generalized linear mixed model with Poisson distribution [@Bolker2009-by], and derived the variance proportion of pixel counts explained by the pot identity taken at the same day:  $Var_{green} / Var_{tot} = 99.7 \%$. As this replicability proportion was high, we summarized the mean number of green pixels for those duplicated pots.
+The resulting raw data consists of green and red area (pixel counts) per pots (Fig. \ref{fig:pixels}A). By error, some trays were photographed two times in the same day. We took the advantage of this to verify whether our camera settings and segmentation pipeline would recover the same area, i.e. to what degree this pipeline is replicable. In total there were 790 of such observations distributed across 11 timepoints and different trays. Using the R package lme4 1.1-12 [@Bates2015-ly], we computed a generalized linear mixed model with Poisson distribution [@Bolker2009-by], and derived the variance proportion of pixel counts explained by the pot identity taken at the same day:  $Var_{green} / Var_{tot} = 99.7 \%$. As this replicability proportion was high, we summarized the mean number of green pixels for those duplicated pots.
  
-In order to remove from the analyses those pots that did not germinate, we performed a moving threshold and analysis of variance to determine what is the number of red pixels above which a pot is highly likely to have a red mark.  As expected, the distribution of pixels is bimodal (Fig. \ref{fig:red}), what makes this process straightforward and reliable. This filtering lead to a dataset of `r library(dryAR); data(veggyclean); nrow(veggyclean)` pixel observations (from an original of `r library(dryAR); data(veggy); nrow(veggy)`). 
+In order to remove pots that did not germinate from the analyses, we performed a moving threshold and analysis of variance to determine what is the number of red pixels above which a pot was highly likely to have a red mark. As expected, the distribution of pixels is bimodal (Fig. \ref{fig:red}), what makes this process straightforward and reliable. This filtering led to a dataset of `r library(dryAR); data(veggyclean); nrow(veggyclean)` pixel observations (from an original of `r library(dryAR); data(veggy); nrow(veggy)` observations). 
  
-Then we aimed to quantify germination timing. We did this by modeling the growth trajectory of green pixels per pot as a sigmoidal curve fitting the next function:
+Then we aimed to quantify germination timing. We did this by modeling the growth trajectory of green pixels per pot as a sigmoidal curve fitting the  function:
  
 $$y = \frac{a}{1 + e^{-(b  \times   (x-c))} } $$
-, starting in the sowing day and until the observed peak of green pixels per pot. The three parameters $a$, $b$, and $c$, would inform about the different shapes of growth curves. We also computed less complex indicators of growth: an analogous linear model that was used to determine the intersection with 1000 pixels,  the day that over 1000 green pixels were observed (~ 1cm^2^ as pixels resolution is ~xyz), the day that a fitted spline passed over 1000 green pixels, and a total count of green and red pixels through all timepoints. In Fig. \ref{fig:trajectories}, we show a total of 1000 example growth trajectories modeled with the sigmoidal approach and in Fig. \ref{fig:germination} we show the estimated number of days from sowing till germination based on the spline approach. The final dataset comprised `r library(dryAR); data(veg); nrow(veg)` observations with germination day from low complex indicators, and `r library(dryAR); data(veg); table(veg$ss.a != "NA")['TRUE']` for which a sigmoidal curve could be fitted. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/updatehere}.
+, starting in the sowing day and until the observed peak of green pixels per pot. The three parameters $a$, $b$, and $c$, would inform about the different shapes of growth curves. We also computed less complex indicators of growth: an analogous linear model that was used to determine the intersection with 1000 pixels,  the day that over 1000 green pixels were observed (~ 1cm^2^ as pixels resolution is [need to update]), the day that a fitted spline passed over 1000 green pixels, and a total count of green and red pixels through all timepoints. In Fig. \ref{fig:trajectories}, we show a total of 1000 example growth trajectories modeled with the sigmoidal approach and in Fig. \ref{fig:germination} we show the estimated number of days from sowing till germination based on the spline approach. The final dataset comprised `r library(dryAR); data(veg); nrow(veg)` observations with germination day from low complex indicators, and `r library(dryAR); data(veg); table(veg$ss.a != "NA")['TRUE']` for which a sigmoidal curve could be fitted. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/gen_vegetative.html}.
  
 <!-- Maximum resolution	4896x3672 -->
 <!-- Minimum resolution	640x480 -->
@@ -162,28 +166,35 @@ $$y = \frac{a}{1 + e^{-(b  \times   (x-c))} } $$
  
 ## Reproductive plants
  
-Once flowering plants finished the reproductive stage (dry fruits were observed), we harvested them and took a final photograph of the rosette and the inflorescence (Fig. \ref{fig:skeletonisation}). The python module to analyse the inflorescence pictures (Fig. \ref{fig:original}) is available at \url{http://github.com/MoisesExpositoAlonso/hitfruit}. We first used a cycle of morphological transformations of erode and dilate to produce the segmented image (Fig. \ref{fig:segmented}). This generated a segmented white/balck image without white noise. Then, we used the thin (erode cycles) algorithm from Mahotas module to generate a binary pictures reduced to single-pixel paths — a process called skeletonisation (Fig. \ref{fig:sk}). Finally, to detect the branching points in the skeletonised image we used a hit or miss algorithm from Mahotas. We used customized structural elements to maximize the branch (Fig. \ref{fig:bp}) and end point detection (Fig. \ref{fig:ep}). This resulted in four variables per image: total segmented inflorescence area, total length of the skeleton path, number of branching points and number of ending points (Fig. \ref{fig:skeletonisation}). 
+Once flowering plants finished the reproductive stage (dry fruits were observed), we harvested them and took a final studio photograph of the rosette and the inflorescence (Fig. \ref{fig:skeletonisation}). The settings were identical as for the veggetative monitoring but here we included a 18% grey card approximately in the same location in case adjustments a posteriori were needed. The python module to analyse the inflorescence pictures (Fig. \ref{fig:original}) is available at \url{http://github.com/MoisesExpositoAlonso/hitfruit}. We first used a cycle of morphological transformations of erode and dilate to produce the segmented image (Fig. \ref{fig:segmented}). This generated a segmented white/black image without white noise. Then, we used the thin (erode cycles) algorithm from Mahotas module to generate a binary pictures reduced to single-pixel paths — a process called skeletonisation (Fig. \ref{fig:sk}). Finally, to detect the branching points in the skeletonised image we used a hit or miss algorithm from Mahotas. We used customized structural elements to maximize the branch (Fig. \ref{fig:bp}) and end point detection (Fig. \ref{fig:ep}). This resulted in four variables per image: total segmented inflorescence area, total length of the skeleton path, number of branching points and number of ending points (Fig. \ref{fig:skeletonisation}). 
 
 
-Because errors of labeling could have occurred, we build a machine learning model with the labeled organs and the branching points, end points, total area, and skeleton. This produced a concordance of 91.63 % between predicted and labeled. Then, the ones that were badly predicted from the machine learning model were manually re-labeled [update here]. 
+Because errors of labeling could have occurred, we build a machine learning model with the labeled organs and the branching points, end points, total area, and skeleton. This produced a concordance of 91.63 % between predicted and labeled. Then, the ones that were badly predicted from the machine learning model were manually re-labeled [need to update result here]. 
 
-The total number of observations in the inflorescence dataset is  `r library(dryAR); data(harvest); nrow(harvest)`. The distribution of total inflorescence area is in Fig. \ref{fig:inflorescence}. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/gen_harvesting.Rmd}.
+The total number of observations in the inflorescence dataset is  `r library(dryAR); data(harvest); nrow(harvest)`. The distribution of total inflorescence area is in Fig. \ref{fig:inflorescence}. A detailed R markdown document of data loading and cleaning can be found at \url{http://github.com/MoisesExpositoAlonso/field/data-cleaning/gen_harvesting.html}.
+
+## Searching for labeling errors
+
+Because we also run the same skeletonization software in rosette images, we leverage the different image patterns that rosettes and inflorescences have to identify labeling errors (i.e. mistakes of inflorescences by rosettes). To do this, we first trained a random forest model to predict the manually labeled organ by the four image variables. From this exercise, a total of 92.1% were correctly predicted from image analysis, and about 2,000 images were incorrectly predicted. This could be either because there might be ranges of organ morphology that are relatively similar, for instance we noticed that very small inflorescences and rosettes were confounded, or could be due to real misslabeling. Manually re-labeling about 500 pictures, we discovered that actually only 2.5% were misslabeled. As these were subsequently corrected, the true error in the dataset should be lower than that value.
+
+## Prediction of number of fruits and seeds 
+
+Although the study of natural selection is fundamented in studying relative fitness, sometimes it is useful to have at least an approximation of the absolute fitness. In order to provide an approximate number of how many seeds were produced per reproductive plant, we generated two allometric relationship by manual counting of few plants and fruits. The first allometric relationship was built by manually counting the number of fruits of inflorescences of very small, intermediate, and very large size inflorescences (n=11). The correlation between the total inflorescence skeleton size (# pixels) and the carefully counted total number of fruits correlated strongly ($r=0.97,\ p= 4 \times 10^{-7}$). We believe that the prediction of the number of fruits is appropriate for this type of data, as we had already shown the same linear relationship with 350 plants counted [@Vasseur_undated-oa]. The second relationship was the average number of seeds per fruit. To do this, in the same samples as before, we counted all the seeds inside one fruit (n=11). We tried to sample fruits capturing all the range of fruit size variation. The mean was 28.3 seeds per fruit (standard deviation 11.2). Although this variation is notable, not even fruits at the two size extremes with extreme sizes varied in more than 2.5-fold. The two mentioned allometric relationships were used to predict, first, the number of fruits per inflorescence using the four image analysis variables, and second, the number of seeds corresponding to the number of fruits per inflorescence. Both counts were only done in individual replicates.
 
 
- 
-################################################################################
-## Environmental data
- 
-We monitored at real time temperature and watering throughout the experiment using multi-purpose sensors (Parrot SA, Paris, France). This enable us to adjust watering depending on the degree of evapotranspiration over the experiment. Overall the soil water content was lower in the blocks of drought treatment compared to the high watering treatments. The sensors outside of the tunnel showed in Madrid similar soil water content as the drought treatment and in Tübingen similar water content as in the high watering treatment. Temperatures were overall higher in Madrid than in Tübingen but did not vary between sensors inside and outside the tunnel \ref{fig:histoenv}.
- 
- 
 ################################################################################
  
 # Author contributions
  
-The detailed list of contributed tasks of each authors
+MEA conceived and designed the project. MEA carried out the experiment in Tübingen. MEA and RGR carried out the experiment in Madrid. All authors contributed to specific tasks in the experiments (see below). OB provided the field site in Tübingen and FGA provided the site in Madrid. DW funded the project. MEA carried out the analyses and wrote the manuscript. All authors commented and aproved the text. Below is a detailed description of the tasks each author contributed to.
 
 \centerline{\includegraphics[width=7in]{../figs/People_paper.pdf}}
+
+
+# Acknowledgements
+
+We greatfully thank Leily Rabbani, Belen Mendez-Vigo, and Carlos Alonso-Blanco for field assistance, and Xavi Picó for experimental design advice.
+
  
 ################################################################################
  
@@ -217,6 +228,7 @@ The detailed list of contributed tasks of each authors
         \caption{} \label{fig:inside}
     \end{subfigure}
      \caption{Aereal picture of foil tunnel setting in Madrid (\subref{fig:aereal}) and photo inside the foil tunnel in Tübingen (\subref{fig:inside}).}
+     \label{fig:fieldsetup}
 \end{figure}
  
  
@@ -226,6 +238,16 @@ The detailed list of contributed tasks of each authors
     \label{fig:blocks}
 \end{figure}
  
+  
+<!-- environment from flower power -->
+\begin{figure}
+    \centerline{\includegraphics[width=5in]{../figs/Figure_watering_temperature.pdf}}
+    \caption{ Soil water content and temperature from the 35 sensors monitororing each experimental block and the conditions outside the tunnel.}
+    \label{fig:histoenv}
+\end{figure}
+
+
+
 <!-- example picture acquisition-->
 \begin{figure}
   \centering
@@ -357,16 +379,6 @@ The detailed list of contributed tasks of each authors
 <!-- survival? -->
  
  
- 
-<!-- environment from flower power -->
-\begin{figure}
-    \centerline{\includegraphics[width=5in]{../figs/Figure_watering_temperature.pdf}}
-    \caption{ Soil water content and temperature from the 35 sensors monitororing each experimental block and the conditions outside the tunnel.}
-    \label{fig:histoenv}
-\end{figure}
-
-
-
 <!-- any correlation with geography? -->
  
  

@@ -22,13 +22,6 @@ drought<-merge(droughtraw,droughtmodel,by='id',all=T)
 
 devtools::use_data(drought,overwrite = F)
 
-#### all accessions from 1001
-
-g1001<-read.csv('data-raw/1001_A.thaliana_genomes_oficial.csv') %>% select (-picture)
-
-devtools::use_data(g1001,overwrite = F)
-
-
 #### Greenhouse data
 
 patrice<-read.table('data-raw/1165_acc_patrice.tsv',fill = T,header=T)

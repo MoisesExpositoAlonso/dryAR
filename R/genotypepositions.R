@@ -20,6 +20,7 @@ unique(ind$otherpos)
 
 which(ind$otherpos !=0)
 
+# Quality controls
 if(QC==TRUE){
 badflags<- c("maybe","bad")
 ind <- subset(ind,!(ind$quality %in% badflags)  )
@@ -38,6 +39,10 @@ for ( line in 1:nrow(ind) ){
 subset(ind, ind$otherpos!=0)
 
 ind<-select(ind,-quality, -otherpos, -othergeno, -row, -col)   ### THIS PROBABLY NOT NECESSARY
+
+# Change the numbers 1 and 2 of Col and Ler to the real ids from 1001g
+ind[ind$id==1 , 'id']<-6909
+ind[ind$id== 2, 'id']<-6932
 
 return(data.frame(ind))
 

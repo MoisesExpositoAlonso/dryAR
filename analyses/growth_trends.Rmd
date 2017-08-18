@@ -1,10 +1,9 @@
 ---
-title: "Flowering exploration of the 1001G fiel experiment"
+title: "Growth trends "
 author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
 date: '`r Sys.Date()`'
 output:
   html_document: default
-  pdf_document: default
 ---
 
 
@@ -70,7 +69,9 @@ veggy %>% filter(trayid == "9_p_l" ,pos=="e7", site=="tuebingen") %>%
 ```{r plot general trend red area, warning=F}
 set_project_dir()
 
+
 veggy %>% 
+  mutate(site_water=paste(site,water,sep='_')) %>%
 ggplot() + geom_line(aes(y=countred,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) #+ theme(legend.position="none")
 
 p<-ggplot(data=veggy,aes(x=log10(countred+1)),fill='black' )+geom_histogram() + labs(x='log 10 (# red pixels +1)')
@@ -83,9 +84,9 @@ p
 
 ## Plot general trends of green area
 ```{r plot general trends}
-set_project_dir('field')
+set_project_dir()
 
-veggy= veggy %>% mutate( potindex=paste(site,qp,pos,id,sep="_"))  %>% mutate(site_water=paste(site,water,sep="_"))
+veggy= veggy %>% mutate( potindex=paste(site,qp,pos,sep="_"))  %>% mutate(site_water=paste(site,water,sep="_"))
 
 veggy %>% filter(indpop=='i') %>%
 ggplot() + geom_line(aes(y=countgreen,x=day,group=potindex, color=factor(site_water)),alpha=0.1 ) +

@@ -80,7 +80,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 102	b1	9873	3	30_i_l	i	l	1	2016-02-11	87
 102	b2	772	3	30_i_l	i	l	1	2016-03-17	122
 102	b3	8244	3	30_i_l	i	l	1	2016-03-21	126
-102	b4	1	3	30_i_l	i	l	1	2016-03-03	108
+102	b4	6909	3	30_i_l	i	l	1	2016-03-03	108
 102	b5	6958	3	30_i_l	i	l	1	2016-03-09	114
 102	b6	10006	3	30_i_l	i	l	1	2016-03-21	126
 102	b7	5784	3	30_i_l	i	l	1	2016-03-25	130
@@ -179,7 +179,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 104	e5	766	3	32_i_l	i	l	0	NA	NA
 104	e6	9834	3	32_i_l	i	l	0	NA	NA
 104	e7	763	3	32_i_l	i	l	0	NA	NA
-105	a2	2	3	33_i_l	i	l	0	NA	NA
+105	a2	6932	3	33_i_l	i	l	0	NA	NA
 105	a3	9782	3	33_i_l	i	l	1	2016-03-25	130
 105	a4	9409	3	33_i_l	i	l	1	2016-03-21	126
 105	a5	9791	3	33_i_l	i	l	1	2016-03-09	114
@@ -616,7 +616,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 116	a6	9701	4	44_i_l	i	l	1	2016-03-08	113
 116	a7	9835	4	44_i_l	i	l	1	2016-03-04	109
 116	b1	6987	4	44_i_l	i	l	1	2016-02-24	100
-116	b2	1	4	44_i_l	i	l	0	NA	NA
+116	b2	6909	4	44_i_l	i	l	0	NA	NA
 116	b3	4958	4	44_i_l	i	l	1	2016-03-22	127
 116	b4	6194	4	44_i_l	i	l	1	2016-03-16	121
 116	b5	1890	4	44_i_l	i	l	1	2016-03-03	108
@@ -853,7 +853,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 121	d5	9791	4	49_i_l	i	l	0	NA	NA
 121	d6	9534	4	49_i_l	i	l	0	NA	NA
 121	d7	9875	4	49_i_l	i	l	0	NA	NA
-121	d8	2	4	49_i_l	i	l	0	NA	NA
+121	d8	6932	4	49_i_l	i	l	0	NA	NA
 121	e2	9766	4	49_i_l	i	l	0	NA	NA
 121	e3	9830	4	49_i_l	i	l	1	2016-02-25	101
 121	e4	9894	4	49_i_l	i	l	0	NA	NA
@@ -1354,7 +1354,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 134	d2	768	5	62_i_l	i	l	1	2016-02-29	105
 134	d3	6897	5	62_i_l	i	l	1	2016-03-17	122
 134	d4	9732	5	62_i_l	i	l	0	NA	NA
-134	d5	1	5	62_i_l	i	l	0	NA	NA
+134	d5	6909	5	62_i_l	i	l	0	NA	NA
 134	d6	9736	5	62_i_l	i	l	0	NA	NA
 134	d7	6150	5	62_i_l	i	l	1	2016-03-21	126
 134	d8	9880	5	62_i_l	i	l	0	NA	NA
@@ -1732,7 +1732,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 144	a7	6195	5	72_i_l	i	l	0	NA	NA
 144	b1	9741	5	72_i_l	i	l	0	NA	NA
 144	b2	9638	5	72_i_l	i	l	1	2016-03-14	119
-144	b3	2	5	72_i_l	i	l	1	2016-03-09	114
+144	b3	6932	5	72_i_l	i	l	1	2016-03-09	114
 144	b4	9554	5	72_i_l	i	l	1	2016-03-09	114
 144	b5	7404	5	72_i_l	i	l	0	NA	NA
 144	b6	9583	5	72_i_l	i	l	0	NA	NA
@@ -1799,7 +1799,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 146	a2	6989	6	74_i_l	i	l	0	NA	NA
 146	a3	7394	6	74_i_l	i	l	0	NA	NA
 146	a4	9644	6	74_i_l	i	l	0	NA	NA
-146	a5	1	6	74_i_l	i	l	0	NA	NA
+146	a5	6909	6	74_i_l	i	l	0	NA	NA
 146	a6	9784	6	74_i_l	i	l	0	NA	NA
 146	a7	9831	6	74_i_l	i	l	0	NA	NA
 146	b1	6940	6	74_i_l	i	l	0	NA	NA
@@ -2215,7 +2215,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 156	c8	6148	6	84_i_l	i	l	0	NA	NA
 156	d1	6173	6	84_i_l	i	l	1	2016-03-08	113
 156	d2	7298	6	84_i_l	i	l	1	2016-03-02	107
-156	d3	2	6	84_i_l	i	l	0	NA	NA
+156	d3	6932	6	84_i_l	i	l	0	NA	NA
 156	d4	9540	6	84_i_l	i	l	0	NA	NA
 156	d5	9590	6	84_i_l	i	l	1	2016-02-15	91
 156	d6	7416	6	84_i_l	i	l	0	NA	NA
@@ -2368,7 +2368,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 15	e3	7255	2	15_p_l	p	l	0	NA	NA
 15	e4	6125	2	15_p_l	p	l	0	NA	NA
 15	e5	7298	2	15_p_l	p	l	0	NA	NA
-15	e6	2	2	15_p_l	p	l	0	NA	NA
+15	e6	6932	2	15_p_l	p	l	0	NA	NA
 15	e7	9725	2	15_p_l	p	l	0	NA	NA
 160	a2	8365	7	88_i_l	i	l	1	2016-03-02	107
 160	a3	6174	7	88_i_l	i	l	1	2016-03-29	134
@@ -2684,7 +2684,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 168	d3	9597	7	96_i_l	i	l	0	NA	NA
 168	d4	8240	7	96_i_l	i	l	0	NA	NA
 168	d5	6203	7	96_i_l	i	l	1	2016-03-29	134
-168	d6	2	7	96_i_l	i	l	0	NA	NA
+168	d6	6932	7	96_i_l	i	l	0	NA	NA
 168	d7	6115	7	96_i_l	i	l	1	2016-03-16	121
 168	d8	7063	7	96_i_l	i	l	1	2016-03-08	113
 168	e2	6074	7	96_i_l	i	l	1	2016-03-28	133
@@ -2813,7 +2813,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 171	b4	9901	7	99_i_l	i	l	0	NA	NA
 171	b5	9602	7	99_i_l	i	l	1	2016-03-04	109
 171	b7	9737	7	99_i_l	i	l	0	NA	NA
-171	b8	1	7	99_i_l	i	l	1	2016-03-23	128
+171	b8	6909	7	99_i_l	i	l	1	2016-03-23	128
 171	c1	6132	7	99_i_l	i	l	0	NA	NA
 171	c2	9928	7	99_i_l	i	l	1	2016-03-02	107
 171	c3	8264	7	99_i_l	i	l	0	NA	NA
@@ -3189,7 +3189,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 181	b3	6112	1	8_p_h	p	h	1	2016-03-28	133
 181	b4	8246	1	8_p_h	p	h	1	2016-03-15	120
 181	b5	9840	1	8_p_h	p	h	1	2016-03-14	119
-181	b6	1	1	8_p_h	p	h	1	2016-03-03	108
+181	b6	6909	1	8_p_h	p	h	1	2016-03-03	108
 181	b7	9058	1	8_p_h	p	h	0	NA	NA
 181	b8	915	1	8_p_h	p	h	0	NA	NA
 181	c1	9876	1	8_p_h	p	h	1	2016-03-15	120
@@ -3227,7 +3227,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 182	b5	6128	1	9_p_h	p	h	1	2016-03-31	136
 182	b6	9644	1	9_p_h	p	h	1	2016-03-08	113
 182	b7	9549	1	9_p_h	p	h	1	2016-03-10	115
-182	b8	2	1	9_p_h	p	h	1	2016-03-14	119
+182	b8	6932	1	9_p_h	p	h	1	2016-03-14	119
 182	c1	6169	1	9_p_h	p	h	1	2016-03-15	120
 182	c2	9992	1	9_p_h	p	h	1	2016-03-17	122
 182	c3	9578	1	9_p_h	p	h	1	2016-02-25	101
@@ -3537,7 +3537,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 18	e5	9854	2	18_p_l	p	l	1	2016-02-29	105
 18	e6	9532	2	18_p_l	p	l	1	2016-03-28	133
 18	e7	6134	2	18_p_l	p	l	0	NA	NA
-190	a2	2	2	17_p_h	p	h	0	NA	NA
+190	a2	6932	2	17_p_h	p	h	0	NA	NA
 190	a3	9755	2	17_p_h	p	h	1	2016-03-04	109
 190	a4	9421	2	17_p_h	p	h	1	2016-03-17	122
 190	a5	9725	2	17_p_h	p	h	1	2016-02-12	88
@@ -3744,7 +3744,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 195	d3	6209	2	22_p_h	p	h	0	NA	NA
 195	d4	6243	2	22_p_h	p	h	0	NA	NA
 195	d5	9561	2	22_p_h	p	h	1	2016-03-28	133
-195	d6	1	2	22_p_h	p	h	0	NA	NA
+195	d6	6909	2	22_p_h	p	h	0	NA	NA
 195	d7	9636	2	22_p_h	p	h	1	2016-04-22	158
 195	d8	5486	2	22_p_h	p	h	1	2016-03-09	114
 195	e2	9718	2	22_p_h	p	h	1	2016-03-17	122
@@ -4077,7 +4077,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 202	e5	7077	3	29_p_h	p	h	1	2016-02-02	78
 202	e6	7126	3	29_p_h	p	h	1	2016-03-07	112
 202	e7	9339	3	29_p_h	p	h	0	NA	NA
-203	a2	1	3	30_p_h	p	h	0	NA	NA
+203	a2	6909	3	30_p_h	p	h	0	NA	NA
 203	a3	9706	3	30_p_h	p	h	1	2016-03-25	130
 203	a4	7218	3	30_p_h	p	h	1	2016-02-29	105
 203	a5	7008	3	30_p_h	p	h	1	2016-03-22	127
@@ -4276,7 +4276,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 208	c3	9937	3	35_p_h	p	h	1	2016-04-22	158
 208	c4	9789	3	35_p_h	p	h	1	2016-03-11	116
 208	c5	9653	3	35_p_h	p	h	1	2016-02-11	87
-208	c6	2	3	35_p_h	p	h	1	2016-03-22	127
+208	c6	6932	3	35_p_h	p	h	1	2016-03-22	127
 208	c7	7026	3	35_p_h	p	h	1	2016-03-01	106
 208	c8	7305	3	35_p_h	p	h	1	2016-03-08	113
 208	d1	6915	3	35_p_h	p	h	1	2016-03-22	127
@@ -4951,7 +4951,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 225	b4	9706	4	52_p_h	p	h	1	2016-03-17	122
 225	b5	9581	4	52_p_h	p	h	1	2016-03-16	121
 225	b6	9643	4	52_p_h	p	h	1	2016-03-04	109
-225	b7	2	4	52_p_h	p	h	0	NA	NA
+225	b7	6932	4	52_p_h	p	h	0	NA	NA
 225	b8	9584	4	52_p_h	p	h	1	2016-03-21	126
 225	c1	9579	4	52_p_h	p	h	1	2016-03-01	106
 225	c2	9399	4	52_p_h	p	h	1	2016-03-21	126
@@ -5082,7 +5082,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 228	e4	9905	4	55_p_h	p	h	1	2016-03-23	128
 228	e5	9897	4	55_p_h	p	h	1	2016-03-04	109
 228	e6	6992	4	55_p_h	p	h	1	2016-03-21	126
-228	e7	1	4	55_p_h	p	h	1	2016-03-08	113
+228	e7	6909	4	55_p_h	p	h	1	2016-03-08	113
 229	a2	5577	4	56_p_h	p	h	1	2016-03-02	107
 229	a3	9332	4	56_p_h	p	h	1	2016-03-15	120
 229	a4	9635	4	56_p_h	p	h	1	2016-02-25	101
@@ -5260,7 +5260,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 232	e2	9595	5	59_p_h	p	h	1	2016-03-03	108
 232	e3	9513	5	59_p_h	p	h	1	2016-02-23	99
 232	e4	6209	5	59_p_h	p	h	1	2016-03-09	114
-232	e5	2	5	59_p_h	p	h	0	NA	NA
+232	e5	6932	5	59_p_h	p	h	0	NA	NA
 232	e6	9588	5	59_p_h	p	h	0	NA	NA
 232	e7	9855	5	59_p_h	p	h	0	NA	NA
 233	a2	9535	5	60_p_h	p	h	0	NA	NA
@@ -5274,7 +5274,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 233	b3	6218	5	60_p_h	p	h	1	2016-03-21	126
 233	b4	9789	5	60_p_h	p	h	1	2016-02-22	98
 233	b5	7028	5	60_p_h	p	h	1	2016-02-22	98
-233	b6	1	5	60_p_h	p	h	1	2016-03-21	126
+233	b6	6909	5	60_p_h	p	h	1	2016-03-21	126
 233	b7	6148	5	60_p_h	p	h	1	2016-03-28	133
 233	b8	6133	5	60_p_h	p	h	1	2016-03-28	133
 233	c1	9586	5	60_p_h	p	h	1	2016-03-29	134
@@ -5515,7 +5515,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 239	e5	9775	5	66_p_h	p	h	1	2016-03-08	113
 239	e6	9569	5	66_p_h	p	h	0	NA	NA
 239	e7	7280	5	66_p_h	p	h	1	2016-03-15	120
-23	a2	1	2	23_p_l	p	l	0	NA	NA
+23	a2	6909	2	23_p_l	p	l	0	NA	NA
 23	a3	9546	2	23_p_l	p	l	1	2016-04-15	151
 23	a4	6961	2	23_p_l	p	l	0	NA	NA
 23	a5	7008	2	23_p_l	p	l	0	NA	NA
@@ -5879,7 +5879,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 249	b5	9332	1	4_i_h	i	h	1	2016-03-16	121
 249	b6	9363	1	4_i_h	i	h	1	2016-03-23	128
 249	b7	7416	1	4_i_h	i	h	1	2016-03-25	130
-249	b8	2	1	4_i_h	i	h	1	2016-04-11	147
+249	b8	6932	1	4_i_h	i	h	1	2016-04-11	147
 249	c1	6188	1	4_i_h	i	h	1	2016-02-26	102
 249	c2	9803	1	4_i_h	i	h	0	NA	NA
 249	c3	9928	1	4_i_h	i	h	1	2016-03-02	107
@@ -6020,7 +6020,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 252	b2	9588	1	7_i_h	i	h	0	NA	NA
 252	b3	5165	1	7_i_h	i	h	1	2016-03-09	114
 252	b4	7127	1	7_i_h	i	h	1	2016-02-22	98
-252	b5	1	1	7_i_h	i	h	1	2016-02-22	98
+252	b5	6909	1	7_i_h	i	h	1	2016-02-22	98
 252	b6	8241	1	7_i_h	i	h	1	2016-03-25	130
 252	b7	6097	1	7_i_h	i	h	1	2016-03-25	130
 252	b8	9698	1	7_i_h	i	h	1	2016-03-21	126
@@ -6739,7 +6739,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 270	b4	9546	2	25_i_h	i	h	1	2016-03-28	133
 270	b5	9544	2	25_i_h	i	h	1	2016-02-23	99
 270	b6	6243	2	25_i_h	i	h	1	2016-02-19	95
-270	b7	2	2	25_i_h	i	h	1	2016-03-01	106
+270	b7	6932	2	25_i_h	i	h	1	2016-03-01	106
 270	b8	9701	2	25_i_h	i	h	1	2016-03-01	106
 270	c1	7288	2	25_i_h	i	h	1	2016-03-02	107
 270	c2	9551	2	25_i_h	i	h	0	NA	NA
@@ -6792,7 +6792,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 271	d5	7337	2	26_i_h	i	h	1	2016-03-09	114
 271	d6	6073	2	26_i_h	i	h	1	2016-03-21	126
 271	d7	9720	2	26_i_h	i	h	1	2016-03-16	121
-271	d8	1	2	26_i_h	i	h	1	2016-03-02	107
+271	d8	6909	2	26_i_h	i	h	1	2016-03-02	107
 271	e2	7353	2	26_i_h	i	h	1	2016-03-09	114
 271	e3	6111	2	26_i_h	i	h	1	2016-03-23	128
 271	e4	9867	2	26_i_h	i	h	1	2016-03-11	116
@@ -7295,7 +7295,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 284	d8	772	3	39_i_h	i	h	1	2016-02-24	100
 284	e2	9513	3	39_i_h	i	h	1	2016-02-16	92
 284	e3	9560	3	39_i_h	i	h	0	NA	NA
-284	e4	1	3	39_i_h	i	h	1	2016-03-03	108
+284	e4	6909	3	39_i_h	i	h	1	2016-03-03	108
 284	e5	5784	3	39_i_h	i	h	0	NA	NA
 284	e6	9641	3	39_i_h	i	h	1	2016-03-08	113
 284	e7	9853	3	39_i_h	i	h	1	2016-02-12	88
@@ -7325,7 +7325,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 285	d2	9611	3	40_i_h	i	h	1	2016-02-29	105
 285	d3	7273	3	40_i_h	i	h	1	2016-03-08	113
 285	d4	9589	3	40_i_h	i	h	1	2016-03-15	120
-285	d5	2	3	40_i_h	i	h	1	2016-03-03	108
+285	d5	6932	3	40_i_h	i	h	1	2016-03-03	108
 285	d6	6961	3	40_i_h	i	h	1	2016-02-12	88
 285	d7	9576	3	40_i_h	i	h	1	2016-03-30	135
 285	d8	9837	3	40_i_h	i	h	1	2016-03-08	113
@@ -7685,7 +7685,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 294	d2	9541	4	49_i_h	i	h	1	2016-02-15	91
 294	d3	9739	4	49_i_h	i	h	1	2016-03-11	116
 294	d4	7305	4	49_i_h	i	h	1	2016-03-10	115
-294	d5	2	4	49_i_h	i	h	1	2016-02-26	102
+294	d5	6932	4	49_i_h	i	h	1	2016-02-26	102
 294	d6	9559	4	49_i_h	i	h	1	2016-02-15	91
 294	d7	6173	4	49_i_h	i	h	1	2016-03-03	108
 294	d8	9585	4	49_i_h	i	h	1	2016-02-10	86
@@ -7944,7 +7944,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 2	e2	10006	1	2_p_l	p	l	0	NA	NA
 2	e3	9708	1	2_p_l	p	l	0	NA	NA
 2	e4	9707	1	2_p_l	p	l	0	NA	NA
-2	e5	2	1	2_p_l	p	l	0	NA	NA
+2	e5	6932	1	2_p_l	p	l	0	NA	NA
 2	e6	9632	1	2_p_l	p	l	0	NA	NA
 2	e7	9888	1	2_p_l	p	l	0	NA	NA
 300	a2	9579	4	55_i_h	i	h	1	2016-03-08	113
@@ -7976,7 +7976,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 300	d7	6184	4	55_i_h	i	h	1	2016-03-15	120
 300	d8	9938	4	55_i_h	i	h	1	2016-02-22	98
 300	e2	7296	4	55_i_h	i	h	1	2016-03-08	113
-300	e3	1	4	55_i_h	i	h	1	2016-02-29	105
+300	e3	6909	4	55_i_h	i	h	1	2016-02-29	105
 300	e4	9661	4	55_i_h	i	h	1	2016-02-12	88
 300	e5	9789	4	55_i_h	i	h	1	2016-03-03	108
 300	e6	9755	4	55_i_h	i	h	1	2016-03-03	108
@@ -8246,7 +8246,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 308	b5	6201	5	63_i_h	i	h	1	2016-03-21	126
 308	b6	6114	5	63_i_h	i	h	1	2016-03-21	126
 308	b7	9935	5	63_i_h	i	h	1	2016-03-04	109
-308	b8	1	5	63_i_h	i	h	1	2016-03-28	133
+308	b8	6909	5	63_i_h	i	h	1	2016-03-28	133
 308	c1	9826	5	63_i_h	i	h	1	2016-02-23	99
 308	c2	9577	5	63_i_h	i	h	0	NA	NA
 308	c3	9764	5	63_i_h	i	h	0	NA	NA
@@ -8441,7 +8441,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 312	d4	8230	5	67_i_h	i	h	1	2016-03-09	114
 312	d5	6140	5	67_i_h	i	h	1	2016-03-25	130
 312	d6	9813	5	67_i_h	i	h	1	2016-03-08	113
-312	d7	2	5	67_i_h	i	h	0	NA	NA
+312	d7	6932	5	67_i_h	i	h	0	NA	NA
 312	d8	8240	5	67_i_h	i	h	1	2016-03-14	119
 312	e2	7014	5	67_i_h	i	h	1	2016-03-18	123
 312	e3	9564	5	67_i_h	i	h	1	2016-03-15	120
@@ -8852,7 +8852,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 323	b1	7244	6	78_i_h	i	h	1	2016-02-29	105
 323	b2	9832	6	78_i_h	i	h	1	2016-03-03	108
 323	b3	9892	6	78_i_h	i	h	1	2016-03-08	113
-323	b4	2	6	78_i_h	i	h	1	2016-03-07	112
+323	b4	6932	6	78_i_h	i	h	1	2016-03-07	112
 323	b5	9651	6	78_i_h	i	h	1	2016-03-04	109
 323	b6	6151	6	78_i_h	i	h	1	2016-03-18	123
 323	b7	8231	6	78_i_h	i	h	1	2016-03-16	121
@@ -8933,7 +8933,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 325	c2	7208	6	80_i_h	i	h	1	2016-03-04	109
 325	c3	9557	6	80_i_h	i	h	0	NA	NA
 325	c4	6132	6	80_i_h	i	h	1	2016-03-23	128
-325	c5	1	6	80_i_h	i	h	1	2016-03-07	112
+325	c5	6909	6	80_i_h	i	h	1	2016-03-07	112
 325	c6	9881	6	80_i_h	i	h	1	2016-03-02	107
 325	c7	9825	6	80_i_h	i	h	1	2016-02-23	99
 325	c8	6174	6	80_i_h	i	h	1	2016-03-11	116
@@ -9221,7 +9221,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 332	c3	9774	7	87_i_h	i	h	1	2016-03-07	112
 332	c4	9781	7	87_i_h	i	h	1	2016-03-08	113
 332	c5	9632	7	87_i_h	i	h	1	2016-03-15	120
-332	c6	2	7	87_i_h	i	h	1	2016-03-14	119
+332	c6	6932	7	87_i_h	i	h	1	2016-03-14	119
 332	c7	9799	7	87_i_h	i	h	1	2016-03-02	107
 332	c8	7143	7	87_i_h	i	h	1	2016-03-15	120
 332	d1	6929	7	87_i_h	i	h	1	2016-03-02	107
@@ -9288,7 +9288,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 334	b7	9888	7	89_i_h	i	h	1	2016-03-04	109
 334	b8	9787	7	89_i_h	i	h	1	2016-03-02	107
 334	c1	9813	7	89_i_h	i	h	1	2016-03-04	109
-334	c2	1	7	89_i_h	i	h	1	2016-03-04	109
+334	c2	6909	7	89_i_h	i	h	1	2016-03-04	109
 334	c3	9571	7	89_i_h	i	h	1	2016-02-22	98
 334	c4	7217	7	89_i_h	i	h	1	2016-02-23	99
 334	c5	6040	7	89_i_h	i	h	1	2016-03-28	133
@@ -9812,7 +9812,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 35	b8	9925	3	35_p_l	p	l	0	NA	NA
 35	c1	9701	3	35_p_l	p	l	1	2016-03-28	133
 35	c2	7036	3	35_p_l	p	l	0	NA	NA
-35	c3	2	3	35_p_l	p	l	1	2016-04-04	140
+35	c3	6932	3	35_p_l	p	l	1	2016-04-04	140
 35	c4	6177	3	35_p_l	p	l	1	2016-04-07	143
 35	c5	9777	3	35_p_l	p	l	0	NA	NA
 35	c6	9336	3	35_p_l	p	l	0	NA	NA
@@ -9952,7 +9952,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 39	b4	9601	3	39_p_l	p	l	0	NA	NA
 39	b5	7133	3	39_p_l	p	l	1	2016-03-30	135
 39	b6	9849	3	39_p_l	p	l	1	2016-04-07	143
-39	b7	1	3	39_p_l	p	l	1	2016-03-25	130
+39	b7	6909	3	39_p_l	p	l	1	2016-03-25	130
 39	b8	9898	3	39_p_l	p	l	1	2016-03-21	126
 39	c1	6216	3	39_p_l	p	l	1	2016-03-28	133
 39	c2	9609	3	39_p_l	p	l	0	NA	NA
@@ -10271,7 +10271,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 47	a7	7081	4	47_p_l	p	l	1	2016-02-12	88
 47	b1	7164	4	47_p_l	p	l	0	NA	NA
 47	b2	9766	4	47_p_l	p	l	0	NA	NA
-47	b3	1	4	47_p_l	p	l	0	NA	NA
+47	b3	6909	4	47_p_l	p	l	0	NA	NA
 47	b4	8234	4	47_p_l	p	l	0	NA	NA
 47	b5	5800	4	47_p_l	p	l	0	NA	NA
 47	b6	9517	4	47_p_l	p	l	0	NA	NA
@@ -10567,7 +10567,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 54	b8	7163	4	54_p_l	p	l	0	NA	NA
 54	c1	6133	4	54_p_l	p	l	0	NA	NA
 54	c2	9799	4	54_p_l	p	l	0	NA	NA
-54	c3	2	4	54_p_l	p	l	0	NA	NA
+54	c3	6932	4	54_p_l	p	l	0	NA	NA
 54	c4	9542	4	54_p_l	p	l	0	NA	NA
 54	c5	9774	4	54_p_l	p	l	0	NA	NA
 54	c6	9594	4	54_p_l	p	l	0	NA	NA
@@ -10800,7 +10800,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 5	e2	7013	1	5_p_l	p	l	0	NA	NA
 5	e3	6174	1	5_p_l	p	l	0	NA	NA
 5	e4	9573	1	5_p_l	p	l	0	NA	NA
-5	e5	1	1	5_p_l	p	l	0	NA	NA
+5	e5	6909	1	5_p_l	p	l	0	NA	NA
 5	e6	9371	1	5_p_l	p	l	0	NA	NA
 5	e7	8420	1	5_p_l	p	l	0	NA	NA
 60	a2	7008	5	60_p_l	p	l	0	NA	NA
@@ -10831,7 +10831,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 60	d4	7092	5	60_p_l	p	l	0	NA	NA
 60	d5	9524	5	60_p_l	p	l	0	NA	NA
 60	d6	9408	5	60_p_l	p	l	0	NA	NA
-60	d7	1	5	60_p_l	p	l	0	NA	NA
+60	d7	6909	5	60_p_l	p	l	0	NA	NA
 60	d8	9470	5	60_p_l	p	l	0	NA	NA
 60	e2	9992	5	60_p_l	p	l	0	NA	NA
 60	e3	6042	5	60_p_l	p	l	0	NA	NA
@@ -11294,7 +11294,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 72	c8	9714	5	72_p_l	p	l	0	NA	NA
 72	d1	6111	5	72_p_l	p	l	0	NA	NA
 72	d2	8246	5	72_p_l	p	l	0	NA	NA
-72	d3	2	5	72_p_l	p	l	0	NA	NA
+72	d3	6932	5	72_p_l	p	l	0	NA	NA
 72	d4	7117	5	72_p_l	p	l	1	2016-03-10	115
 72	d5	9849	5	72_p_l	p	l	0	NA	NA
 72	d6	9625	5	72_p_l	p	l	1	2016-03-15	120
@@ -11335,7 +11335,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 73	e5	9738	1	1_i_l	i	l	0	NA	NA
 73	e6	9775	1	1_i_l	i	l	0	NA	NA
 73	e7	9841	1	1_i_l	i	l	0	NA	NA
-74	a2	1	1	2_i_l	i	l	0	NA	NA
+74	a2	6909	1	2_i_l	i	l	0	NA	NA
 74	a3	6169	1	2_i_l	i	l	1	2016-03-21	126
 74	a4	9810	1	2_i_l	i	l	0	NA	NA
 74	a5	9529	1	2_i_l	i	l	0	NA	NA
@@ -11834,7 +11834,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 86	d7	9789	1	14_i_l	i	l	1	2016-03-16	121
 86	d8	9804	1	14_i_l	i	l	0	NA	NA
 86	e2	9725	1	14_i_l	i	l	0	NA	NA
-86	e3	2	1	14_i_l	i	l	0	NA	NA
+86	e3	6932	1	14_i_l	i	l	0	NA	NA
 86	e4	9528	1	14_i_l	i	l	1	2016-03-25	130
 86	e5	9847	1	14_i_l	i	l	1	2016-02-26	102
 86	e6	6992	1	14_i_l	i	l	1	2016-03-15	120
@@ -11985,7 +11985,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 8	e7	9891	1	8_p_l	p	l	0	NA	NA
 90	a2	9589	2	18_i_l	i	l	0	NA	NA
 90	a3	9737	2	18_i_l	i	l	0	NA	NA
-90	a4	1	2	18_i_l	i	l	0	NA	NA
+90	a4	6909	2	18_i_l	i	l	0	NA	NA
 90	a5	5784	2	18_i_l	i	l	0	NA	NA
 90	a6	9935	2	18_i_l	i	l	0	NA	NA
 90	a7	9644	2	18_i_l	i	l	0	NA	NA
@@ -12196,7 +12196,7 @@ qp	pos	id	rep	trayid	indpop	water	FT.q	FT.date	FT.dif
 95	e2	9557	2	23_i_l	i	l	1	2016-03-23	128
 95	e3	9539	2	23_i_l	i	l	1	2016-03-23	128
 95	e4	6915	2	23_i_l	i	l	0	NA	NA
-95	e5	2	2	23_i_l	i	l	0	NA	NA
+95	e5	6932	2	23_i_l	i	l	0	NA	NA
 95	e6	772	2	23_i_l	i	l	1	2016-02-16	92
 95	e7	6174	2	23_i_l	i	l	0	NA	NA
 96	a2	9789	2	24_i_l	i	l	1	2016-03-18	123
