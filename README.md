@@ -1,24 +1,33 @@
 
 ##### Note: presubmission version --  does not contain the raw data.
 
-------
-
-
-# dryAR: Companion R pkg of "Exposito-Alonso et al. (2017) A selection
-experiment with 517 Arabidopsis thaliana ecotypes"
-
-
-#### Abstract
-To quantify phenotypic and genetic natural selection, the gold standard are evolution experiments. However, studies that include whole-genome data are still scarce. Evolution experiments can be longitudinal, as laboratory experiments continued over many generations, or cross-sectional, as field experiments replicated over many geographic locations or environments. For organisms with generations that span months or years such as \textit{Arabidopsis thaliana}, cross-sectional studies are most feasible. Here we present an experiment carried out in a Mediterranean and a Central European field station with rainout shelters which enabled to apply a high and low rainfall treatment in each location. We planted 12 replicates per treatment combination of 517 whole-genome sequenced \textit{A. thaliana} lines covering the global distribution. To make the data and processing code available, we created a companion R package "dryAR" (\url{http://github.com/MoisesExpositoAlonso/dryAR}). We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities. 
-
-nline-style: 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
+If you would like a copy of the draft manuscript or would like to use the data, send me an e-mail.
 
 #### Contact
 
 Moises Exposito-Alonso     
 moisesexpositoalonso@gmail.com      
+
+------
+
+
+# dryAR: Companion R package of "Exposito-Alonso et al. (2017) A rainfall-manipulated
+experiment with 517 *Arabidopsis thaliana* ecotypes"
+
+
+#### Summary info
+TThe gold standard to quantify natural selection are experiments where individuals of natural populations are grown together and lifetime fitness is quantified. These have been widely done in ecology to quantify phenotypic selection in a wide range of organisms, which have uncovered a number of critical patterns, including that local precipitation patterns best correlate with the strength of natural selection. Studies that include whole- genome data are still scarce, but they would inform about the frequency and strength of selection at the genetic level — a critical knowledge that would help to predict the effect of climate change in natural populations. Here we present such an experiment with the plant Arabidopsis thaliana. The experiments were carried out in a Mediterranean and a Central European field station with rainout shelters which enabled to apply a high and low rainfall treatment in each location. For each treatment combination, we planted 7 pots with one individual and 5 pots with 30 counted seeds of 517 whole-genome sequenced ecotype lines covering the global species distribution. Survival, germination, flowering time, and final seed output per plant were measured for ca. 25,000 pots, which contained ca. 14,500 individual plants and over 310,00 plants growing in small populations. Such high-throughput of phenotype production was only possible thanks to image analyses techniques using custom-made scripts. To make the data and processing code available, we created an R package “dryAR” (http://github.com/MoisesExpositoAlonso/dryAR). We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities.
+
+
+#### Figure 1
+Location of 517 used ecotypes (red), ecotypes included in the 1001 Genomes Projects (blue), and all locations recorded in gbif.org (grey).
+![alt text](figs/Figure_gbif_field_occurrence_map.pdf.png)
+
+#### Figure 2
+Aerial image of the foil tunnel setting in Madrid (up) and photo inside the foil tunnel in Tübingen (down).
+![alt text](figs/IMG_20151113_154250988.jpg)
+![alt text](figs/IMG_20151121_162359474_HDR.jpg)
+
 
 
 ------
@@ -35,7 +44,7 @@ For more details in the main dataset, "field", run:
 The package structure:
 
 ``` sh
-field
+dryAR
 |- paper/
 |--Exposito-Alonso_data_field.pdf
 |
@@ -91,28 +100,14 @@ field
 
 ### Exploratory analyses available
 
-The analyses are stored under /analyses. They are typically R markdown files (.Rmd) and come
-with pre-computed .html report.
-
-The different analyses are:
+A limited number of analyses are available as html documents 
 
 (1) Growth trajectories exploration:
 https://github.com/MoisesExpositoAlonso/dryAR/analyses/growth.html
 
-(2) Flowering time exploration
+(2) Flowering time exploration:
 https://github.com/MoisesExpositoAlonso/dryAR/analyses/flowering_exploration.html
 
-
-
-* Notes:
-The most important phenotypes are the fitness ones. Therefore they are described
-more in detail here.
-
-The veg dataset contains all pots that were well sown (errors of sowing removed, red flag removed)
-
-The field dataset was a merge starting from veg with all=T flag, therefore all sown pots are there
-even though fitness or other phenotypes might be zero.
-
-Then the existence or not of flowering data indicates survival. Likewise, the existence or not
-of harvesting data also indicates survival.
+(3) Survival and seed set exploration:
+https://github.com/MoisesExpositoAlonso/dryAR/analyses/fitness_exploration.html
 
