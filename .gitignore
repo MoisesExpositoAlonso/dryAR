@@ -15,3 +15,5 @@ analyses/*/*/*.png
 *.log
 *.aux
 *.Rhistory
+*.knit.md
+*.utf8.md
