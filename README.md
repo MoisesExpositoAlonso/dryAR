@@ -21,12 +21,12 @@ TThe gold standard to quantify natural selection are experiments where individua
 
 #### Figure 1
 Location of 517 used ecotypes (red), ecotypes included in the 1001 Genomes Projects (blue), and all locations recorded in gbif.org (grey).
-![alt text](figs/Figure_gbif_field_occurrence_map.pdf.png)
+![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/Figure_gbif_field_occurrence_map.pdf.png)
 
 #### Figure 2
 Aerial image of the foil tunnel setting in Madrid (up) and photo inside the foil tunnel in Tübingen (down).
-![alt text](figs/IMG_20151113_154250988.jpg)
-![alt text](figs/IMG_20151121_162359474_HDR.jpg)
+![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/IMG_20151113_154250988.jpg)
+![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/IMG_20151121_162359474_HDR.jpg)
 
 
 
