@@ -11,8 +11,7 @@ moisesexpositoalonso@gmail.com
 ------
 
 
-# dryAR: Companion R package of "Exposito-Alonso et al. (2017) A rainfall-manipulated
-experiment with 517 *Arabidopsis thaliana* ecotypes"
+# dryAR: Companion R package of "Exposito-Alonso et al. (2017) A rainfall-manipulated experiment with 517 *Arabidopsis thaliana* ecotypes"
 
 
 #### Summary info
