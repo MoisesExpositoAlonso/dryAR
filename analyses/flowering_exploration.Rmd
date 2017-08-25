@@ -191,7 +191,7 @@ f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
 
 f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
   scale_fill_gradientn("Flowering date",
-                       colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
+                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "PRGn")),contrast=2,raw=T ),
                         limits=c(60, 180)
   ) #+
   # scale_x_continuous(breaks = c(0,100,200,300),labels = paste(c(0,100,200,300) * 10 /100, 'm')  )+
