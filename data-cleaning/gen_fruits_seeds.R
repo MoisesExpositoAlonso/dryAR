@@ -101,7 +101,7 @@ counted=rbind(lowcounted,highcounted)
 
 fruitcounted<-merge(field, counted, by='pathimage')
 
-devtools::use_data(fruitcounted,overwrite = FALSE)
+# devtools::use_data(fruitcounted,overwrite = FALSE)
 
 
 ################################################################################
@@ -138,6 +138,10 @@ fruitpredictor()$all  %>% summary
 
 cor.test(fn(fruitcounted$nfruits) , fn(fruitcounted$Harv.sk))
 
+#
+
+lm(data=fruitcounted, nfruits ~ Harv.sk + Harv.area + Harv.bp + Harv.ep) %>% summary
+
 
 ################################################################################
 # manually count seeds
@@ -151,6 +155,7 @@ seedcounts=c(19,17,18,43,48,19,31,22,30,36)
 seeds_per_fruit=mean(seedcounts)
 sd(seedcounts)
 
+ggplot(data.frame(seeds=seedcounts))+geom_density(aes(x=seeds))
 
 
 ################################################################################

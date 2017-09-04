@@ -43,6 +43,7 @@ env$capture_time= strptime(env$capture_ts, format = "%Y-%m-%d %H:%M:%S", tz = "U
 env = rename(env , datestart= Date)
 env$capture_time <- as.POSIXct(env$capture_time)
 env$datestart <- as.POSIXct(env$datestart)
+env$group = paste(env$Site, env$Treatment, sep="_")
 
 head(env)
 dim(env)
@@ -56,34 +57,15 @@ dim(env)
 ################################################################################
 ### Solve the mess that some sensors stopped working
 
-toy=envsub %>% sample_n(size=200)
-
-## first round the dates to 5 per day or sth
-toy$capture_time %>% round()
-
-## second, spread to short format to predict one pot from the rest
-# library(reshape2)
-## dcast(toy,formula= capture_time ~ sensor , value.var="vwc_percent")
-toy %>% spread(key='sensor',value='vwc_percent')
-
-# third, do the predictions and validations
-
-
-
-# library(reshape2)
-# library(tidyr)
-# library(dplyr)
+# toy=envsub %>% sample_n(size=200)
 #
-# mini_iris <- iris[c(1, 51, 101), ]
+# ## first round the dates to 5 per day or sth
+# toy$capture_time %>% round()
 #
-# # melt
-# melted1 <- mini_iris %>% melt(id.vars = "Species",value.name = 'dimension',variable.name='trait')
-# melted2 <- mini_iris %>% gather(key='trait', value='dimension', -Species)
-#
-# # cast
-# melted1 %>% dcast(Species ~ trait, value.var = "dimension")
-# melted2 %>% spread(key='trait', value='dimension')
-
+# ## second, spread to short format to predict one pot from the rest
+# # library(reshape2)
+# ## dcast(toy,formula= capture_time ~ sensor , value.var="vwc_percent")
+# toy %>% spread(key='sensor',value='vwc_percent')
 
 
 ################################################################################
@@ -134,25 +116,66 @@ envpanel
 save_plot(filename="figs/Figure_watering_temperature.pdf",plot = envpanel, base_width = 7,base_height = 7)
 
 ### Tests
+envsample=envsub %>% sample_n(.,size=100)
 
-t.test(
-(filter(envsample, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
-(filter(envsample, Site=='Madrid' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() )
-)
-t.test(
-(filter(envsample, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
-(filter(envsample, Site=='Tuebingen' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() )
-)
+lm(
+  data=filter(envsample, group %in% c("Tuebingen_low","Madrid_low","Madrid_out")),
+  vwc_percent ~group
+   ) %>% anova
 
-t.test(
-(filter(envsample, Site=='Madrid' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
-(filter(envsample, Site=='Tuebingen' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+lm(
+  data=filter(envsample, group %in% c("Tuebingen_high","Madrid_high","Tuebingen_out")),
+  vwc_percent ~group
+   ) %>% anova
+
+wilcox.test(
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Madrid' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() )
 )
 
 wilcox.test(
-(filter(envsample, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
-(filter(envsample, Site=='Madrid' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() )
 )
+
+
+wilcox.test(
+(dplyr::filter(envsample, Site=='Madrid' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
+wilcox.test(
+(dplyr::filter(envsample, Site=='Madrid' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
+wilcox.test(
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Tuebingen' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
+wilcox.test(
+(dplyr::filter(envsample, Site=='Madrid' ,Treatment=='high' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample, Site=='Madrid' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
+
+removesome=which(envsample$Treatment =="out" & envsample$Site =="Madrid" & envsample$vwc_percent <10)
+envsample2=envsample[-removesome,]
+
+t.test(
+(dplyr::filter(envsample2, Site=='Madrid' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample2, Site=='Tuebingen' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
+boxplot(envsample2$vwc_percent ~ envsample2$Treatment + envsample2$Site)
+boxplot(envsample$vwc_percent ~ envsample$Treatment + envsample$Site)
+
+t.test(
+(dplyr::filter(envsample2, Site=='Tuebingen' ,Treatment=='out' ) %>% select(vwc_percent) %>% fn() ),
+(dplyr::filter(envsample2, Site=='Madrid' ,Treatment=='low' ) %>% select(vwc_percent) %>% fn() )
+)
+
 
 ### bigplot
 names(envsub)
@@ -173,6 +196,21 @@ ggplot(data=envsample) + xlab('')+ ylab('Soil water content (%)')+
     max(unique(envsub$capture_time) ),
     length.out = 8) )
     )
+
+################################################################################
+### ANOVA
+envsub %>% head
+
+envsub %>% head
+
+envsub$group=paste(envsub$Site, envsub$Treatment, sep="_")
+boxplot(envsub$vwc_percent ~ envsub$group)
+
+# kruskal.test(envsub$vwc_percent ~envsub$group)
+lmmod = lm(envsub$vwc_percent ~ (envsub$group) )
+summary(lmmod)
+
+
 
 ################################################################################
 

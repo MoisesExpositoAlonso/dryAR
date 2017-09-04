@@ -19,11 +19,11 @@ experiment with 517 *Arabidopsis thaliana* ecotypes"
 TThe gold standard to quantify natural selection are experiments where individuals of natural populations are grown together and lifetime fitness is quantified. These have been widely done in ecology to quantify phenotypic selection in a wide range of organisms, which have uncovered a number of critical patterns, including that local precipitation patterns best correlate with the strength of natural selection. Studies that include whole- genome data are still scarce, but they would inform about the frequency and strength of selection at the genetic level — a critical knowledge that would help to predict the effect of climate change in natural populations. Here we present such an experiment with the plant Arabidopsis thaliana. The experiments were carried out in a Mediterranean and a Central European field station with rainout shelters which enabled to apply a high and low rainfall treatment in each location. For each treatment combination, we planted 7 pots with one individual and 5 pots with 30 counted seeds of 517 whole-genome sequenced ecotype lines covering the global species distribution. Survival, germination, flowering time, and final seed output per plant were measured for ca. 25,000 pots, which contained ca. 14,500 individual plants and over 310,00 plants growing in small populations. Such high-throughput of phenotype production was only possible thanks to image analyses techniques using custom-made scripts. To make the data and processing code available, we created an R package “dryAR” (http://github.com/MoisesExpositoAlonso/dryAR). We believe this could be a useful resource for the evolutionary biology and the Arabidopsis communities.
 
 
-#### Figure 1
+#### World map
 Location of 517 used ecotypes (red), ecotypes included in the 1001 Genomes Projects (blue), and all locations recorded in gbif.org (grey).
 ![alt text](figs/Figure_gbif_field_occurrence_map.pdf.png)
 
-#### Figure 2
+#### Field experiment
 Aerial image of the foil tunnel setting in Madrid (up) and photo inside the foil tunnel in Tübingen (down).
 ![alt text](figs/IMG_20151113_154250988.jpg)
 ![alt text](figs/IMG_20151121_162359474_HDR.jpg)

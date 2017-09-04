@@ -9,8 +9,13 @@ output:
 
 ### Packages set up
 
-```{r setup,message = FALSE, warning = FALSE}
-library(knitr)
+```{r "setup", include=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "~/field/")
+```
+
+
+```{r LIBRARIES,message = FALSE, warning = FALSE}
 library(dplyr,tidyr)
 library(ggplot2);library(cowplot)
 library(devtools)
@@ -191,7 +196,7 @@ f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
 
 f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
   scale_fill_gradientn("Flowering date",
-                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "PRGn")),contrast=2,raw=T ),
+                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "BrBG")),contrast=2,raw=T ),
                         limits=c(60, 180)
   ) #+
   # scale_x_continuous(breaks = c(0,100,200,300),labels = paste(c(0,100,200,300) * 10 /100, 'm')  )+
@@ -209,7 +214,7 @@ f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
 
 f2=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
   scale_fill_gradientn("Flowering date",
-                       colours= make.pallete.contrast( vecol = brewer.pal(10,name = "RdBu"),contrast=2,raw=T ),
+                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "BrBG")),contrast=2,raw=T ),
                        limits=c(60, 180)
                        )
 
@@ -288,7 +293,6 @@ stargazer(lmod,lmod2,type='text')
 
 ```{r}
 library(lme4)
-library(lmerTest)
 library(stargazer)
 library(xtable)
 data(cake)
@@ -305,7 +309,7 @@ stargazer(M1, M2, style="ajps", title="An Illustrative Model Using Cake Data", d
 summary(M1a <- lmer(angle ~ temp + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
 summary(M2a <- lmer(angle ~ factor(temperature) + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
 anovadf <- data.frame(anova(M1a,M2a))
-xtable(anovadf)
+# xtable(anovadf)
 
 ```
 

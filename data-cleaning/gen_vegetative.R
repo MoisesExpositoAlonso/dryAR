@@ -36,19 +36,13 @@ wannaoverwrite=T
 # write.tsv(veggyraw,file = 'data-raw/veggyraw')
 
 data(veggyraw)
-veggy=veggyraw
-
-head(veggy)
-tail(veggy)
-dim(veggy)
-
 
 ### merge images with genotype replicates
 
 data("genoreps")
 head(genoreps)
 
-veggy= merge(veggy,genoreps[,-1], by=c('qp','pos','site'),all.dupcoly=T)
+veggy= merge(veggyraw,genoreps[,-1], by=c('qp','pos','site'),all.dupcoly=T)
 ## Note that I removed the id. We do not need to work with it all the time
 ## NOTE ALSO THAT CAN BE SEVERAL PICTURES FOR A SINGLE POT!
 
@@ -69,22 +63,6 @@ veggy= veggy %>% mutate( pathimage= paste(pathimage,folder,image,sep='/') ) %>%
                 select(-folder, -image)
 head(veggy)
 
-
-
-
-# CONSENSUS OF DUPLICATES
-## Verify replicability, find duplicates
-
-## Number of pots used for replicability analysis
-dim(veggy[duplicated(veggy$indexrep),]) # There are 790 in total from both experiments
-unique(veggy[duplicated(veggy$indexrep),]$day)
-unique(veggy[duplicated(veggy$indexrep),]$qp)
-
-## Run the test for replicability
-library(MCMCglmm)
-lmm=MCMCglmm(data=veggy[duplicated(veggy$indexrep),], countgreen ~1, random = ~ indexrep, family = 'poisson',verbose=F)
-print('Variance accumulated by the same pot taken pictures multiple times (replicability)')
-print ( h2MCMC(lmm,randomname = 'indexrep') )
 
 
 ################################################################################

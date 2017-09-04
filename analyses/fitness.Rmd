@@ -21,6 +21,8 @@ load_all(".")
 
 data(field)
 data(field.s)
+data(field.c)
+head(field.c)
 
 ```
 
@@ -30,15 +32,36 @@ data(field.s)
 
 
 ggplot(field.s) +
+  geom_histogram(aes(x=Fruits,group=water,fill=water,alpha=0.3)) + 
+  scale_fill_manual(values = c("h"="navy","l"="red3"))+
+  facet_grid(site~indpop)+
+  theme_bw() +
+  xlab('# Fruits') + 
+  ylab('# pots') + 
+  scale_alpha(guide = 'none') -> pf
+pf
+
+ggplot(field.s) +
+  geom_histogram(aes(x=Survival_fruit,group=water,fill=water,alpha=0.3)) + 
+  scale_fill_manual(values = c("h"="navy","l"="red3"))+
+  facet_grid(site~indpop)+
+  theme_bw() +
+  xlab('Survival prob.') + 
+  ylab('# pots') +
+  scale_alpha(guide = 'none') -> ps
+ps
+
+
+ggplot(field.c) +
   geom_histogram(aes(x=Fitness,group=water,fill=water,alpha=0.3)) + 
   scale_fill_manual(values = c("h"="navy","l"="red3"))+
   facet_grid(site~indpop)+
   theme_bw() +
-  xlab('Lifetime fitness (% survival x # inflorescence pixels)') + 
+  xlab('Lifetime fitness (% survival x seeds)') + 
   scale_alpha(guide = 'none') -> p1
 p1
 
-ggplot(field.s) +
+ggplot(field.c) +
   geom_histogram(aes(x=Fecundity.byind,group=water,fill=water,alpha=0.3)) + 
   scale_fill_manual(values = c("h"="navy","l"="red3"))+
   facet_grid(site~indpop)+
@@ -47,7 +70,7 @@ ggplot(field.s) +
   scale_alpha(guide = 'none') -> p2
 p2
 
-ggplot(field.s) +
+ggplot(field.c) +
   geom_histogram(aes(x=Survival.fruit,group=water,fill=water,alpha=0.3)) + 
   scale_fill_manual(values = c("h"="navy","l"="red3"))+
   facet_grid(site~indpop)+
@@ -56,7 +79,7 @@ ggplot(field.s) +
   scale_alpha(guide = 'none') -> p3
 p3
 
-ggplot(field.s) +
+ggplot(field.c) +
   geom_histogram(aes(x=Survival.num,group=water,fill=water,alpha=0.3)) + 
   scale_fill_manual(values = c("h"="navy","l"="red3"))+
   facet_grid(site~indpop)+
