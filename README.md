@@ -23,7 +23,7 @@ The gold standard for studying natural selection is to quantify lifetime fitness
 Location of 517 used ecotypes (red), ecotypes included in the 1001 Genomes Projects (blue), and all locations recorded in gbif.org (grey).
 ![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/Figure_gbif_field_occurrence_map.pdf.png)
 
-#### Field experiment settup
+#### Field experiment setup
 Aerial image of the foil tunnel setting in Madrid (up) and photo inside the foil tunnel in Tübingen (down).
 ![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/IMG_20151113_154250988.jpg)
 ![alt text](https://github.com/MoisesExpositoAlonso/dryAR/blob/master/IMG_20151121_162359474_HDR.jpg)
