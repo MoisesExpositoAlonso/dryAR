@@ -1,7 +1,9 @@
 
-##### Note: presubmission version --  does not contain the raw data.
+##### Note: presubmission version --  does not contain the raw data and nor code (links might not work).
 
-If you would like a copy of the draft manuscript or would like to use the data, send me an e-mail.
+The manuscript is in ![alt text](http://www.biorxiv.org/content/early/2017/09/10/186767), with doi:10.1101/186767
+
+If you would like to use the data, send me an e-mail.
 
 #### Contact
 
@@ -98,7 +100,7 @@ dryAR
 
 ### Exploratory analyses 
 
-A limited number of analyses are available as html documents (links might not work until the manuscript is accepted). 
+A limited number of analyses are available as html documents.
 
 (1) Growth trajectories exploration:
 https://github.com/MoisesExpositoAlonso/dryAR/analyses/growth.html
