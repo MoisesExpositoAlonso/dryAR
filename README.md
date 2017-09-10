@@ -1,7 +1,7 @@
 
-##### Note: presubmission version --  does not contain the raw data and nor code (links might not work).
+##### Note: presubmission version --  does not contain the raw data nor code (links to Rmd might not work).
 
-The manuscript is in ![biorxiv.org](http://www.biorxiv.org/content/early/2017/09/10/186767), with doi:10.1101/186767
+The manuscript is in ![biorxiv.org](http://www.biorxiv.org/content/early/2017/09/10/186767) with a doi:10.1101/186767
 
 If you would like to use the data, send me an e-mail.
 
