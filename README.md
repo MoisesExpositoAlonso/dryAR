@@ -1,8 +1,6 @@
 
 ##### Note: presubmission version --  does not contain the raw data nor code (links will not work).
 
-The manuscript is in [biorxiv.org](http://www.biorxiv.org/content/early/2017/09/10/186767) with a doi:10.1101/186767
-
 If you would like to use the data, send me an e-mail.
 
 #### Contact
@@ -12,9 +10,11 @@ moisesexpositoalonso@gmail.com
 
 ------
 
+Cite this repo as:
+Exposito-Alonso, M (2019) dryAR: data repository of a rainfall-manipulated experiment with 517 *Arabidopsis thaliana* ecotypes. [![DOI](https://zenodo.org/badge/95196840.svg)](https://zenodo.org/badge/latestdoi/95196840)
 
-# dryAR: Companion R package of "Exposito-Alonso et al. (2017) A rainfall-manipulated experiment with 517 *Arabidopsis thaliana* ecotypes"
-
+Cite the manuscript as:
+Exposito-Alonso, M et al. (2017) A rainfall-manipulated experiment with 517 *Arabidopsis thaliana* ecotypes. bioRxiv, [doi:10.1101/186767](http://www.biorxiv.org/content/early/2017/09/10/186767)
 
 #### Abstract
 The gold standard for studying natural selection is to quantify lifetime fitness in individuals from natural populations that have been grown together under different field conditions. This has been widely done in ecology to measure phenotypic selection in nature for a wide range of organisms -- an evolutionary force that seems to be most determined by local precipitation patterns. Studies that include whole-genome data would enable the translation of coefficients of selection to the genetic level, but such studies are still scarce, even though this type of genetic knowledge will be critical to predict the effect of climate change in natural populations. Here we present such an experiment including rainfall-manipulation with the plant Arabidopsis thaliana. The experiment was carried out in a Mediterranean and a Central European field station with rainout shelters to simulate a high and low rainfall treatment within each location. For each treatment combination, we planted 7 pots with one individual and 5 pots with 30 counted seeds of 517 whole-genome sequenced natural accessions covering the global species distribution. Survival, germination, flowering time, and final seed output were measured for ca. 25,000 pots, which contained ca. 14,500 individual plants and over 310,00 plants growing in small populations. This high-throughput phenotyping was only possible thanks to image analysis techniques using custom-made scripts. To make the data and processing code available, we created an R package dryAR (http://github.com/MoisesExpositoAlonso/dryAR).
