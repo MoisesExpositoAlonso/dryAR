@@ -1,0 +1,173 @@
+---
+title: "Flowering exploration of the 1001G fiel experiment"
+author: "Moises Exposito-Alonso (moisesexpositoalonso@gmail.com)"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+---
+
+
+### Packages set up
+
+```{r "setup", include=FALSE}
+require("knitr")
+# opts_knit$set(root.dir = "~/field/")
+opts_knit$set(root.dir = "../")
+```
+
+
+```{r LIBRARIES,message = FALSE, warning = FALSE}
+library(dplyr,tidyr)
+library(ggplot2);library(cowplot)
+library(devtools)
+library(RColorBrewer)
+library(moiR)
+#source("~/ebio/abt6_projects9/ath_1001G_image_pheno/experiment_218_droughtgwa/droughtfunctions.R")
+#source("droughtfunctions.R")
+load_all(".") # field
+
+```
+
+### load dataset
+
+```{r  }
+data(field)
+dim(field)
+names(field)
+
+
+```
+
+
+
+# Direct visualization of germination time in the spatial positions of the experiment
+
+```{r ,fig.width=10,fig.height=3 ,warning=F}
+set_project_dir()
+
+flo=read_flowering('madrid','data-raw')
+flo=as.matrix(flo)
+flo=apply(flo,2,function(x)asmydate(x,'madrid'))
+flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
+
+f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
+
+f1=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
+  scale_fill_gradientn("Flowering date",
+                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "BrBG")),contrast=2,raw=T ),
+                        limits=c(60, 180)
+  ) #+
+  # scale_x_continuous(breaks = c(0,100,200,300),labels = paste(c(0,100,200,300) * 10 /100, 'm')  )+
+  # scale_y_continuous(breaks = c(0,10,20,30),labels = paste(c(0,25,50,75) * 10 /100, 'm')  )+
+  # labs(y="",x='') 
+  
+
+
+flo=read_flowering('tuebingen','data-raw')
+flo=as.matrix(flo)
+flo=apply(flo,2,function(x)asmydate(x,'tuebingen'))
+flo[traycoordinates_tunnel() == "x"] <-NA # Remove those corners
+
+f=data.frame(row=fn(row(flo)),col=fn(col(flo)),flowering=fn(flo))
+
+f2=ggplot(f,aes(x=row,y=col , fill=flowering ))+geom_tile() + 
+  scale_fill_gradientn("Flowering date",
+                       colours= make.pallete.contrast( vecol = rev(brewer.pal(10,name = "BrBG")),contrast=2,raw=T ),
+                       limits=c(60, 180)
+                       )
+
+f2
+
+
+########## PLOT THE TWO FLOWERING TIMES
+
+f1=f1+ theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          # legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank()) + ggtitle("Madrid")
+
+f2=f2+ theme(axis.line=element_blank(),axis.text.x=element_blank(),
+          axis.text.y=element_blank(),axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          # legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank()) +ggtitle("Tübingen")
+
+
+panel=plot_grid(f1,f2,rel_widths = c(10,10),rel_heights = c(3,3),nrow = 2)
+save_plot(filename="figs/Figure_raw_flowering.pdf",plot = panel, base_width = 13,base_height =5)
+
+```
+
+
+We see that Tuebingen again has later flowering times  than Madrid. This also helps to visualize that the blocks of lower watering had 
+
+
+### load data sets
+
+```{r  }
+data(field)
+dim(field)
+names(field)
+stargazer(field,type='text')
+
+```
+
+
+
+## Fixed Model
+
+```{r}
+library(stargazer)
+library(MCMCglmm)
+
+names(field)
+
+lmod<-lm(data=field,
+  FT.dif ~  latitude
+   )
+lmod2<-lm(data=field,
+  FT.dif ~  latitude + longitude^2
+   )
+
+
+stargazer(lmod,lmod2,type='text')
+
+```
+
+
+## Mixed Model
+
+
+```{r}
+library(lme4)
+library(stargazer)
+library(xtable)
+data(cake)
+
+# Get the table first.
+summary(M1 <- lme4::lmer(angle ~ temp + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+summary(M2 <- lme4::lmer(angle ~ factor(temperature) + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+
+stargazer(M1, M2, style="ajps", title="An Illustrative Model Using Cake Data", dep.var.labels.include = FALSE,
+      covariate.labels=c( "Temperature (Continuous)", "Temperature (Factor $<$ 185)", "Temperature (Factor $<$ 195)", "Temperature (Factor $<$ 205)", "Temperature (Factor $<$ 215)", "Temperature (Factor $<$ 225)")
+)
+
+# now for lmerTest
+summary(M1a <- lmer(angle ~ temp + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+summary(M2a <- lmer(angle ~ factor(temperature) + (1 | replicate) + (1|recipe:replicate), cake, REML= FALSE))
+anovadf <- data.frame(anova(M1a,M2a))
+# xtable(anovadf)
+
+```
+

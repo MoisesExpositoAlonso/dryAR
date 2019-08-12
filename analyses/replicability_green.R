@@ -55,6 +55,10 @@ cor.test(
     log10(vegdup.clean$pixels1+1), log10(vegdup.clean$pixels2+1)
 )
 
+cor.test(
+    (vegdup.clean$pixels1), (vegdup.clean$pixels2), method='spearman'
+)
+
 modtest<-lm(
     log10(vegdup.clean$pixels1+1) ~ log10(vegdup.clean$pixels2+1)
 )
